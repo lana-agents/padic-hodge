@@ -29,7 +29,7 @@ classification:
   msc2020: ["11S20", "14F30"]
 
 status:
-  scope: "Galois action on C_p; Ax's lemma; Ax-Sen-Tate; H^0(G_L, C_p) = L"
+  scope: "Galois action on C_p; Ax's lemma; Ax-Sen-Tate; H^0(G_L, C_p) = L; Tate: H^0(G_L, C_p(j)) = 0 for j != 0"
   sorry_count: 0
   sorry_in_definitions: 0
   axioms: []
@@ -38,6 +38,9 @@ status:
     - "PadicHodge.ax: Ax's lemma with constant p^(p/(p-1)^2)"
     - "PadicHodge.galCp_eq_self_iff_mem_closure, PadicHodge.galCp_eq_self_iff_mem: Ax-Sen-Tate, C_p^(G_L) = closure of L (= L for L/Q_p finite)"
     - "PadicHodge.H0CpIso: H^0_cont(G_L, C_p) = L for L/Q_p finite"
+    - "PadicHodge.finrank_adjoin_primitiveRoot: [Q_p(zeta_{p^n}) : Q_p] = phi(p^n)"
+    - "PadicHodge.eq_zero_of_autCp_eq_smul: Tate's normalised-trace argument (no eigenvectors near 1 in the completion of Q_p(mu_{p^infty}))"
+    - "PadicHodge.cpTwistRep_invariants_eq_bot, PadicHodge.H0CpTwistIso: Tate, C_p(j)^(G_L) = 0 and H^0_cont(G_L, C_p(j)) = 0 for j != 0"
 
 automation:
   methods:

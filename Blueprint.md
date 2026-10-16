@@ -30,7 +30,7 @@ p-divisible groups.
 
 Lake project `PadicHodge`, Mathlib only, `--wfail`, `mk_all` check (`.orchestra/validation.sh`).
 
-## PH1. Tate's Galois cohomology of `ℂ_p` — wip (untwisted H⁰ done)
+## PH1. Tate's Galois cohomology of `ℂ_p` — wip (all of `H⁰` done; `H¹` open)
 
 1. **done** `PadicHodge.galCp L : G_L →* (ℂ_[p] ≃+* ℂ_[p])`, `norm_galCp`, `continuous_galCp`
    (`Galois/Basic.lean`): extension by continuity of the isometric action on `ℚ̄_p`.
@@ -49,10 +49,28 @@ Lake project `PadicHodge`, Mathlib only, `--wfail`, `mk_all` check (`.orchestra/
    (`ℂ_[p]^{G_L} = closure L`, [BC, Prop. 2.1.2]); `galCp_eq_self_iff_mem` (`= L` for `L/ℚ_p`
    finite); `cpRep L` (`ℂ_[p]` as a `ContRepresentation ℚ_[p] G_L`); `H0CpIso`:
    `H⁰_cont(G_L, ℂ_[p]) ≅ L` via Mathlib's `continuousCohomology` (`zeroIso`).
-4. **planned** Tate twists `ℂ_[p](j)` via `cyclotomicCharacter`; `ℂ_[p](j)^{G_K} = 0` (`j ≠ 0`),
-   `H¹(G_K, ℂ_[p](j)) = 0` (`j ≠ 0`), `dim_K H¹(G_K, ℂ_[p]) = 1` ([BC, Thm. 2.2.7], proved in
-   [BC, §14] by the Tate–Sen formalism: normalised traces on `K(μ_{p^∞})`, ramification of the
-   cyclotomic tower, descent of cohomology from `G_K` to `Γ`). This is the bulk of PH1.
+4. **done** `ℂ_[p](j)^{G_L} = 0` for `j ≠ 0`, `L/ℚ_p` finite ([BC, Thm. 2.2.7], first half).
+   * `Cyclotomic/Norms.lean`: `‖ζ_{p^{m+1}} − 1‖^{φ(p^{m+1})} = p⁻¹`, value groups of finite
+     extensions, `[ℚ_p(ζ_{p^{m+1}}) : ℚ_p] = φ(p^{m+1})` (`finrank_adjoin_primitiveRoot`).
+   * `Cyclotomic/Tower.lean`, `Trace.lean`: one step `ℚ_p(ζ^p) ⊂ ℚ_p(ζ)` of the cyclotomic tower:
+     representation `∑_{i<p} a_i ζ^i`, orthogonality of the `π`-adic expansion, the averaging
+     operator `T = p⁻¹ ∑ δ^s` with `T(∑ a_i ζ^i) = a_0`, `‖T y‖ ‖π‖^{p−1} ≤ ‖y‖`, and
+     `‖y‖ ‖ω−1‖ ‖π‖^{p−1} ≤ ‖δy − y‖` when `T y = 0`.
+   * `Cyclotomic/Core.lean`: Tate generators `IsTateGen γ n`; composites of normalised traces;
+     uniform estimates `‖A y‖ ≤ p‖y‖`, `‖y − A y‖ ≤ p⁴ ‖γ y − y‖` ([BC, §14.1] after Tate).
+   * `Cyclotomic/Vanishing.lean`: `eq_zero_of_autCp_eq_smul` (no eigenvector with eigenvalue
+     `λ ≠ 1`, `p⁴‖λ−1‖ < 1`, in the closure of `ℚ_p(μ_{p^∞})`).
+   * `Cyclotomic/Character.lean`: `chi` (Mathlib `cyclotomicCharacter`), existence of `γ` with
+     `χ(γ) = 1 + p^n u`, weak LTE, `χ(γ)^j ≠ 1`.
+   * `TateSen/Invariants.lean`: over `ℚ_p` (`eq_zero_of_autCp_eq_chi_smul`) and for finite `L`
+     by the norm trick over `G_{ℚ_p}/G_L` (`eq_zero_of_galCp_eq_chi_smul`).
+   * `TateSen/Twist.lean`: `cpTwistRep L j` (`σ·c = χ(σ)^j σ(c)`),
+     `cpTwistRep_invariants_eq_bot`, `H0CpTwistIso : H⁰_cont(G_L, ℂ_p(j)) ≅ 0`.
+5. **planned** `H¹(G_K, ℂ_p(j)) = 0` (`j ≠ 0`), `dim_K H¹(G_K, ℂ_p) = 1` ([BC, Thm. 2.2.7], second
+   half; [BC, §14.2–14.3]: needs `H¹(G_{K_∞}, ℂ_p) = 0` (almost étale descent / Tate's
+   ramification estimates for arbitrary finite extensions of `K_∞`), inflation–restriction for
+   continuous cochains, and `H¹(Γ, \hat K_∞(j))` via the normalised traces). Mathlib's
+   `continuousCohomology` has no description of `H¹` by crossed homomorphisms yet.
 
 ## PH2. Hodge–Tate representations — planned
 
