@@ -30,11 +30,11 @@ p-divisible groups.
 
 Lake project `PadicHodge`, Mathlib only, `--wfail`, `mk_all` check (`.orchestra/validation.sh`).
 
-## PH1. Tate's Galois cohomology of `ℂ_p` — wip
+## PH1. Tate's Galois cohomology of `ℂ_p` — wip (untwisted H⁰ done)
 
 1. **done** `PadicHodge.galCp L : G_L →* (ℂ_[p] ≃+* ℂ_[p])`, `norm_galCp`, `continuous_galCp`
    (`Galois/Basic.lean`): extension by continuity of the isometric action on `ℚ̄_p`.
-2. **planned** Ax's lemma (`AxSenTate.lean`). For `L` an intermediate field of `ℚ̄_p/ℚ_p` and
+2. **done** Ax's lemma, `PadicHodge.ax` (`AxSenTate/AxLemma.lean`, `AxSenTate/Ax.lean`). For `L` an intermediate field of `ℚ̄_p/ℚ_p` and
    `α ∈ ℚ̄_p` with `‖σα − α‖ ≤ c` for all `σ ∈ G_L` there is `a ∈ L` with
    `‖α − a‖ ≤ p^{p/(p-1)²} c` ([BC, proof of Prop. 2.1.2] quoting [Ax, Prop. 1]).
    Proof (standard; written up here since [Ax] is not available locally): induction on
@@ -45,8 +45,10 @@ Lake project `PadicHodge`, Mathlib only, `--wfail`, `mk_all` check (`.orchestra/
    `β` of `Q` has `‖α − β‖ ≤ c ‖binom(n,d)‖^{-1/(n−d)}`, and `β` has degree `< n` and satisfies
    the hypothesis with that constant. `‖binom(n,d)‖ = 1` in the first case (Lucas) and `= p^{-1}`
    in the second; the losses sum to at most `Σ_k 1/(p^{k−1}(p−1)) = p/(p−1)²`.
-3. **planned** Ax–Sen–Tate: `ℂ_[p]^{G_L} = closure L` ([BC, Prop. 2.1.2]); for `L/ℚ_p` finite,
-   `ℂ_[p]^{G_L} = L`. Then `H⁰(G_L, ℂ_[p]) ≅ L` via Mathlib's `continuousCohomology` (`zeroIso`).
+3. **done** Ax–Sen–Tate (`AxSenTate/Basic.lean`): `galCp_eq_self_iff_mem_closure`
+   (`ℂ_[p]^{G_L} = closure L`, [BC, Prop. 2.1.2]); `galCp_eq_self_iff_mem` (`= L` for `L/ℚ_p`
+   finite); `cpRep L` (`ℂ_[p]` as a `ContRepresentation ℚ_[p] G_L`); `H0CpIso`:
+   `H⁰_cont(G_L, ℂ_[p]) ≅ L` via Mathlib's `continuousCohomology` (`zeroIso`).
 4. **planned** Tate twists `ℂ_[p](j)` via `cyclotomicCharacter`; `ℂ_[p](j)^{G_K} = 0` (`j ≠ 0`),
    `H¹(G_K, ℂ_[p](j)) = 0` (`j ≠ 0`), `dim_K H¹(G_K, ℂ_[p]) = 1` ([BC, Thm. 2.2.7], proved in
    [BC, §14] by the Tate–Sen formalism: normalised traces on `K(μ_{p^∞})`, ramification of the

@@ -8,11 +8,16 @@ Mathlib pin: `v4.32.0` (commit 81a5d25), the same as `iut`. No other dependencie
 
 ## Status
 
-Phase PH0 (skeleton) and the first part of PH1 (see `Blueprint.md`):
+Phase PH0 (skeleton) and the untwisted `H⁰` part of PH1 (see `Blueprint.md`):
 
 * `PadicHodge/Galois/Basic.lean`: the Galois group `G_L = PadicAlgCl p ≃ₐ[L] PadicAlgCl p`
   of an intermediate field `L` of `ℚ̄_p/ℚ_p` acts on `ℂ_[p]` by isometric continuous ring
   automorphisms (`PadicHodge.galCp`).
+* `PadicHodge/AxSenTate/`: **Ax's lemma** (`PadicHodge.ax`: if all `G_L`-conjugates of
+  `α ∈ ℚ̄_p` lie within `c` of `α`, then `α` lies within `p^{p/(p-1)²} c` of `L`), the
+  **Ax–Sen–Tate theorem** `ℂ_[p]^{G_L} = closure L` (`galCp_eq_self_iff_mem_closure`), `= L` for
+  `L/ℚ_p` finite (`galCp_eq_self_iff_mem`), and `H⁰_cont(G_L, ℂ_[p]) ≅ L` (`H0CpIso`, Mathlib's
+  `continuousCohomology`).
 
 No `sorry`, no `axiom`. All builds use `lake build --wfail`.
 

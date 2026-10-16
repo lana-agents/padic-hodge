@@ -29,12 +29,15 @@ classification:
   msc2020: ["11S20", "14F30"]
 
 status:
-  scope: "Galois action on C_p"
+  scope: "Galois action on C_p; Ax's lemma; Ax-Sen-Tate; H^0(G_L, C_p) = L"
   sorry_count: 0
   sorry_in_definitions: 0
   axioms: []
   main_results:
     - "PadicHodge.galCp, PadicHodge.norm_galCp: G_L acts on C_p by isometric continuous ring automorphisms"
+    - "PadicHodge.ax: Ax's lemma with constant p^(p/(p-1)^2)"
+    - "PadicHodge.galCp_eq_self_iff_mem_closure, PadicHodge.galCp_eq_self_iff_mem: Ax-Sen-Tate, C_p^(G_L) = closure of L (= L for L/Q_p finite)"
+    - "PadicHodge.H0CpIso: H^0_cont(G_L, C_p) = L for L/Q_p finite"
 
 automation:
   methods:
