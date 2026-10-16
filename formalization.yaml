@@ -1,0 +1,56 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/mathlib-initiative/formalization.yaml/main/schema/formalization.schema.json
+# formalization.yaml (v0.4): repo-root metadata for this formalization,
+# following https://github.com/mathlib-initiative/formalization.yaml
+
+version: "v0.4"
+
+project:
+  name: "padic-hodge"
+  description: >-
+    Lean 4 / Mathlib formalization of p-adic Hodge theory as needed for Mochizuki's relative
+    p-adic Grothendieck conjecture: the Galois action on C_p, Ax-Sen-Tate, Tate's Galois
+    cohomology of C_p(j), Hodge-Tate representations, p-divisible groups.
+  authors:
+    - "Claude (Anthropic)"
+    - "LANA Project"
+  responsible_maintainers:
+    - "Christian Merten"
+  license: "Apache-2.0"
+
+sources:
+  - title: "CMI summer school notes on p-adic Hodge theory"
+    authors: ["Olivier Brinon", "Brian Conrad"]
+    type: "lecture-notes"
+    location: "Sections 2, 5, 14"
+    note: "Main reference (references/README.md)."
+
+classification:
+  arxiv: ["math.NT"]
+  msc2020: ["11S20", "14F30"]
+
+status:
+  scope: "Galois action on C_p"
+  sorry_count: 0
+  sorry_in_definitions: 0
+  axioms: []
+  main_results:
+    - "PadicHodge.galCp, PadicHodge.norm_galCp: G_L acts on C_p by isometric continuous ring automorphisms"
+
+automation:
+  methods:
+    - method: "agent"
+      models: ["claude-opus-5-5"]
+      framework: "Claude Code"
+      tool_setup: >-
+        orchestra for running the agents, taxis for project management, and Claude (Claude Code) as the
+        coding agent; Lean/Lake builds with `lake build --wfail`.
+      prompting_notes: >-
+        Human input consisted of high-level task descriptions and scope decisions.
+
+review:
+  status: "agent-reviewed"
+  reviewers: ["Claude (Anthropic)"]
+  notes: >-
+    The formalization has only been reviewed by Claude; it has not been reviewed by a human.
+
+acknowledgements: "Built on Mathlib (Apache-2.0)."
