@@ -8,7 +8,7 @@ Mathlib pin: `v4.32.0` (commit 81a5d25), the same as `iut`. No other dependencie
 
 ## Status
 
-Phase PH0 (skeleton) and the `H⁰` part of PH1 (all twists) (see `Blueprint.md`):
+Phase PH0 (skeleton), the `H⁰` part of PH1 (all twists), and the core of PH2 (see `Blueprint.md`):
 
 * `PadicHodge/Galois/Basic.lean`: the Galois group `G_L = PadicAlgCl p ≃ₐ[L] PadicAlgCl p`
   of an intermediate field `L` of `ℚ̄_p/ℚ_p` acts on `ℂ_[p]` by isometric continuous ring
@@ -22,6 +22,9 @@ Phase PH0 (skeleton) and the `H⁰` part of PH1 (all twists) (see `Blueprint.md`
   `j ≠ 0` and `L/ℚ_p` finite (`cpTwistRep_invariants_eq_bot`, `H0CpTwistIso`), via the
   cyclotomic tower `ℚ_p(μ_{p^∞})` (`[ℚ_p(ζ_{p^n}) : ℚ_p] = φ(p^n)`), Tate's normalised traces with
   estimates uniform in the level, and the norm trick from `G_{ℚ_p}` to `G_L`.
+* `PadicHodge/HodgeTate/`: Hodge–Tate representations: the Serre–Tate lemma, `D_q(V)`,
+  `IsHodgeTate`, the Hodge–Tate decomposition criterion, stability under sub- and quotient
+  representations, and `Hom_{G_L}(ℂ_p(a), ℂ_p(b)) = 0` for `a ≠ b`.
 
 No `sorry`, no `axiom`. All builds use `lake build --wfail`.
 

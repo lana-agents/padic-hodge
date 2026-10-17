@@ -72,11 +72,22 @@ Lake project `PadicHodge`, Mathlib only, `--wfail`, `mk_all` check (`.orchestra/
    continuous cochains, and `H¹(Γ, \hat K_∞(j))` via the normalised traces). Mathlib's
    `continuousCohomology` has no description of `H¹` by crossed homomorphisms yet.
 
-## PH2. Hodge–Tate representations — planned
+## PH2. Hodge–Tate representations — wip (core done)
 
-`ℂ_K`-representations `W`, `W{q} = W(q)^{G_K}`, `ξ_W : ⊕ ℂ_K(−q) ⊗ W{q} → W` injective
-(Serre–Tate, [BC, Lemma 2.3.1]; uses PH1.4 for `ℂ_K(r)^{G_K}`), `IsHodgeTate`, stability under
-subobjects/quotients ([BC, Prop. 2.4.4]), duals and tensor products, unique splitting of
-extensions with distinct weights ([BC, discussion after Thm. 2.2.7]).
+* **done** `HodgeTate/SerreTate.lean`: abstract Serre–Tate lemma ([BC, Lemma 2.3.1], minimal
+  relation argument) for a group acting semilinearly on a vector space over a field `B` with
+  fixed field `K` and characters without nonzero eigenvectors in `B`:
+  `linearIndependent_of_eigen`, `sum_finrank_le`, `exists_eigenbasis`,
+  `sum_finrank_eq_of_eigenbasis`.
+* **done** `HodgeTate/Basic.lean`: for `ρ : Representation ℚ_p G_L V` (`L/ℚ_p` finite, `V`
+  finite-dimensional): `CpTensor ρ = ℂ_p ⊗ V` with `σ(c ⊗ v) = σ(c) ⊗ ρ(σ)v`;
+  `DHT ρ q = {w | σ w = χ(σ)^{-q} w}` (`L`-subspace; `W[q]` of [BC, Rem. 2.3.2]);
+  `sum_finrank_DHT_le`, `finite_support_DHT`, `htDim`, `IsHodgeTate`;
+  `isHodgeTate_iff_exists_basis` (Hodge–Tate decomposition: `ℂ_p ⊗ V ≅ ⊕ ℂ_p(−q_i)`);
+  `isHodgeTate_of_exact` (sub and quotient representations, [BC, Prop. 2.4.4]);
+  `eq_zero_of_twist_equivariant` (`Hom_{G_L}(ℂ_p(a), ℂ_p(b)) = 0` for `a ≠ b`; this gives the
+  *uniqueness* of splittings of extensions with distinct weights).
+* **planned** duals and tensor products; `htWeights` as a multiset; *existence* of splittings
+  for distinct weights (needs `H¹(G_L, ℂ_p(j)) = 0`, PH1.5).
 
 ## PH3. Finite flat group schemes, p-divisible groups, Tate's theorem — planned

@@ -9,5 +9,7 @@ import PadicHodge.Cyclotomic.Tower
 import PadicHodge.Cyclotomic.Trace
 import PadicHodge.Cyclotomic.Vanishing
 import PadicHodge.Galois.Basic
+import PadicHodge.HodgeTate.Basic
+import PadicHodge.HodgeTate.SerreTate
 import PadicHodge.TateSen.Invariants
 import PadicHodge.TateSen.Twist

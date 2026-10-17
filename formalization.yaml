@@ -29,7 +29,7 @@ classification:
   msc2020: ["11S20", "14F30"]
 
 status:
-  scope: "Galois action on C_p; Ax's lemma; Ax-Sen-Tate; H^0(G_L, C_p) = L; Tate: H^0(G_L, C_p(j)) = 0 for j != 0"
+  scope: "Galois action on C_p; Ax's lemma; Ax-Sen-Tate; H^0(G_L, C_p) = L; Tate: H^0(G_L, C_p(j)) = 0 for j != 0; Hodge-Tate representations (Serre-Tate lemma, decomposition, sub/quotient stability)"
   sorry_count: 0
   sorry_in_definitions: 0
   axioms: []
@@ -41,6 +41,10 @@ status:
     - "PadicHodge.finrank_adjoin_primitiveRoot: [Q_p(zeta_{p^n}) : Q_p] = phi(p^n)"
     - "PadicHodge.eq_zero_of_autCp_eq_smul: Tate's normalised-trace argument (no eigenvectors near 1 in the completion of Q_p(mu_{p^infty}))"
     - "PadicHodge.cpTwistRep_invariants_eq_bot, PadicHodge.H0CpTwistIso: Tate, C_p(j)^(G_L) = 0 and H^0_cont(G_L, C_p(j)) = 0 for j != 0"
+    - "PadicHodge.SerreTate.linearIndependent_of_eigen, PadicHodge.sum_finrank_DHT_le: Serre-Tate lemma"
+    - "PadicHodge.IsHodgeTate, PadicHodge.isHodgeTate_iff_exists_basis: Hodge-Tate representations and the Hodge-Tate decomposition"
+    - "PadicHodge.isHodgeTate_of_exact: sub- and quotient representations of Hodge-Tate representations are Hodge-Tate"
+    - "PadicHodge.eq_zero_of_twist_equivariant: Hom_G(C_p(a), C_p(b)) = 0 for a != b"
 
 automation:
   methods:
