@@ -240,7 +240,8 @@ theorem tateMatrix_fix (t : Fin (G.baseChange ℚ_[p]).height → (G.baseChange 
   rw [← sub_eq_zero, ← map_sub, ← RingHom.mem_ker, PadicInt.ker_toZModPow,
     ← PadicInt.norm_le_pow_iff_mem_span_pow] at h1
   rw [hA, Matrix.one_apply]
-  have h2 : (Pi.single j (1 : ℤ_[p]) : Fin (G.baseChange ℚ_[p]).height → ℤ_[p]) i = if i = j then 1 else 0 := by
+  have h2 : (Pi.single j (1 : ℤ_[p]) : Fin (G.baseChange ℚ_[p]).height → ℤ_[p]) i =
+      if i = j then 1 else 0 := by
     rw [Pi.single_apply]
   rw [← h2, PadicInt.norm_p, inv_pow, ← zpow_natCast, ← zpow_neg]
   exact h1
