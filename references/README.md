@@ -8,7 +8,16 @@ for statements that were actually looked up in it; where a text was not availabl
   Used: §2.1 (Proposition 2.1.2, `ℂ_K^H = \hat{L}`, proved from [Ax, Prop. 1]),
   §2.2 (Theorem 2.2.7, Tate–Sen), §2.3 (Lemma 2.3.1, Serre–Tate), §2.4 (Proposition 2.4.4),
   §5 (formalism of admissible representations), §14 (Tate–Sen formalism; §14.3, proof of
-  Theorem 14.3.4: `H¹(Gal(K_∞/K), \hat K_∞) ≃ H¹(Gal(K_∞/K), K) ⊕ H¹(Gal(K_∞/K), X)`).
+  Theorem 14.3.4: `H¹(Gal(K_∞/K), \hat K_∞) ≃ H¹(Gal(K_∞/K), K) ⊕ H¹(Gal(K_∞/K), X)`),
+  §13.1 (Theorem 13.1.2, Tate's almost-étaleness theorem), §13.7 (Exercise 13.7.2, descent of
+  finite extensions of `K_∞` to finite layers; Exercise 13.7.4, Faltings' proof: parts (1)–(6),
+  formalised with `d = 0`; parts (3) and (6) say "δn→∞", but the inequality of part (6),
+  `δ_n − δ_{n+1} ≥ β_n − (d+1)(δ_n − δ_{n+1})`, gives `δ_n → 0`, which is what is used), §14.1 (Lemma 14.1.3, axiom (TS1)).
+* [Serre] J.-P. Serre, *Local Fields*, Ch. III, §6, Prop. 12 (rings of integers of complete DVR
+  extensions with separable residue extension are monogenic) and §7, Prop. 14 (annihilator of
+  `Ω¹` is the different). **Not available locally**; cited only as quoted in [BC, Ex. 13.7.1]
+  ("[44, Ch. III, §7, Prop. 14]"); the monogenicity statement used is proved from scratch in
+  `AlmostEtale/Mono.lean`.
 * [Ax] J. Ax, *Zeros of polynomials over local fields — the Galois action*, J. Algebra 15
   (1970). **Not available locally**; cited only through [BC, proof of Prop. 2.1.2], which
   quotes [Ax, Prop. 1] in the form "for each n there exists y_n ∈ K̄^H with

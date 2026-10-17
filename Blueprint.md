@@ -30,7 +30,7 @@ p-divisible groups.
 
 Lake project `PadicHodge`, Mathlib only, `--wfail`, `mk_all` check (`.orchestra/validation.sh`).
 
-## PH1. Tate's Galois cohomology of `ℂ_p` — wip (all of `H⁰` done; `H¹` open)
+## PH1. Tate's Galois cohomology of `ℂ_p` — done
 
 1. **done** `PadicHodge.galCp L : G_L →* (ℂ_[p] ≃+* ℂ_[p])`, `norm_galCp`, `continuous_galCp`
    (`Galois/Basic.lean`): extension by continuity of the isometric action on `ℚ̄_p`.
@@ -66,7 +66,7 @@ Lake project `PadicHodge`, Mathlib only, `--wfail`, `mk_all` check (`.orchestra/
      by the norm trick over `G_{ℚ_p}/G_L` (`eq_zero_of_galCp_eq_chi_smul`).
    * `TateSen/Twist.lean`: `cpTwistRep L j` (`σ·c = χ(σ)^j σ(c)`),
      `cpTwistRep_invariants_eq_bot`, `H0CpTwistIso : H⁰_cont(G_L, ℂ_p(j)) ≅ 0`.
-5. **wip** `H¹(G_K, ℂ_p(j)) = 0` (`j ≠ 0`), `dim_K H¹(G_K, ℂ_p) = 1` ([BC, Thm. 2.2.7], second
+5. **done** `H¹(G_K, ℂ_p(j)) = 0` (`j ≠ 0`), `dim_K H¹(G_K, ℂ_p) = 1` ([BC, Thm. 2.2.7], second
    half; [BC, §14]). Route: (i) `H¹(G_{K_∞}, ℂ_p) = 0` (almost étale, milestone PH1.AE below);
    (ii) inflation–restriction; (iii) `H¹(Γ, \hat K_∞(j))` via normalised traces.
    * **done** `Cohomology/ContH1.lean`: continuous `H¹` via crossed homomorphisms for a
@@ -101,27 +101,50 @@ Lake project `PadicHodge`, Mathlib only, `--wfail`, `mk_all` check (`.orchestra/
      `∑_{i<d} Y_i α^i`, `Y_i = ∑_k (V⁻¹)_{ik} τ_k z ∈ \hat F_∞` (`V` the Vandermonde matrix of the
      `β_k`), so twisted solving / decomposition / rigidity on `\hat K_∞` reduce coordinatewise to
      `\hat F_∞`; `γ ∈ G_K` with `χ(γ) = 1 + p^N u` from a pigeonhole argument
-     (`exists_gamma_K`). Remaining for Tate's `H¹(G_K, ℂ_p(j))`: PH1.AE.
+     (`exists_gamma_K`).
+   * **done** (i)+(ii) `TateSen/TateH1.lean`: `res_HK_eq_zero` (restriction to `H_K` vanishes, by
+     `exists_coboundary` of PH1.AE and `χ|_{H_K} = 1`), `inf_surjective`,
+     **`subsingleton_H1_twist`** (`H¹_cont(G_K, ℂ_p(j)) = 0`, `j ≠ 0`) and
+     **`H1ZeroEquiv : K ≃ₗ[ℚ_p] H¹_cont(G_K, ℂ_p)`**, `s ↦ [s log χ]` (`finrank_H1_zero`), i.e.
+     `H¹(G_K, ℂ_p)` is free of rank one over `K` on `log χ`.
 
-### PH1.AE — almost étaleness of `K_∞ = K(μ_{p^∞})` (separate milestone, not started)
+### PH1.AE — almost étaleness of `K_∞ = K(μ_{p^∞})` — done
 
 Statement ([BC, Thm. 13.1.2], Tate): for every finite `M / K_∞`, `Tr_{M/K_∞}(O_M) ⊇ m_{K_∞}`;
-consequence ([BC, Lemma 14.1.3], axiom (TS1)) `H¹(G_{K_∞}, ℂ_p) = 0`.
+consequence ([BC, Lemma 14.1.3], axiom (TS1)) `H¹(G_{K_∞}, ℂ_p) = 0`. Tate's own proof (upper
+numbering, Herbrand, Serre's geometric class field theory) is avoided; we follow **Faltings'
+commutative-algebra route** ([BC, Exercise 13.7.4], `d = 0`), but with explicit monogenic generators
+in place of Kähler differentials (all rings of integers here are monogenic), everything inside
+`ℚ̄_p` with norms (`v = -log_p ‖·‖`), traces via Mathlib's normalised trace
+(`Algebra.normalizedTrace`, `Tr_{N/F} = [N:F] nt_F`):
 
-* Tate's proof uses upper-numbering ramification groups, the Herbrand function, Hasse–Arf, the
-  integral formula for the different ([BC, Lemma 13.1.8]) and Serre's geometric local class field
-  theory ([BC, Lemma 13.1.6]); none of these is in Mathlib (only `ramificationGroup`, lower
-  numbering). Estimate ≥ 20k lines; not recommended.
-* **Planned route: Faltings' commutative-algebra proof** ([BC, Exercise 13.7.4], `d = 0`):
-  inputs: Kähler differentials `Ω_{B/A}` of finite extensions of complete DVRs of mixed
-  characteristic, `length_B Ω_{B/A} = length_B(B/𝔇_{B/A})` (Mathlib: `differentIdeal`, trace dual),
-  the exact sequence `0 → B_{n+1} ⊗ Ω_{A_{n+1}/A_n} → Ω_{B_{n+1}/A_n} → Ω_{B_{n+1}/A_{n+1}} → 0`,
-  elementary divisors over DVRs, the discriminant estimate `p^{δ_n−δ_{n+1}} B_{n+1} ⊆ B_n ⊗ A_{n+1}`,
-  and the induction `δ_n − δ_{n+1} ≥ β_n − (d+1)(δ_n − δ_{n+1})` giving `δ_n → 0`; for the
-  cyclotomic tower `Ω_{A_n/A_{n−1}} ≅ A_n/p` from `X^p − ζ_{p^{n−1}}`. Estimate **6–10k lines**.
-* Plus descent of finite extensions `M / K_∞` to finite layers `L_n` with `M = L_n K_∞` and
-  `L_m = L_n ⊗_{K_n} K_m` ([BC, Exercise 13.7.2]): about 1k lines; and the passage
-  almost-étale ⇒ `H¹(G_{K_∞}, ℂ_p) = 0` (averaging over finite quotients, limits): 1–2k lines.
+* `AlmostEtale/Basic.lean`: `O_F`, polynomials over subrings, `S[z]`; `mp F z` has coefficients in
+  `O_F` (roots are conjugates, spectral norm); division by `mp F z` in `O_F[X]`
+  (`exists_eq_mp_mul`); `nt_nt` (transitivity), trace bound `‖Tr_{N/F} y‖ ≤ ‖y‖`.
+* `Euler.lean` (Mathlib's `traceDual_powerBasis_eq`): `y g'(z) = ∑ Tr(y z^i) D_i`
+  (`mul_derivative_eq_sum`), `Tr(z^j/g'(z)) = δ_{j,d-1}` (`trace_pow_div_derivative`): the trace
+  dual of `O_F[z]` is `g'(z)^{-1} O_F[z]` ([BC, Ex. 13.7.4 (2)], the different of a monogenic order).
+* `Mono.lean`: `O_L = ℤ_p[z]` for `L/ℚ_p` finite (`exists_monogenic`): uniformizer from the
+  discrete value group, finite residue field (compactness of `O_L`), cyclic residue units,
+  `Π₁ = ω^q − ω` a uniformizer after `ω ↦ ω + Π` (Taylor), successive approximation and
+  closedness of `ℤ_p[z]` (image of the compact `ℤ_p^d`). (Serre, Local Fields III §6 Prop. 12 —
+  not available locally; proof written out in the file.)
+* `Step.lean`, **`faltings_step`** ([BC, Ex. 13.7.4 (4)–(6)]): for `F ⊆ F'`, `x ∈ O_F[z]`,
+  `F'(x) = F'(z)`, and `‖G'(z)‖ ≤ ‖p‖ ‖g'(z)‖`: `‖f'(x)‖² ≤ ‖g'(z)‖² max(‖f'(x)‖, ‖p‖)`
+  (`2(δ_n − δ_{n+1}) ≥ min(δ_n, 1)`). Kernel estimate: `G ∣ f ∘ h` gives `f'(x) h'(z) ∈ G'(z) O`;
+  cokernel estimate: Euler gives `e = f'(x)/g'(z)`, `e z ∈ O_{F'}[x]`, and differentiating
+  `q₁∘h − X q₂∘h` gives `e ∈ h'(z) O + g'(z) O`.
+* `Cyclo.lean` ([BC, Ex. 13.7.4 (3)], `Ω_{A_n/A_{n−1}} ≅ A_n/p`): `O_{ℚ_p(ζ)} = O_{ℚ_p(ζ^p)}[ζ]`,
+  minimal polynomial `X^p − ζ^p` (`mp_zeta`), and `cyc_transitivity` (`‖G'(z)‖ ≤ ‖p‖‖g'(z)‖`, via
+  `Tr_{F(z)/F} = Tr_{F'/F} ∘ Tr_{F'(z)/F'}` and Euler for `ζ` and `z`).
+* `Tower.lean`: `a_m = ‖g_m'(z_m)‖ → 1` (`tendsto_one_of_step`) along `L_{m+1} = L_m F_{m+1}`;
+  **`exists_trace_large`**: `‖Tr_{L_m/F_m}(u)‖ ≥ ρ` for some `u ∈ O_{L_m}`, any `ρ < 1`, `m ≫ 0`.
+* `TraceOne.lean` ([BC, Ex. 13.7.2], descent): the minimal polynomial of `θ` over `K_∞` lives over
+  `N_m = K(μ_{p^{m+1}})` for `m ≫ 0`; **`exists_trace_one`**: `α ∈ N_m(θ)`, `‖α‖ ≤ 2`,
+  `∑_σ σ(α) = 1`; `exists_extend`: the embeddings `σ` lift to `Gal(ℚ̄_p/K_∞)`.
+* `H1.lean` ([BC, proof of Lemma 14.1.3] and the standard averaging argument): `exists_approx`
+  (`B = ∑ σ(α) c(τ_σ)`, `‖c + dB‖ ≤ 2η`) and **`exists_coboundary`**:
+  `H¹_cont(Gal(ℚ̄_p/K_∞), ℂ_p) = 0`.
 
 ## PH2. Hodge–Tate representations — wip (core done)
 
@@ -142,7 +165,7 @@ consequence ([BC, Lemma 14.1.3], axiom (TS1)) `H¹(G_{K_∞}, ℂ_p) = 0`.
 * **done** `HodgeTate/Dual.lean`: `isHodgeTate_dual` (via `IsBaseChange.toDualBaseChange` and dual eigenbases).
 * **done** `HodgeTate/Tensor.lean`: `isHodgeTate_tprod` (via `AlgebraTensorModule.distribBaseChange`).
 * **planned** *existence* of splittings
-  for distinct weights (needs `H¹(G_L, ℂ_p(j)) = 0`, PH1.5).
+  for distinct weights (input now available: `subsingleton_H1_twist`, PH1.5).
 
 ## PH3. Finite flat group schemes, p-divisible groups, Tate's theorem — wip (foundations)
 
@@ -179,7 +202,6 @@ Next steps, in order:
    `GroupScheme/Constant.lean` (`constHopf`) and `FFGroupScheme.diag`. Estimate 1–2k lines.
 2. **Connected–étale sequence** over a henselian local ring (`O_K`): idempotent decomposition of
    `A ⊗ k`, lifting idempotents; needs étale = separable residue algebra. Estimate 2–4k lines.
-3. **PH1.AE** (Faltings' route, see above) to obtain Tate's `H¹(G_K, ℂ_p(j))` from the
-   `Γ_K`-statements now done for all finite `K` (`TateSen/H1K.lean`, `TateSen/H1KZero.lean`)
-   by inflation–restriction (`Cohomology/ContH1.lean`).
-4. Existence of splittings for distinct Hodge–Tate weights (PH2), once 3 is done.
+3. ~~PH1.AE~~ **done** (2026-10-17, `AlmostEtale/`, `TateSen/TateH1.lean`).
+4. Existence of splittings for distinct Hodge–Tate weights (PH2), now unblocked by
+   `subsingleton_H1_twist`.

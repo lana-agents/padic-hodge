@@ -10,7 +10,7 @@ logarithm `PadicLogVolume.padicLog`.
 
 ## Status
 
-Phase PH0 (skeleton), the `H⁰` part of PH1 (all twists), and the core of PH2 (see `Blueprint.md`):
+Phase PH0 (skeleton), PH1 (Tate's `H⁰` and `H¹` of `ℂ_p(j)`, including almost étaleness), and the core of PH2 (see `Blueprint.md`):
 
 * `PadicHodge/Galois/Basic.lean`: the Galois group `G_L = PadicAlgCl p ≃ₐ[L] PadicAlgCl p`
   of an intermediate field `L` of `ℚ̄_p/ℚ_p` acts on `ℂ_[p]` by isometric continuous ring
@@ -38,8 +38,18 @@ Phase PH0 (skeleton), the `H⁰` part of PH1 (all twists), and the core of PH2 (
   and the logarithm of the cyclotomic character (`Cyclotomic/LogChi.lean`, reusing
   `padic-log-volume`). For finite `K / ℚ_p`: `H¹(Gal(K_∞/K), \hat K_∞(j)) = 0` (`j ≠ 0`) and
   `≅ K` (`j = 0`) (`TateSen/H1K.lean`, `TateSen/H1KZero.lean`, via coordinates on `\hat K_∞`
-  over `\hat F_∞`, `TateSen/Coord.lean`). The remaining input for Tate's `H¹(G_K, ℂ_p(j))` is almost étaleness
-  (`Blueprint.md`, PH1.AE).
+  over `\hat F_∞`, `TateSen/Coord.lean`).
+* `PadicHodge/AlmostEtale/`: **Tate's almost-étaleness theorem** for `K_∞ = K(μ_{p^∞})` via
+  Faltings' commutative-algebra route ([BC, Exercise 13.7.4], `d = 0`), with explicit monogenic
+  generators instead of Kähler differentials: Euler's lemma for the trace dual of `O_F[z]`
+  (`Euler.lean`), `O_L = ℤ_p[z]` for finite `L/ℚ_p` (`Mono.lean`), Faltings' inductive step
+  `‖a‖² ≤ ‖b‖² max(‖a‖, ‖p‖)` (`Step.lean`), the cyclotomic input `O_{F_{n+1}} = O_{F_n}[ζ]`,
+  `𝔇 = (p)` and transitivity of the different (`Cyclo.lean`), `δ_n → 0` and the trace estimate
+  (`Tower.lean`, `exists_trace_large`), descent to finite layers (`TraceOne.lean`,
+  `exists_trace_one`), and **`H¹(Gal(ℚ̄_p/K_∞), ℂ_p) = 0`** (`H1.lean`, `exists_coboundary`).
+* `PadicHodge/TateSen/TateH1.lean`: **Tate's theorem** for finite `K/ℚ_p`:
+  `H¹_cont(G_K, ℂ_p(j)) = 0` for `j ≠ 0` (`subsingleton_H1_twist`) and
+  `H1ZeroEquiv : K ≃ₗ[ℚ_p] H¹_cont(G_K, ℂ_p)`, `s ↦ [s log χ]` (`finrank_H1_zero`).
 
 * `PadicHodge/GroupScheme/`: finite flat group schemes (Hopf form), `p`-divisible groups, Tate
   modules, `μ_{p^∞}`, and `T_p μ_{p^∞} ≅ ℤ_p(1)` (`tateMuZpEquiv`, `tateMuZpEquiv_gal`).
