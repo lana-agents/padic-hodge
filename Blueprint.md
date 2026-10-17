@@ -166,3 +166,20 @@ consequence ([BC, Lemma 14.1.3], axiom (TS1)) `H¹(G_{K_∞}, ℂ_p) = 0`.
   connected–étale sequence over `O_K`, formal Lie groups;
   Tate's Hodge–Tate decomposition of `T_p G ⊗ ℂ_p` and full faithfulness ([Tate] §4, Thm. 4;
   [Tate] not available locally, statements as quoted in [LocAn] and [BC]); these need PH1.5.
+
+## Hand-off (2026-10-17)
+
+Next steps, in order:
+
+1. **Cartier duality** (PH3): for a finite free commutative cocommutative Hopf algebra `A`, the
+   dual `A^∨ = Hom_R(A, R)` is again one: algebra structure = convolution (Mathlib
+   `WithConv`, `Coalgebra/Convolution.lean`), coalgebra structure = transpose of multiplication,
+   which needs `(A ⊗ A)^∨ ≅ A^∨ ⊗ A^∨` for finite free `A` (`TensorProduct.dualDistribEquiv`).
+   Points: `G^∨(S) = Hom_{S-gp}(G_S, 𝔾_m)`. Test case: `D(M)^∨ ≅ (M^∨)_R` against
+   `GroupScheme/Constant.lean` (`constHopf`) and `FFGroupScheme.diag`. Estimate 1–2k lines.
+2. **Connected–étale sequence** over a henselian local ring (`O_K`): idempotent decomposition of
+   `A ⊗ k`, lifting idempotents; needs étale = separable residue algebra. Estimate 2–4k lines.
+3. **PH1.AE** (Faltings' route, see above) to obtain Tate's `H¹(G_K, ℂ_p(j))` from the
+   `Γ_K`-statements now done for all finite `K` (`TateSen/H1K.lean`, `TateSen/H1KZero.lean`)
+   by inflation–restriction (`Cohomology/ContH1.lean`).
+4. Existence of splittings for distinct Hodge–Tate weights (PH2), once 3 is done.
