@@ -45,6 +45,9 @@ status:
     - "PadicHodge.IsHodgeTate, PadicHodge.isHodgeTate_iff_exists_basis: Hodge-Tate representations and the Hodge-Tate decomposition"
     - "PadicHodge.isHodgeTate_of_exact: sub- and quotient representations of Hodge-Tate representations are Hodge-Tate"
     - "PadicHodge.eq_zero_of_twist_equivariant: Hom_G(C_p(a), C_p(b)) = 0 for a != b"
+    - "PadicHodge.isHodgeTate_dual, PadicHodge.isHodgeTate_tprod, PadicHodge.htWeights: duals, tensor products, Hodge-Tate weights"
+    - "PadicHodge.ContH1.H1, PadicHodge.ContH1.inf_injective, PadicHodge.ContH1.exists_inf_of_res_eq_zero: continuous H^1 and inflation-restriction"
+    - "PadicHodge.subsingleton_H1_quotient_twist: H^1(Gal(Q_p(mu_p^inf)/Q_p), completion of Q_p(mu_p^inf)(j)) = 0 for j != 0"
 
 automation:
   methods:

@@ -12,6 +12,9 @@ import PadicHodge.Cyclotomic.Trace
 import PadicHodge.Cyclotomic.Vanishing
 import PadicHodge.Galois.Basic
 import PadicHodge.Galois.Continuity
+import PadicHodge.GroupScheme.FiniteFlat
+import PadicHodge.GroupScheme.Mu
+import PadicHodge.GroupScheme.PDivisible
 import PadicHodge.HodgeTate.Basic
 import PadicHodge.HodgeTate.Dual
 import PadicHodge.HodgeTate.SerreTate

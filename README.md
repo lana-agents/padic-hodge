@@ -24,7 +24,14 @@ Phase PH0 (skeleton), the `H⁰` part of PH1 (all twists), and the core of PH2 (
   estimates uniform in the level, and the norm trick from `G_{ℚ_p}` to `G_L`.
 * `PadicHodge/HodgeTate/`: Hodge–Tate representations: the Serre–Tate lemma, `D_q(V)`,
   `IsHodgeTate`, the Hodge–Tate decomposition criterion, stability under sub- and quotient
-  representations, and `Hom_{G_L}(ℂ_p(a), ℂ_p(b)) = 0` for `a ≠ b`.
+  representations, and `Hom_{G_L}(ℂ_p(a), ℂ_p(b)) = 0` for `a ≠ b`; duals and tensor products
+  (`isHodgeTate_dual`, `isHodgeTate_tprod`); Hodge–Tate weights (`htWeights`).
+* `PadicHodge/Cohomology/ContH1.lean`: continuous `H¹` via crossed homomorphisms, restriction,
+  inflation, degree-one inflation–restriction, finite-index averaging.
+* `PadicHodge/TateSen/H1Gamma*.lean`: `H¹(Γ, (ℂ_p(j))^{H}) = 0` for `j ≠ 0` over `ℚ_p`
+  (`Γ = Gal(ℚ_p(μ_{p^∞})/ℚ_p)`), from the uniform solution of `χ(γ)^j γ m − m = z` on the
+  completion of `ℚ_p(μ_{p^∞})` (`exists_twist_eq`). The remaining input for Tate's
+  `H¹(G_K, ℂ_p(j))` is almost étaleness (`Blueprint.md`, PH1.AE).
 
 No `sorry`, no `axiom`. All builds use `lake build --wfail`.
 

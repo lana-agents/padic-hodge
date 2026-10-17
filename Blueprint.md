@@ -124,4 +124,16 @@ consequence ([BC, Lemma 14.1.3], axiom (TS1)) `H¹(G_{K_∞}, ℂ_p) = 0`.
 * **planned** *existence* of splittings
   for distinct weights (needs `H¹(G_L, ℂ_p(j)) = 0`, PH1.5).
 
-## PH3. Finite flat group schemes, p-divisible groups, Tate's theorem — planned
+## PH3. Finite flat group schemes, p-divisible groups, Tate's theorem — wip (foundations)
+
+* **done** `GroupScheme/FiniteFlat.lean`: `FFGroupScheme R` (finite free commutative and
+  cocommutative Hopf algebras, [BC, Def. 7.1.6]), `order`, `points` with its commutative group
+  structure (convolution; inverse via the antipode), homomorphisms and `Hom.mapPoints`,
+  diagonalizable groups `diag M` (`order_diag`, `diagPointsEquiv : D(M)(S) ≃* Hom(M, S)`).
+* **done** `GroupScheme/PDivisible.lean`: `PDivGroup R p` ([BC, Def. 7.2.1], kernel condition
+  on points for all `R`-algebras, closed immersions), `TateModule`.
+* **done** `GroupScheme/Mu.lean`: `muPDiv R p = μ_{p^∞}` of height `1`.
+* **planned** Cartier duality (dual Hopf algebra of a finite free Hopf algebra), constant group
+  schemes, connected–étale sequence over `O_K`, formal Lie groups, `T_p μ_{p^∞} = ℤ_p(1)`;
+  Tate's Hodge–Tate decomposition of `T_p G ⊗ ℂ_p` and full faithfulness ([Tate] §4, Thm. 4;
+  [Tate] not available locally, statements as quoted in [LocAn] and [BC]); these need PH1.5.
