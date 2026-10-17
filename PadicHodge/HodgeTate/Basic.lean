@@ -421,4 +421,40 @@ theorem eq_zero_of_twist_equivariant {a b : ℤ} (hab : a ≠ b) (f : ℂ_[p] �
 
 end Hom
 
+section Weights
+
+variable {L} [FiniteDimensional ℚ_[p] L] {V : Type*} [AddCommGroup V] [Module ℚ_[p] V]
+  [FiniteDimensional ℚ_[p] V] (ρ : Representation ℚ_[p] (PadicAlgCl p ≃ₐ[L] PadicAlgCl p) V)
+
+/-- The multiset of Hodge–Tate weights: `q` with multiplicity `dim_L D_q(V)` (the convention of
+[BC, §2.3]: `ℂ_p(q)` has the unique weight `-q`). -/
+def htWeights : Multiset ℤ :=
+  ∑ q ∈ (finite_support_DHT ρ).toFinset, Multiset.replicate (finrank L (DHT ρ q)) q
+
+theorem count_htWeights (q : ℤ) : (htWeights ρ).count q = finrank L (DHT ρ q) := by
+  classical
+  rw [htWeights, Multiset.count_sum']
+  by_cases hq : q ∈ (finite_support_DHT ρ).toFinset
+  · rw [Finset.sum_eq_single_of_mem q hq]
+    · rw [Multiset.count_replicate_self]
+    · intro b _ hb
+      rw [Multiset.count_replicate, if_neg hb]
+  · rw [Finset.sum_eq_zero]
+    · simp only [Set.Finite.mem_toFinset, Function.mem_support, ne_eq, not_not] at hq
+      exact hq.symm
+    · intro b hb
+      rw [Multiset.count_replicate, if_neg]
+      rintro rfl; exact hq hb
+
+theorem card_htWeights : Multiset.card (htWeights ρ) = htDim ρ := by
+  rw [htWeights, Multiset.card_sum,
+    htDim_eq_sum ρ (S := (finite_support_DHT ρ).toFinset) (by simp)]
+  simp only [Multiset.card_replicate]
+
+theorem isHodgeTate_iff_card_htWeights :
+    IsHodgeTate ρ ↔ Multiset.card (htWeights ρ) = finrank ℚ_[p] V := by
+  rw [card_htWeights]; rfl
+
+end Weights
+
 end PadicHodge

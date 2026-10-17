@@ -74,9 +74,14 @@ Lake project `PadicHodge`, Mathlib only, `--wfail`, `mk_all` check (`.orchestra/
      `coboundaries`, `H1`), restriction, inflation from `G ⧸ S` with values in `M^S`, and the
      inflation–restriction exact sequence in degree one (`inf_injective`, `res_comp_inf`,
      `exists_inf_of_res_eq_zero`, the last assuming continuous orbit maps).
-   * **planned** (iii) for `K = ℚ_p`: normalised traces `R_n` on `ℚ_p(μ_{p^∞})`, extension to the
-     completion, `γ − 1` invertible on `ker R_n`, `H¹(Γ, \hat F_∞(j)) = 0` for `j ≠ 0` and
-     `= ℚ_p` for `j = 0`; then general finite `K` via linear disjointness of `K_n` and `F_n`.
+   * **done** (iii) for `K = ℚ_p`, `j ≠ 0`: `Galois/Continuity.lean` (orbit maps continuous),
+     `Cyclotomic/Solve.lean` (`norm_le_of_twist`: `‖y‖ ≤ C‖λγy − y‖` uniformly on
+     `ℚ_p(μ_{p^M})`; `exists_twist_eq`: `λγ − 1` surjective on the completion),
+     `ContH1.mk_eq_zero_of_vanish` (finite-index averaging), `TateSen/H1Gamma*.lean`:
+     `subsingleton_H1_quotient_twist : H¹(Γ, (ℂ_p(j))^H) = 0` for `j ≠ 0`
+     (`Γ = G_{ℚ_p}/H`, `H = G_{ℚ_p(μ_{p^∞})}`).
+   * **planned** `j = 0` (`H¹(Γ, \hat F_∞) ≅ ℚ_p`), and general finite `K` via linear
+     disjointness of `K_n` and `F_n` for large `n`.
 
 ### PH1.AE — almost étaleness of `K_∞ = K(μ_{p^∞})` (separate milestone, not started)
 
@@ -113,7 +118,8 @@ consequence ([BC, Lemma 14.1.3], axiom (TS1)) `H¹(G_{K_∞}, ℂ_p) = 0`.
   `isHodgeTate_of_exact` (sub and quotient representations, [BC, Prop. 2.4.4]);
   `eq_zero_of_twist_equivariant` (`Hom_{G_L}(ℂ_p(a), ℂ_p(b)) = 0` for `a ≠ b`; this gives the
   *uniqueness* of splittings of extensions with distinct weights).
-* **planned** duals and tensor products; `htWeights` as a multiset; *existence* of splittings
+* **done** `htWeights` (multiset of Hodge–Tate weights, `count_htWeights`, `card_htWeights`).
+* **planned** duals and tensor products; *existence* of splittings
   for distinct weights (needs `H¹(G_L, ℂ_p(j)) = 0`, PH1.5).
 
 ## PH3. Finite flat group schemes, p-divisible groups, Tate's theorem — planned

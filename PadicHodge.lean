@@ -14,5 +14,7 @@ import PadicHodge.Galois.Basic
 import PadicHodge.Galois.Continuity
 import PadicHodge.HodgeTate.Basic
 import PadicHodge.HodgeTate.SerreTate
+import PadicHodge.TateSen.H1Gamma
+import PadicHodge.TateSen.H1GammaMain
 import PadicHodge.TateSen.Invariants
 import PadicHodge.TateSen.Twist
