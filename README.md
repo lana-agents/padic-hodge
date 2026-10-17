@@ -41,6 +41,9 @@ Phase PH0 (skeleton), the `H⁰` part of PH1 (all twists), and the core of PH2 (
   over `\hat F_∞`, `TateSen/Coord.lean`). The remaining input for Tate's `H¹(G_K, ℂ_p(j))` is almost étaleness
   (`Blueprint.md`, PH1.AE).
 
+* `PadicHodge/GroupScheme/`: finite flat group schemes (Hopf form), `p`-divisible groups, Tate
+  modules, `μ_{p^∞}`, and `T_p μ_{p^∞} ≅ ℤ_p(1)` (`tateMuZpEquiv`, `tateMuZpEquiv_gal`).
+
 No `sorry`, no `axiom`. All builds use `lake build --wfail`.
 
 ## Reused Mathlib material

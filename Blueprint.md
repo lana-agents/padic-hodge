@@ -153,7 +153,12 @@ consequence ([BC, Lemma 14.1.3], axiom (TS1)) `H¹(G_{K_∞}, ℂ_p) = 0`.
 * **done** `GroupScheme/PDivisible.lean`: `PDivGroup R p` ([BC, Def. 7.2.1], kernel condition
   on points for all `R`-algebras, closed immersions), `TateModule`.
 * **done** `GroupScheme/Mu.lean`: `muPDiv R p = μ_{p^∞}` of height `1`.
+* **done** `GroupScheme/TateMu.lean`: `muPointsEquiv : μ_{p^v}(S) ≃* rootsOfUnity (p^v) S`,
+  `tateMuEquiv : T_p μ_{p^∞}(S) ≃* RootSys p S` (compatible systems of `p`-power roots of unity).
+* **done** `GroupScheme/TateMuZp.lean`: **`T_p μ_{p^∞} ≅ ℤ_p(1)`**: `tateMuZpEquiv :
+  T_p μ_{p^∞}(ℚ̄_p) ≃* ℤ_p` (via a compatible system `ε` of primitive roots, `eps`) and
+  `tateMuZpEquiv_gal`: `σ` acts by `χ(σ)`.
 * **planned** Cartier duality (dual Hopf algebra of a finite free Hopf algebra), constant group
-  schemes, connected–étale sequence over `O_K`, formal Lie groups, `T_p μ_{p^∞} = ℤ_p(1)`;
+  schemes, connected–étale sequence over `O_K`, formal Lie groups;
   Tate's Hodge–Tate decomposition of `T_p G ⊗ ℂ_p` and full faithfulness ([Tate] §4, Thm. 4;
   [Tate] not available locally, statements as quoted in [LocAn] and [BC]); these need PH1.5.

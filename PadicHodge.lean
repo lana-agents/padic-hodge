@@ -17,6 +17,8 @@ import PadicHodge.Galois.Continuity
 import PadicHodge.GroupScheme.FiniteFlat
 import PadicHodge.GroupScheme.Mu
 import PadicHodge.GroupScheme.PDivisible
+import PadicHodge.GroupScheme.TateMu
+import PadicHodge.GroupScheme.TateMuZp
 import PadicHodge.HodgeTate.Basic
 import PadicHodge.HodgeTate.Dual
 import PadicHodge.HodgeTate.SerreTate
