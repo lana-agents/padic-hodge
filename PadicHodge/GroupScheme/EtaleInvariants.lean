@@ -34,9 +34,10 @@ connected component `π : A → A⁰` (`GroupScheme/Connected.lean`). The coordi
 * constant groups: `e₀ = e_1` (`const_idemConn`), `A^{et} = A` (`etaleInvariants_const`) and
   `|M_R⁰| = 1` (`order_connectedComponent_const`).
 
-**Open** (not done here): `Δ(A^{et}) ⊆ A^{et} ⊗ A^{et}` (needs flatness of `A^{et}`), that
-`A^{et}` is finite free and étale over `R`, that `A` is faithfully flat over `A^{et}` with
-`A ⊗_{A^{et}} R = A⁰`, and hence the exact sequence `0 → G⁰ → G → G^{et} → 0`.
+Over a complete local PID, `GroupScheme/EtaleQuotient.lean` shows `Δ(A^{et}) ⊆ A^{et} ⊗ A^{et}`,
+that `A^{et}` is a finite free sub-Hopf algebra, and defines `G^{et}`. **Open**: that `A^{et}` is
+étale over `R`, that `A` is faithfully flat over `A^{et}` with `A ⊗_{A^{et}} R = A⁰`, and hence
+the exact sequence `0 → G⁰ → G → G^{et} → 0`.
 -/
 
 noncomputable section
