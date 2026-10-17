@@ -28,6 +28,8 @@ import PadicHodge.GroupScheme.CartierDouble
 import PadicHodge.GroupScheme.CartierPairing
 import PadicHodge.GroupScheme.Connected
 import PadicHodge.GroupScheme.ConnectedIdempotent
+import PadicHodge.GroupScheme.ConstPDiv
+import PadicHodge.GroupScheme.ConstPDivMap
 import PadicHodge.GroupScheme.Constant
 import PadicHodge.GroupScheme.EtaleInvariants
 import PadicHodge.GroupScheme.EtaleQuotient
