@@ -191,8 +191,26 @@ in place of Kähler differentials (all rings of integers here are monogenic), ev
   7.1.7(1)]): the Hopf algebra `constHopf` on `M → R` (`Δ e_k = ∑_m e_m ⊗ e_{m⁻¹k}`, antipode
   `f ↦ f ∘ (·)⁻¹`), cocommutative; `FFGroupScheme.const`, `order_const = |M|`;
   `constPointsEquiv : M ≃* M_R(S)` for a domain `S`.
-* **planned** Cartier duality (dual Hopf algebra of a finite free Hopf algebra; `D(M)^∨ = M^∨_R`),
-  connected–étale sequence over `O_K`, formal Lie groups;
+* **done** `GroupScheme/Cartier.lean`: **Cartier duality** ([BC, Exercise 12.5.3 (3), (4)]): for
+  `A` finite free, commutative and cocommutative, `A^∨ = Cartier.Dual R A = WithConv (A →ₗ R)`
+  (convolution product, unit `ε`) with comultiplication the transpose of `m` read through
+  `ev2 : A^∨ ⊗ A^∨ ≅ (A ⊗ A)^∨` (`dualDistribEquiv`), counit `f ↦ f(1)`, antipode `f ↦ f ∘ S`:
+  `instHopfAlgebra`, `instIsCocomm`, free and finite; `FFGroupScheme.dual`, `order_dual`. All
+  axioms are checked after the injective evaluations `ev2`, `ev3` (on `A ⊗ A`, `A ⊗ (A ⊗ A)`).
+* **done** `GroupScheme/CartierDouble.lean`: double duality `Cartier.evEquiv : A ≃ₐc[R] A^∨∨`
+  ([BC, Ex. 12.5.3 (6)]), `FFGroupScheme.dualDualIso`.
+* **done** `GroupScheme/CartierDiag.lean`: test case `D(M)^∨ ≅ M_R` (`dualDiagEquiv`,
+  `FFGroupScheme.dualDiagIso : (const R M).A ≃ₐc[R] (diag R M).dual.A`; with double duality also
+  `M_R^∨ ≅ D(M)`; [BC, Ex. 12.5.3 (1)] is `(ℤ/n)_R^∨ = μ_n`). Note: the dual of `D(M)` is the
+  constant group on `M` itself (the earlier plan's "`M^∨_R`" was a typo).
+  Caveat: Mathlib has a *different* global `Coalgebra` instance on `M → R` (the product coalgebra,
+  `Pi.instCoalgebraStruct`); statements about `M_R` must be phrased via `(const R M).A`.
+* **done** `HodgeTate/Character.lean`, `GroupScheme/TateMuHT.lean`: `ℚ_p(j) = charRep L j` is
+  Hodge–Tate with `htWeights = {-j}`; `V_p μ_{p^∞} ≅ ℚ_p(1)` (`tateMu_charRep`), so
+  `T_p μ_{p^∞} ⊗ ℂ_p ≅ ℂ_p(1)` (`isHodgeTate_tateMu`, `htWeights_tateMu = {-1}`): the first case of
+  Tate's Hodge–Tate decomposition.
+* **planned** Cartier pairing on points (`G^∨(S) = Hom(G_S, 𝔾_m)`), Cartier dual of a
+  `p`-divisible group, connected–étale sequence over `O_K`, formal Lie groups;
   Tate's Hodge–Tate decomposition of `T_p G ⊗ ℂ_p` and full faithfulness ([Tate] §4, Thm. 4;
   [Tate] not available locally, statements as quoted in [LocAn] and [BC]); these need PH1.5.
 

@@ -55,6 +55,9 @@ Phase PH0 (skeleton), PH1 (Tate's `H⁰` and `H¹` of `ℂ_p(j)`, including almo
 
 * `PadicHodge/GroupScheme/`: finite flat group schemes (Hopf form), `p`-divisible groups, Tate
   modules, `μ_{p^∞}`, and `T_p μ_{p^∞} ≅ ℤ_p(1)` (`tateMuZpEquiv`, `tateMuZpEquiv_gal`).
+  **Cartier duality** (`Cartier.lean`: the dual Hopf algebra `A^∨`, `FFGroupScheme.dual`;
+  `CartierDouble.lean`: `G ≅ G^∨∨`; `CartierDiag.lean`: `D(M)^∨ ≅ M_R`); `ℚ_p(j)` is Hodge–Tate of
+  weight `-j` (`HodgeTate/Character.lean`), hence `T_p μ_{p^∞} ⊗ ℂ_p ≅ ℂ_p(1)` (`TateMuHT.lean`).
 
 No `sorry`, no `axiom`. All builds use `lake build --wfail`.
 
