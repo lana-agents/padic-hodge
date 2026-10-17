@@ -119,7 +119,8 @@ consequence ([BC, Lemma 14.1.3], axiom (TS1)) `H¹(G_{K_∞}, ℂ_p) = 0`.
   `eq_zero_of_twist_equivariant` (`Hom_{G_L}(ℂ_p(a), ℂ_p(b)) = 0` for `a ≠ b`; this gives the
   *uniqueness* of splittings of extensions with distinct weights).
 * **done** `htWeights` (multiset of Hodge–Tate weights, `count_htWeights`, `card_htWeights`).
-* **planned** duals and tensor products; *existence* of splittings
+* **done** `HodgeTate/Dual.lean`: `isHodgeTate_dual` (via `IsBaseChange.toDualBaseChange` and dual eigenbases).
+* **planned** tensor products; *existence* of splittings
   for distinct weights (needs `H¹(G_L, ℂ_p(j)) = 0`, PH1.5).
 
 ## PH3. Finite flat group schemes, p-divisible groups, Tate's theorem — planned
