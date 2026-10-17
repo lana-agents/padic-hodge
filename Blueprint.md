@@ -187,6 +187,10 @@ in place of Kähler differentials (all rings of integers here are monogenic), ev
   bialgebra map, `homOfPoints`); Tate module points are `quot`-compatible systems
   (`TateModule.val_eq_quot`); morphisms `PDivGroup.Hom` (levelwise, compatible with `i_v`), `id`,
   `comp`, `quot_comm`, and the functor `Hom.mapTate : T_p G(S) →* T_p H(S)`.
+* **done** `GroupScheme/BaseChange.lean`: base change `G_S = Spec(S ⊗_R A)` (Mathlib's Hopf
+  structure on `S ⊗_R A`), `order_baseChange`, `baseChangePointsEquiv : G_S(T) ≃* G(T)` (natural),
+  `PDivGroup.baseChange` (same height; kernel condition transported), `baseChangeTateEquiv :
+  T_p(G_S)(T) ≃* T_p(G)(T)`, `Hom.baseChange` (compatible with `mapTate`).
 * **done** `GroupScheme/Mu.lean`: `muPDiv R p = μ_{p^∞}` of height `1`.
 * **done** `GroupScheme/TateMu.lean`: `muPointsEquiv : μ_{p^v}(S) ≃* rootsOfUnity (p^v) S`,
   `tateMuEquiv : T_p μ_{p^∞}(S) ≃* RootSys p S` (compatible systems of `p`-power roots of unity).

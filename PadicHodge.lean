@@ -22,6 +22,7 @@ import PadicHodge.Cyclotomic.Trace
 import PadicHodge.Cyclotomic.Vanishing
 import PadicHodge.Galois.Basic
 import PadicHodge.Galois.Continuity
+import PadicHodge.GroupScheme.BaseChange
 import PadicHodge.GroupScheme.Cartier
 import PadicHodge.GroupScheme.CartierDiag
 import PadicHodge.GroupScheme.CartierDouble
