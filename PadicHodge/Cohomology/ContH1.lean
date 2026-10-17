@@ -242,4 +242,49 @@ theorem exists_inf_of_res_eq_zero (hρ : ∀ m : M, Continuous fun g : G => ρ g
 
 end Inf
 
+section Finite
+
+variable {R G M : Type*} [Field R] [Group G] [TopologicalSpace G]
+  [AddCommGroup M] [Module R M] [TopologicalSpace M] [IsTopologicalAddGroup M]
+  [ContinuousConstSMul R M] (ρ : Representation R G M)
+
+/-- A cocycle vanishing on a subgroup `S` of finite index is a coboundary, provided `[G : S]` is
+invertible in `R` (averaging over `G ⧸ S`). -/
+theorem mk_eq_zero_of_vanish (S : Subgroup G) [S.FiniteIndex] (hS : (S.index : R) ≠ 0)
+    (f : cocycles ρ) (hf : ∀ s ∈ S, (f : G → M) s = 0) : mk ρ f = 0 := by
+  classical
+  letI : Fintype (G ⧸ S) := Subgroup.fintypeQuotientOfFiniteIndex
+  -- `f` is constant on left cosets
+  have hconst : ∀ g s, s ∈ S → (f : G → M) (g * s) = (f : G → M) g := by
+    intro g s hs
+    rw [f.2.2 g s, hf s hs, map_zero, add_zero]
+  set Φ : G ⧸ S → M := Quotient.lift (fun g => (f : G → M) g) (fun a b hab => by
+    have hab' : a⁻¹ * b ∈ S := QuotientGroup.leftRel_apply.mp hab
+    have := hconst a (a⁻¹ * b) hab'
+    rw [mul_inv_cancel_left] at this
+    exact this.symm) with hΦ
+  have hΦmk : ∀ g : G, Φ (g : G ⧸ S) = (f : G → M) g := fun g => rfl
+  set T := ∑ c, Φ c with hT
+  have hN : (Fintype.card (G ⧸ S) : R) = (S.index : R) := by
+    rw [Subgroup.index_eq_card, Nat.card_eq_fintype_card]
+  have key : ∀ g : G, (Fintype.card (G ⧸ S) : R) • (f : G → M) g = T - ρ g T := by
+    intro g
+    have h1 : ∑ c, Φ (g • c) = T := Fintype.sum_equiv (MulAction.toPerm g) _ _ (fun c => rfl)
+    have h2 : ∀ c, Φ (g • c) = (f : G → M) g + ρ g (Φ c) := by
+      intro c
+      induction c using QuotientGroup.induction_on with
+      | H a => rw [MulAction.Quotient.smul_mk, hΦmk, hΦmk, smul_eq_mul, f.2.2 g a]
+    simp only [h2, Finset.sum_add_distrib, Finset.sum_const, Finset.card_univ, ← map_sum] at h1
+    rw [← hT] at h1
+    rw [← Nat.cast_smul_eq_nsmul R] at h1
+    exact eq_sub_of_add_eq h1
+  rw [mk_eq_zero_iff]
+  refine ⟨-((S.index : R)⁻¹ • T), fun g => ?_⟩
+  have := key g
+  rw [hN] at this
+  rw [map_neg, map_smul, neg_sub_neg, ← smul_sub, ← this, smul_smul,
+    inv_mul_cancel₀ hS, one_smul]
+
+end Finite
+
 end PadicHodge.ContH1

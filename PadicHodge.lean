@@ -6,10 +6,12 @@ import PadicHodge.Cyclotomic.Character
 import PadicHodge.Cyclotomic.Core
 import PadicHodge.Cyclotomic.Fields
 import PadicHodge.Cyclotomic.Norms
+import PadicHodge.Cyclotomic.Solve
 import PadicHodge.Cyclotomic.Tower
 import PadicHodge.Cyclotomic.Trace
 import PadicHodge.Cyclotomic.Vanishing
 import PadicHodge.Galois.Basic
+import PadicHodge.Galois.Continuity
 import PadicHodge.HodgeTate.Basic
 import PadicHodge.HodgeTate.SerreTate
 import PadicHodge.TateSen.Invariants
