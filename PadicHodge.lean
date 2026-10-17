@@ -21,8 +21,10 @@ import PadicHodge.HodgeTate.Basic
 import PadicHodge.HodgeTate.Dual
 import PadicHodge.HodgeTate.SerreTate
 import PadicHodge.HodgeTate.Tensor
+import PadicHodge.TateSen.Coord
 import PadicHodge.TateSen.H1Gamma
 import PadicHodge.TateSen.H1GammaMain
 import PadicHodge.TateSen.H1GammaZero
+import PadicHodge.TateSen.H1K
 import PadicHodge.TateSen.Invariants
 import PadicHodge.TateSen.Twist
