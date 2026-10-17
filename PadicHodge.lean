@@ -36,6 +36,8 @@ import PadicHodge.GroupScheme.ConstPDiv
 import PadicHodge.GroupScheme.ConstPDivMap
 import PadicHodge.GroupScheme.ConstPDivTate
 import PadicHodge.GroupScheme.Constant
+import PadicHodge.GroupScheme.EtaleFrobenius
+import PadicHodge.GroupScheme.EtaleHT
 import PadicHodge.GroupScheme.EtaleInvariants
 import PadicHodge.GroupScheme.EtaleInvertible
 import PadicHodge.GroupScheme.EtalePoints
@@ -50,6 +52,7 @@ import PadicHodge.GroupScheme.PDivisible
 import PadicHodge.GroupScheme.PDivisibleHom
 import PadicHodge.GroupScheme.PDivisiblePoints
 import PadicHodge.GroupScheme.TateDual
+import PadicHodge.GroupScheme.TateDualRep
 import PadicHodge.GroupScheme.TateFree
 import PadicHodge.GroupScheme.TateMu
 import PadicHodge.GroupScheme.TateMuHT
@@ -57,6 +60,10 @@ import PadicHodge.GroupScheme.TateMuZp
 import PadicHodge.GroupScheme.TatePairing
 import PadicHodge.GroupScheme.TatePerfect
 import PadicHodge.GroupScheme.TateRep
+import PadicHodge.Hilbert90.Linear
+import PadicHodge.Hilbert90.Main
+import PadicHodge.Hilbert90.Matrix
+import PadicHodge.Hilbert90.Residue
 import PadicHodge.HodgeTate.Basic
 import PadicHodge.HodgeTate.Character
 import PadicHodge.HodgeTate.Dual
@@ -64,6 +71,7 @@ import PadicHodge.HodgeTate.FiniteImage
 import PadicHodge.HodgeTate.SerreTate
 import PadicHodge.HodgeTate.Splitting
 import PadicHodge.HodgeTate.Tensor
+import PadicHodge.HodgeTate.Trivialization
 import PadicHodge.TateSen.Coord
 import PadicHodge.TateSen.H1Gamma
 import PadicHodge.TateSen.H1GammaMain
