@@ -46,6 +46,7 @@ import PadicHodge.GroupScheme.PDivisibleHom
 import PadicHodge.GroupScheme.TateMu
 import PadicHodge.GroupScheme.TateMuHT
 import PadicHodge.GroupScheme.TateMuZp
+import PadicHodge.GroupScheme.TatePairing
 import PadicHodge.HodgeTate.Basic
 import PadicHodge.HodgeTate.Character
 import PadicHodge.HodgeTate.Dual

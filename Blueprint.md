@@ -275,6 +275,14 @@ in place of Kähler differentials (all rings of integers here are monogenic), ev
   under double duality (`pairing_symm`); values in `μ_n` if `n` kills `G(S)`
   (`cartierPairingBase_pow_eq_one`); naturality `⟨f φ, ψ⟩_H = ⟨φ, ψ ∘ (f^*)^∨⟩_G`
   (`pairing_mapPoints`, `Cartier.transposeAlgHom`). [Stix, §11.2.2] for the levelwise use.
+* **done** `GroupScheme/TatePairing.lean` ([Stix, §11.2.2], [Hong, Prop. 3.4.6]): dual
+  homomorphisms `Hom.dual` (transpose of a bialgebra map is a bialgebra map), naturality
+  `pairing_dual`, `pairing_postComp`; `DualTate G S = lim_v G_v^∨(S)` along `i_v^∨` (the Tate
+  module of the Cartier dual system); **`tatePairing : T_p G(S) →* DualTate G S →* RootSys p S`**
+  (levelwise Cartier pairings, compatible by naturality and `i_v ∘ quot_v = [p]`); over `ℚ_p`:
+  `tatePairingZp` with values in `ℤ_p`, biadditive, and **`⟨σx, σy⟩ = χ(σ)⟨x, y⟩`**
+  (`tatePairingZp_gal`), i.e. values in `ℤ_p(1)`. Open: perfectness (needs `G_v ⊗ K` étale in
+  characteristic `0` and `(G_v^∨)` a `p`-divisible group).
 * **planned** Cartier dual of a
   `p`-divisible group, rest of the connected–étale sequence, formal Lie groups;
   Tate's Hodge–Tate decomposition of `T_p G ⊗ ℂ_p` and full faithfulness ([Tate] §4, Thm. 4;
