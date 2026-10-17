@@ -36,6 +36,7 @@ import PadicHodge.GroupScheme.ConstPDivTate
 import PadicHodge.GroupScheme.Constant
 import PadicHodge.GroupScheme.EtaleInvariants
 import PadicHodge.GroupScheme.EtaleInvertible
+import PadicHodge.GroupScheme.EtalePoints
 import PadicHodge.GroupScheme.EtaleQuotient
 import PadicHodge.GroupScheme.EtaleQuotientEtale
 import PadicHodge.GroupScheme.EtaleQuotientFlat
