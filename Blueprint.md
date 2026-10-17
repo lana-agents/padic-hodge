@@ -301,7 +301,50 @@ in place of Kähler differentials (all rings of integers here are monogenic), ev
   Tate's Hodge–Tate decomposition of `T_p G ⊗ ℂ_p` and full faithfulness ([Tate] §4, Thm. 4;
   [Tate] not available locally, statements as quoted in [LocAn] and [BC]); these need PH1.5.
 
-## Hand-off (2026-10-17, second session)
+## Hand-off (2026-10-17, third session)
+
+Literature found (free, downloaded to `~/iut-scratch/lit/dl/padic-hodge/tate/`, not committed;
+see `references/README.md`): [Stix] (Heidelberg course notes, §11: Tate's proof of the
+Hodge–Tate decomposition after [Tate, §4] and Shatz) and [Hong] (Notes on p-adic Hodge theory,
+Ch. II §3.4–3.5: Hodge–Tate decomposition and Tate's full faithfulness, Thm. 3.5.4). [Tate]
+itself was not found freely.
+
+Done this session (all in `GroupScheme/`): `|G| = |G⁰|·|G^{et}|` (`EtaleQuotientOrder.lean`);
+Cartier pairing over `R`-algebras (`CartierPairingBase.lean`); quotient maps `G_{v+1} → G_v`,
+morphisms of `p`-divisible groups, `T_p` functor (`PDivisibleHom.lean`); base change
+(`BaseChange.lean`); dual homomorphisms and the Galois-equivariant Cartier pairing
+`T_p G × lim G_v^∨ → ℤ_p(1)` (`TatePairing.lean`); finite flat group schemes killed by an
+invertible integer are étale (`EtaleInvertible.lean`); `#G(K) = |G|` for étale `G` over a
+separably closed field, `#G_v(ℚ̄_p) = p^{hv}` (`EtalePoints.lean`); `quot_v` surjective on
+`ℚ̄_p`-points (`PDivisiblePoints.lean`). Next steps, in order:
+
+1. **Perfectness of the Cartier pairing over `ℚ̄_p`** ([Stix, §11.2.2], [Hong, Prop. 3.4.6]).
+   (a) Injectivity of `G^∨(K) → Hom(G(K), K^×)` for `G` étale over separably closed `K`: take
+   the basis `b_x = e⁻¹(δ_x)` of `A` from `equivPiOfIsSepClosed`; `⟨φ_y, ψ⟩ = ψ(b_y^*)`
+   (`pairing_eq_sum`), so `ψ` is determined. (b) `#Hom(M, K^×) ≤ #M` (Mathlib
+   `linearIndependent_monoidHom`). (c) `G^∨` killed by `n` when `G` is: for a group-like
+   `u ∈ S ⊗ A` (a character), `[n]^*(u) = u^n`; equivalently show `[n]_{G^∨} = ([n]_G)^∨`
+   (transpose of `μ^{(n)} ∘ Δ^{(n)}`), then `EtaleInvertible` gives `G_v^∨` étale over `ℚ_p`,
+   `#G_v^∨(ℚ̄_p) = p^{hv}` and the levelwise pairing is perfect by counting.
+2. **Cartier dual `p`-divisible group.** Show `(G_v^∨, quot_v^∨)` is a `PDivGroup`: closed
+   immersion = `quot_v^*` injective with torsion-free cokernel (over a PID `R`; over `ℚ_p`
+   from surjectivity on `ℚ̄_p`-points + étaleness), kernel condition = exactness of
+   `0 → G_1 → G_{v+1} → G_v → 0` (fppf; over a field: counting). Then
+   `DualTate G ≅ T_p(G^∨)` and `T_p(G^∨) ≅ Hom(T_p G, ℤ_p(1))` from 1.
+3. `T_p G(ℚ̄_p) ≅ ℤ_p^h`: surjectivity of `T_p G → G_v` from `quot_surjective_padicAlgCl`
+   (sequential lifting; beware the dependent indices `G (v + n)`), and the structure of
+   `G_v(ℚ̄_p)` (`#G_v[p^w] = p^{hw}`, hence `≅ (ℤ/p^v)^h`).
+4. Étale `p`-divisible groups over `O_K`: Hodge–Tate weight `0` needs Hilbert 90 for
+   `\hat{K^{ur}}` (`H¹(Gal(K^{ur}/K), GL_n(\hat{K^{ur}})) = 1`, successive approximation + Lang)
+   and unramifiedness of `T_p` (points over `O_{\hat{K^{ur}}}` lift uniquely).
+5. Formal Lie groups of connected `p`-divisible groups, the logarithm ([Stix, §11.3, Lemma 86,
+   Cor. 87]; [Hong, §3.3]), Tate's Theorem 91 / [Hong, Thm. 3.4.10] (`G(O_K) ≅ Hom_Γ(T_p G^∨,
+   1 + m_{ℂ_K})`, `t_G(K) ≅ Hom_Γ(T_p G^∨, ℂ_K)`), then the decomposition [Hong, Thm. 3.4.12]
+   using `isHodgeTate_of_exact_of_disjoint` (`HodgeTate/Splitting.lean`) and Tate's `H¹`
+   (`TateSen/TateH1.lean`); full faithfulness [Hong, Thm. 3.5.4] additionally needs the
+   discriminant formula [Hong, Prop. 3.5.1] (proof only sketched there; Haines' notes §2.3).
+
+## Hand-off (2026-10-17, second session; superseded)
 
 Done this session: Cartier duality (dual Hopf algebra, double duality, `D(M)^∨ ≅ M_R`), the
 connected component `G⁰` over a complete local ring and the `G⁰`-invariants `A^{et}`,

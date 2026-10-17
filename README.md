@@ -58,8 +58,13 @@ Phase PH0 (skeleton), PH1 (Tate's `H⁰` and `H¹` of `ℂ_p(j)`, including almo
   **Cartier duality** (`Cartier.lean`: the dual Hopf algebra `A^∨`, `FFGroupScheme.dual`;
   `CartierDouble.lean`: `G ≅ G^∨∨`; `CartierDiag.lean`: `D(M)^∨ ≅ M_R`); `ℚ_p(j)` is Hodge–Tate of
   weight `-j` (`HodgeTate/Character.lean`), hence `T_p μ_{p^∞} ⊗ ℂ_p ≅ ℂ_p(1)` (`TateMuHT.lean`).
-  Connected component `G⁰` over a complete local ring (`Connected*.lean`) and the
-  `G⁰`-invariant subalgebra (`EtaleInvariants.lean`).
+  Connected component `G⁰` over a complete local ring (`Connected*.lean`), the étale quotient
+  `G^{et}` and `|G| = |G⁰| · |G^{et}|` (`EtaleQuotient*.lean`); Cartier pairing over any
+  `R`-algebra (`CartierPairingBase.lean`); quotient maps, morphisms and base change of
+  `p`-divisible groups (`PDivisibleHom.lean`, `BaseChange.lean`); the Galois-equivariant pairing
+  `T_p G × T_p G^∨ → ℤ_p(1)` (`TatePairing.lean`); étaleness of group schemes killed by an
+  invertible integer and `#G_v(ℚ̄_p) = p^{hv}` (`EtaleInvertible.lean`, `EtalePoints.lean`,
+  `PDivisiblePoints.lean`).
 
 No `sorry`, no `axiom`. All builds use `lake build --wfail`.
 
