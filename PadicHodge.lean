@@ -25,6 +25,7 @@ import PadicHodge.Galois.Continuity
 import PadicHodge.GroupScheme.Cartier
 import PadicHodge.GroupScheme.CartierDiag
 import PadicHodge.GroupScheme.CartierDouble
+import PadicHodge.GroupScheme.CartierPairing
 import PadicHodge.GroupScheme.Connected
 import PadicHodge.GroupScheme.ConnectedIdempotent
 import PadicHodge.GroupScheme.Constant
