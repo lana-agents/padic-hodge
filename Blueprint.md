@@ -158,7 +158,11 @@ consequence ([BC, Lemma 14.1.3], axiom (TS1)) `H¹(G_{K_∞}, ℂ_p) = 0`.
 * **done** `GroupScheme/TateMuZp.lean`: **`T_p μ_{p^∞} ≅ ℤ_p(1)`**: `tateMuZpEquiv :
   T_p μ_{p^∞}(ℚ̄_p) ≃* ℤ_p` (via a compatible system `ε` of primitive roots, `eps`) and
   `tateMuZpEquiv_gal`: `σ` acts by `χ(σ)`.
-* **planned** Cartier duality (dual Hopf algebra of a finite free Hopf algebra), constant group
-  schemes, connected–étale sequence over `O_K`, formal Lie groups;
+* **done** `GroupScheme/Constant.lean`: constant group schemes `M_R = Spec R^M` ([BC, Example
+  7.1.7(1)]): the Hopf algebra `constHopf` on `M → R` (`Δ e_k = ∑_m e_m ⊗ e_{m⁻¹k}`, antipode
+  `f ↦ f ∘ (·)⁻¹`), cocommutative; `FFGroupScheme.const`, `order_const = |M|`;
+  `constPointsEquiv : M ≃* M_R(S)` for a domain `S`.
+* **planned** Cartier duality (dual Hopf algebra of a finite free Hopf algebra; `D(M)^∨ = M^∨_R`),
+  connected–étale sequence over `O_K`, formal Lie groups;
   Tate's Hodge–Tate decomposition of `T_p G ⊗ ℂ_p` and full faithfulness ([Tate] §4, Thm. 4;
   [Tate] not available locally, statements as quoted in [LocAn] and [BC]); these need PH1.5.

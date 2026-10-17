@@ -14,6 +14,7 @@ import PadicHodge.Cyclotomic.Trace
 import PadicHodge.Cyclotomic.Vanishing
 import PadicHodge.Galois.Basic
 import PadicHodge.Galois.Continuity
+import PadicHodge.GroupScheme.Constant
 import PadicHodge.GroupScheme.FiniteFlat
 import PadicHodge.GroupScheme.Mu
 import PadicHodge.GroupScheme.PDivisible
