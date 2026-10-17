@@ -38,7 +38,8 @@ is a sub-Hopf algebra of `A`, finite free over `R`, and define the étale quotie
 * `etaleQuotientHom_bijective_of_isEtale`: for étale `G`, `G → G^{et}` is an isomorphism.
 
 `GroupScheme/EtaleQuotientEtale.lean` shows that `G^{et}` is étale and that the kernel of
-`G → G^{et}` is `G⁰`. **Open**: faithful flatness of `A` over `A^{et}`, `|G| = |G⁰| · |G^{et}|`.
+`G → G^{et}` is `G⁰`, and `GroupScheme/EtaleQuotientFlat.lean` that `A` is faithfully flat over
+`A^{et}`. **Open**: `|G| = |G⁰| · |G^{et}|`.
 -/
 
 noncomputable section

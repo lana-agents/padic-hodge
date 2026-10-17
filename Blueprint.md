@@ -224,8 +224,14 @@ in place of Kähler differentials (all rings of integers here are monogenic), ev
   (A^{et}/ker ε) ≃ A⁰`); **`G` étale iff `G⁰` trivial** (`isEtale_iff`, `R` noetherian: formal
   unramifiedness by the lifting criterion and the group law, `h = f₁ f₂⁻¹` kills
   `ker ε = (ker ε)(1 - e₀)`; then Mathlib `Algebra.Etale.of_formallyUnramified_of_flat`);
-  **`G^{et}` étale** (`isEtale_etaleQuotient`, its `e₀` is `e₀`, `idemConn_etaleQuotient`).
-  Open: faithful flatness of `A` over `A^{et}`, `|G| = |G⁰| · |G^{et}|`.
+  **`G^{et}` étale** (`isEtale_etaleQuotient`, its `e₀` is `e₀`, `idemConn_etaleQuotient`);
+  `0 → G⁰(T) → G(T) → G^{et}(T)` exact for all `R`-algebras `T`
+  (`mapPoints_etaleQuotientHom_eq_one_iff`, `mapPoints_connectedComponentHom_injective`).
+* **done** `GroupScheme/EtaleQuotientFlat.lean`: **`A` faithfully flat over `A^{et}`**
+  (`faithfullyFlat_etaleInvariants`), via `flat_of_formallyUnramified` (an `S`-module flat over
+  `R` is flat over an unramified `R`-algebra `S`: the diagonal idempotent `δ ∈ S ⊗_R S` gives an
+  `S`-linear section `m ↦ δ(1 ⊗ m)` of `S ⊗_R M → M`) and going up. Open: `|G| = |G⁰| · |G^{et}|`
+  (plan in the module docstring: Galois isomorphism `A ⊗_{A^{et}} A ≅ A ⊗_R A⁰`, then ranks).
 * **done** `GroupScheme/Cartier.lean`: **Cartier duality** ([BC, Exercise 12.5.3 (3), (4)]): for
   `A` finite free, commutative and cocommutative, `A^∨ = Cartier.Dual R A = WithConv (A →ₗ R)`
   (convolution product, unit `ε`) with comultiplication the transpose of `m` read through
@@ -261,8 +267,8 @@ connected component `G⁰` over a complete local ring and the `G⁰`-invariants 
 `ℚ_p(j)` and `V_p μ_{p^∞}` Hodge–Tate. Next steps, in order:
 
 1. **Étale quotient** (`EtaleQuotient.lean`: `G^{et}` as an `FFGroupScheme` over a complete
-   local PID, `G^{et}` étale and `ker(G → G^{et}) = G⁰` are done): remaining is faithful
-   flatness of `A` over `A^{et}` (equivalently `|G| = |G⁰| · |G^{et}|`). Henselian version
+   local PID, `G^{et}` étale, `ker(G → G^{et}) = G⁰`, `A` faithfully flat over `A^{et}` are
+   done): remaining is `|G| = |G⁰| · |G^{et}|`, see `EtaleQuotientFlat.lean`. Henselian version
    needs idempotent lifting along finite algebras (Stacks 04GG), not in Mathlib.
 2. **Cartier pairing over `S`** (done over `R`, `CartierPairing.lean`): base change `S ⊗ A`;
    then `T_p(G^∨) ≅ Hom(T_p G, ℤ_p(1))` (needs the Cartier dual of a `p`-divisible group, i.e.
