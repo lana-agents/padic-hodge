@@ -258,8 +258,14 @@ in place of Kähler differentials (all rings of integers here are monogenic), ev
   `isGroupLikeElem_dual_iff` (`f ∈ A^∨` group-like iff `f` is an algebra map),
   `pointsEquivGroupLike : G(R) ≃* GroupLike(A^∨)`, `dualPointsEquivGroupLike :
   G^∨(R) ≃* GroupLike(A)` (characters of `G`), `cartierPairing : G(R) →* G^∨(R) →* R`.
-* **planned** Cartier pairing over `R`-algebras `S` (`G^∨(S) = Hom(G_S, 𝔾_m)`, base change
-  `S ⊗ A`), Cartier dual of a
+* **done** `GroupScheme/CartierPairingBase.lean`: **Cartier pairing over an `R`-algebra `S`**
+  `cartierPairingBase : G(S) →* G^∨(S) →* S`, `⟨φ, ψ⟩ = ∑ φ(e_i) ψ(e_i^*)` (`pairing_eq_sum`, any
+  basis). Basis-free: `θ : A^∨ ⊗ S ≃ Hom_R(A, S)` (Mathlib `dualTensorHomEquiv`) is multiplicative
+  for convolution (`theta_mul`), `⟨φ, ψ⟩ = (ψ ⊗ id)(θ⁻¹φ)`; multiplicativity in `ψ` from symmetry
+  under double duality (`pairing_symm`); values in `μ_n` if `n` kills `G(S)`
+  (`cartierPairingBase_pow_eq_one`); naturality `⟨f φ, ψ⟩_H = ⟨φ, ψ ∘ (f^*)^∨⟩_G`
+  (`pairing_mapPoints`, `Cartier.transposeAlgHom`). [Stix, §11.2.2] for the levelwise use.
+* **planned** Cartier dual of a
   `p`-divisible group, rest of the connected–étale sequence, formal Lie groups;
   Tate's Hodge–Tate decomposition of `T_p G ⊗ ℂ_p` and full faithfulness ([Tate] §4, Thm. 4;
   [Tate] not available locally, statements as quoted in [LocAn] and [BC]); these need PH1.5.
