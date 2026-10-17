@@ -66,11 +66,37 @@ Lake project `PadicHodge`, Mathlib only, `--wfail`, `mk_all` check (`.orchestra/
      by the norm trick over `G_{ℚ_p}/G_L` (`eq_zero_of_galCp_eq_chi_smul`).
    * `TateSen/Twist.lean`: `cpTwistRep L j` (`σ·c = χ(σ)^j σ(c)`),
      `cpTwistRep_invariants_eq_bot`, `H0CpTwistIso : H⁰_cont(G_L, ℂ_p(j)) ≅ 0`.
-5. **planned** `H¹(G_K, ℂ_p(j)) = 0` (`j ≠ 0`), `dim_K H¹(G_K, ℂ_p) = 1` ([BC, Thm. 2.2.7], second
-   half; [BC, §14.2–14.3]: needs `H¹(G_{K_∞}, ℂ_p) = 0` (almost étale descent / Tate's
-   ramification estimates for arbitrary finite extensions of `K_∞`), inflation–restriction for
-   continuous cochains, and `H¹(Γ, \hat K_∞(j))` via the normalised traces). Mathlib's
-   `continuousCohomology` has no description of `H¹` by crossed homomorphisms yet.
+5. **wip** `H¹(G_K, ℂ_p(j)) = 0` (`j ≠ 0`), `dim_K H¹(G_K, ℂ_p) = 1` ([BC, Thm. 2.2.7], second
+   half; [BC, §14]). Route: (i) `H¹(G_{K_∞}, ℂ_p) = 0` (almost étale, milestone PH1.AE below);
+   (ii) inflation–restriction; (iii) `H¹(Γ, \hat K_∞(j))` via normalised traces.
+   * **done** `Cohomology/ContH1.lean`: continuous `H¹` via crossed homomorphisms for a
+     representation of a topological group on a topological module (`ContH1.cocycles`,
+     `coboundaries`, `H1`), restriction, inflation from `G ⧸ S` with values in `M^S`, and the
+     inflation–restriction exact sequence in degree one (`inf_injective`, `res_comp_inf`,
+     `exists_inf_of_res_eq_zero`, the last assuming continuous orbit maps).
+   * **planned** (iii) for `K = ℚ_p`: normalised traces `R_n` on `ℚ_p(μ_{p^∞})`, extension to the
+     completion, `γ − 1` invertible on `ker R_n`, `H¹(Γ, \hat F_∞(j)) = 0` for `j ≠ 0` and
+     `= ℚ_p` for `j = 0`; then general finite `K` via linear disjointness of `K_n` and `F_n`.
+
+### PH1.AE — almost étaleness of `K_∞ = K(μ_{p^∞})` (separate milestone, not started)
+
+Statement ([BC, Thm. 13.1.2], Tate): for every finite `M / K_∞`, `Tr_{M/K_∞}(O_M) ⊇ m_{K_∞}`;
+consequence ([BC, Lemma 14.1.3], axiom (TS1)) `H¹(G_{K_∞}, ℂ_p) = 0`.
+
+* Tate's proof uses upper-numbering ramification groups, the Herbrand function, Hasse–Arf, the
+  integral formula for the different ([BC, Lemma 13.1.8]) and Serre's geometric local class field
+  theory ([BC, Lemma 13.1.6]); none of these is in Mathlib (only `ramificationGroup`, lower
+  numbering). Estimate ≥ 20k lines; not recommended.
+* **Planned route: Faltings' commutative-algebra proof** ([BC, Exercise 13.7.4], `d = 0`):
+  inputs: Kähler differentials `Ω_{B/A}` of finite extensions of complete DVRs of mixed
+  characteristic, `length_B Ω_{B/A} = length_B(B/𝔇_{B/A})` (Mathlib: `differentIdeal`, trace dual),
+  the exact sequence `0 → B_{n+1} ⊗ Ω_{A_{n+1}/A_n} → Ω_{B_{n+1}/A_n} → Ω_{B_{n+1}/A_{n+1}} → 0`,
+  elementary divisors over DVRs, the discriminant estimate `p^{δ_n−δ_{n+1}} B_{n+1} ⊆ B_n ⊗ A_{n+1}`,
+  and the induction `δ_n − δ_{n+1} ≥ β_n − (d+1)(δ_n − δ_{n+1})` giving `δ_n → 0`; for the
+  cyclotomic tower `Ω_{A_n/A_{n−1}} ≅ A_n/p` from `X^p − ζ_{p^{n−1}}`. Estimate **6–10k lines**.
+* Plus descent of finite extensions `M / K_∞` to finite layers `L_n` with `M = L_n K_∞` and
+  `L_m = L_n ⊗_{K_n} K_m` ([BC, Exercise 13.7.2]): about 1k lines; and the passage
+  almost-étale ⇒ `H¹(G_{K_∞}, ℂ_p) = 0` (averaging over finite quotients, limits): 1–2k lines.
 
 ## PH2. Hodge–Tate representations — wip (core done)
 

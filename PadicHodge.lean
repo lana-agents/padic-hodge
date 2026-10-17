@@ -1,6 +1,7 @@
 import PadicHodge.AxSenTate.Ax
 import PadicHodge.AxSenTate.AxLemma
 import PadicHodge.AxSenTate.Basic
+import PadicHodge.Cohomology.ContH1
 import PadicHodge.Cyclotomic.Character
 import PadicHodge.Cyclotomic.Core
 import PadicHodge.Cyclotomic.Fields
