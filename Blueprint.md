@@ -80,8 +80,17 @@ Lake project `PadicHodge`, Mathlib only, `--wfail`, `mk_all` check (`.orchestra/
      `ContH1.mk_eq_zero_of_vanish` (finite-index averaging), `TateSen/H1Gamma*.lean`:
      `subsingleton_H1_quotient_twist : H¹(Γ, (ℂ_p(j))^H) = 0` for `j ≠ 0`
      (`Γ = G_{ℚ_p}/H`, `H = G_{ℚ_p(μ_{p^∞})}`).
-   * **planned** `j = 0` (`H¹(Γ, \hat F_∞) ≅ ℚ_p`), and general finite `K` via linear
-     disjointness of `K_n` and `F_n` for large `n`.
+   * **done** `j = 0`: `H¹(Γ, \hat F_∞) ≅ ℚ_p` (`TateSen/H1GammaZero.lean`:
+     `H1QuotientZeroEquiv : ℚ_p ≃ₗ H¹(Γ, ℂ_p^H)`, `a ↦ a [log χ]`; `finrank_H1_quotient_zero`).
+     Inputs: `Cyclotomic/Decomp.lean` (Tate's normalised trace `R_n` is independent of the level,
+     `‖y‖ ≤ p^5 ‖(γ−1)y + R_n y‖`, `exists_decomp`: `c = (γ−1)m + r`, `r ∈ ℚ_p(μ_{p^n})`;
+     `eq_zero_of_autCp_sub_eq`: `(γ−1)m ∈ ℚ_p(μ_{p^n})` forces `(γ−1)m = 0`), and
+     `Cyclotomic/LogChi.lean` (`logChi σ = log χ(σ)^{p−1}`, a continuous homomorphism with
+     `logChi γ ≠ 0`; the logarithm is `PadicLogVolume.padicLog` on Mathlib's completion
+     `(Rat.padicValuation p).Completion ≅ ℚ_p`, transported along `Padic.withValRingEquiv`).
+     Proof as in [BC, proof of Thm. 14.3.4] (`H¹(Γ, \hat K_∞) = H¹(Γ, K) ⊕ H¹(Γ, X)`), using
+     that `Γ` is abelian: `(γ−1)F(g) = (g−1)F(γ)`.
+   * **planned** general finite `K` via linear disjointness of `K_n` and `F_n` for large `n`.
 
 ### PH1.AE — almost étaleness of `K_∞ = K(μ_{p^∞})` (separate milestone, not started)
 

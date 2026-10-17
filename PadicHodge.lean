@@ -4,7 +4,9 @@ import PadicHodge.AxSenTate.Basic
 import PadicHodge.Cohomology.ContH1
 import PadicHodge.Cyclotomic.Character
 import PadicHodge.Cyclotomic.Core
+import PadicHodge.Cyclotomic.Decomp
 import PadicHodge.Cyclotomic.Fields
+import PadicHodge.Cyclotomic.LogChi
 import PadicHodge.Cyclotomic.Norms
 import PadicHodge.Cyclotomic.Solve
 import PadicHodge.Cyclotomic.Tower
@@ -21,5 +23,6 @@ import PadicHodge.HodgeTate.SerreTate
 import PadicHodge.HodgeTate.Tensor
 import PadicHodge.TateSen.H1Gamma
 import PadicHodge.TateSen.H1GammaMain
+import PadicHodge.TateSen.H1GammaZero
 import PadicHodge.TateSen.Invariants
 import PadicHodge.TateSen.Twist

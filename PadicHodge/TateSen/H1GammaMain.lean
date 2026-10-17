@@ -81,6 +81,67 @@ theorem fixingSubgroup_cycField_finiteIndex (N : ℕ) :
   haveI := finiteDimensional_cycField (p := p) N
   exact ⟨by rw [← finrank_eq_fixingSubgroup_index]; exact Module.finrank_pos.ne'⟩
 
+/-- An inflated cocycle vanishes on `H`. -/
+theorem infCocycles_twist_of_mem_H {j : ℤ}
+    (f : ContH1.cocycles ((cpTwistRepQ (p := p) j).quotientToInvariants
+      (cycFieldInf p).fixingSubgroup))
+    {h : PadicAlgCl p ≃ₐ[ℚ_[p]] PadicAlgCl p} (hh : h ∈ (cycFieldInf p).fixingSubgroup) :
+    (ContH1.infCocycles _ _ f : (PadicAlgCl p ≃ₐ[ℚ_[p]] PadicAlgCl p) → ℂ_[p]) h = 0 := by
+  change ((f : _ → Representation.invariants
+    ((cpTwistRepQ (p := p) j).comp (cycFieldInf p).fixingSubgroup.subtype))
+      (QuotientGroup.mk h : (PadicAlgCl p ≃ₐ[ℚ_[p]] PadicAlgCl p) ⧸
+        (cycFieldInf p).fixingSubgroup) : ℂ_[p]) = 0
+  rw [(QuotientGroup.eq_one_iff h).mpr hh, ContH1.cocycle_one _ f.2]
+  rfl
+
+/-- An inflated cocycle takes values in the closure of `ℚ_p(μ_{p^∞})` (Ax–Sen–Tate). -/
+theorem infCocycles_twist_mem_closure {j : ℤ}
+    (f : ContH1.cocycles ((cpTwistRepQ (p := p) j).quotientToInvariants
+      (cycFieldInf p).fixingSubgroup)) (g : PadicAlgCl p ≃ₐ[ℚ_[p]] PadicAlgCl p) :
+    (ContH1.infCocycles _ _ f : (PadicAlgCl p ≃ₐ[ℚ_[p]] PadicAlgCl p) → ℂ_[p]) g ∈
+      closure (cpSubmodule (cycFieldInf p) : Set ℂ_[p]) := by
+  refine mem_closure_of_H_fixed fun h hh => ?_
+  have := ((f : _ → Representation.invariants
+    ((cpTwistRepQ (p := p) j).comp (cycFieldInf p).fixingSubgroup.subtype))
+      (QuotientGroup.mk g : (PadicAlgCl p ≃ₐ[ℚ_[p]] PadicAlgCl p) ⧸
+        (cycFieldInf p).fixingSubgroup)).2 ⟨h, hh⟩
+  rw [← cpTwistRepQ_of_mem_H j hh]
+  exact this
+
+/-- A cocycle for `ℂ_p(j)` vanishing on `H = Gal(ℚ̄_p/ℚ_p(μ_{p^∞}))` and on all powers of `γ`
+(`χ(γ) = 1 + p^5 u`) vanishes on `Gal(ℚ̄_p/ℚ_p(μ_{p^5}))` (density of `γ^ℕ H`, compactness). -/
+theorem vanish_of_vanish_pow {j : ℤ} {γ : PadicAlgCl p ≃ₐ[ℚ_[p]] PadicAlgCl p} {u : ℤ_[p]}
+    (hu : IsUnit u) (hγ : ((chi γ : ℤ_[p]ˣ) : ℤ_[p]) = 1 + (p : ℤ_[p]) ^ 5 * u)
+    {F' : (PadicAlgCl p ≃ₐ[ℚ_[p]] PadicAlgCl p) → ℂ_[p]}
+    (hF'c : F' ∈ ContH1.cocycles (cpTwistRepQ (p := p) j))
+    (hF'H : ∀ h ∈ (cycFieldInf p).fixingSubgroup, F' h = 0) (hpow : ∀ k : ℕ, F' (γ ^ k) = 0) :
+    ∀ σ ∈ (cycField p 5).fixingSubgroup, F' σ = 0 := by
+  intro σ hσ
+  by_contra hne
+  have hε : 0 < ‖F' σ‖ := norm_pos_iff.mpr hne
+  obtain ⟨N0, hN0⟩ := exists_small_on_fixingSubgroup hF'c.1 hF'H hε
+  set N := max N0 5 with hN
+  obtain ⟨k, hk⟩ := exists_pow_dvd_sub (by norm_num : 2 ≤ 5) hu (dvd_chi_sub_one_of_mem hσ)
+    (le_max_right N0 5)
+  rw [← hγ] at hk
+  set τ := (γ ^ k)⁻¹ * σ with hτ
+  have hτN : τ ∈ (cycField p N).fixingSubgroup := by
+    refine mem_of_dvd_chi_sub_one (by omega) ?_
+    have e : ((chi τ : ℤ_[p]ˣ) : ℤ_[p]) - 1 =
+        (((chi γ ^ k)⁻¹ : ℤ_[p]ˣ) : ℤ_[p]) *
+          (((chi σ : ℤ_[p]ˣ) : ℤ_[p]) - ((chi γ ^ k : ℤ_[p]ˣ) : ℤ_[p])) := by
+      rw [hτ, map_mul, map_inv, map_pow, mul_sub, ← Units.val_mul, ← Units.val_mul,
+        inv_mul_cancel, Units.val_one]
+    rw [e, Units.val_pow_eq_pow_val]
+    exact Dvd.dvd.mul_left hk _
+  have hστ : σ = γ ^ k * τ := by rw [hτ, mul_inv_cancel_left]
+  have h1 : F' σ = cpTwistRepQ j (γ ^ k) (F' τ) := by
+    rw [hστ, hF'c.2, hpow, zero_add]
+  have h2 : ‖F' τ‖ < ‖F' σ‖ := hN0 τ (fixingSubgroup_antitone
+    (cycField_mono (le_max_left N0 5)) hτN)
+  rw [h1, norm_cpTwistRepQ] at h2
+  exact lt_irrefl _ h2
+
 /-- **`H¹(Γ, \hat{ℚ_p(μ_{p^∞})}(j)) = 0` for `j ≠ 0`**, where `Γ = Gal(ℚ_p(μ_{p^∞})/ℚ_p)`
 and the coefficients are `(ℂ_p(j))^H`, `H = Gal(ℚ̄_p/ℚ_p(μ_{p^∞}))`. -/
 theorem subsingleton_H1_quotient_twist {j : ℤ} (hj : j ≠ 0) :
@@ -97,23 +158,9 @@ theorem subsingleton_H1_quotient_twist {j : ℤ} (hj : j ≠ 0) :
   change ContH1.inf ρ H (ContH1.mk (ρ.quotientToInvariants H) f) = 0
   rw [ContH1.inf_mk]
   set F := ContH1.infCocycles ρ H f with hFdef
-  have hFapp : ∀ g, (F : (PadicAlgCl p ≃ₐ[ℚ_[p]] PadicAlgCl p) → ℂ_[p]) g =
-      (((f : Gal(PadicAlgCl p/ℚ_[p]) ⧸ H → Representation.invariants (ρ.comp H.subtype))
-        (g : (PadicAlgCl p ≃ₐ[ℚ_[p]] PadicAlgCl p) ⧸ H)) : ℂ_[p]) :=
-    fun g => rfl
-  -- `F` vanishes on `H` and takes values in the closure of `ℚ_p(μ_{p^∞})`
-  have hFH : ∀ h ∈ H, (F : (PadicAlgCl p ≃ₐ[ℚ_[p]] PadicAlgCl p) → ℂ_[p]) h = 0 := by
-    intro h hh
-    rw [hFapp, (QuotientGroup.eq_one_iff h).mpr hh, ContH1.cocycle_one _ f.2]
-    rfl
-  have hFval : ∀ g, (F : (PadicAlgCl p ≃ₐ[ℚ_[p]] PadicAlgCl p) → ℂ_[p]) g ∈
-      closure (cpSubmodule (cycFieldInf p) : Set ℂ_[p]) := by
-    intro g
-    refine mem_closure_of_H_fixed fun h hh => ?_
-    have := ((f : Gal(PadicAlgCl p/ℚ_[p]) ⧸ H → Representation.invariants (ρ.comp H.subtype))
-      (g : (PadicAlgCl p ≃ₐ[ℚ_[p]] PadicAlgCl p) ⧸ H)).2 ⟨h, hh⟩
-    rw [hFapp, ← cpTwistRepQ_of_mem_H j hh]
-    exact this
+  have hFH : ∀ h ∈ H, (F : (PadicAlgCl p ≃ₐ[ℚ_[p]] PadicAlgCl p) → ℂ_[p]) h = 0 :=
+    fun h hh => infCocycles_twist_of_mem_H f hh
+  have hFval := infCocycles_twist_mem_closure f
   -- a Tate generator and the solution `m`
   obtain ⟨γ, u, hu, hγ⟩ := exists_chi_eq (p := p) 5 (by norm_num)
   have hT := isTateGen_of_chi (by norm_num) hu hγ
@@ -139,33 +186,7 @@ theorem subsingleton_H1_quotient_twist {j : ℤ} (hj : j ≠ 0) :
     induction k with
     | zero => exact ContH1.cocycle_one ρ hF'c
     | succ k ih => rw [pow_succ, hF'c.2, ih, hF'γ, map_zero, add_zero]
-  -- `F'` vanishes on `Gal(ℚ̄_p/ℚ_p(μ_{p^5}))`
-  have hG5 : ∀ σ ∈ (cycField p 5).fixingSubgroup, F' σ = 0 := by
-    intro σ hσ
-    by_contra hne
-    have hε : 0 < ‖F' σ‖ := norm_pos_iff.mpr hne
-    obtain ⟨N0, hN0⟩ := exists_small_on_fixingSubgroup hF'c.1 hF'H hε
-    set N := max N0 5 with hN
-    obtain ⟨k, hk⟩ := exists_pow_dvd_sub (by norm_num : 2 ≤ 5) hu (dvd_chi_sub_one_of_mem hσ)
-      (le_max_right N0 5)
-    rw [← hγ] at hk
-    set τ := (γ ^ k)⁻¹ * σ with hτ
-    have hτN : τ ∈ (cycField p N).fixingSubgroup := by
-      refine mem_of_dvd_chi_sub_one (by omega) ?_
-      have e : ((chi τ : ℤ_[p]ˣ) : ℤ_[p]) - 1 =
-          (((chi γ ^ k)⁻¹ : ℤ_[p]ˣ) : ℤ_[p]) *
-            (((chi σ : ℤ_[p]ˣ) : ℤ_[p]) - ((chi γ ^ k : ℤ_[p]ˣ) : ℤ_[p])) := by
-        rw [hτ, map_mul, map_inv, map_pow, mul_sub, ← Units.val_mul, ← Units.val_mul,
-          inv_mul_cancel, Units.val_one]
-      rw [e, Units.val_pow_eq_pow_val]
-      exact Dvd.dvd.mul_left hk _
-    have hστ : σ = γ ^ k * τ := by rw [hτ, mul_inv_cancel_left]
-    have h1 : F' σ = ρ (γ ^ k) (F' τ) := by
-      rw [hστ, hF'c.2, hpow, zero_add]
-    have h2 : ‖F' τ‖ < ‖F' σ‖ := hN0 τ (fixingSubgroup_antitone
-      (cycField_mono (le_max_left N0 5)) hτN)
-    rw [h1, norm_cpTwistRepQ] at h2
-    exact lt_irrefl _ h2
+  have hG5 := vanish_of_vanish_pow hu hγ hF'c hF'H hpow
   haveI := fixingSubgroup_cycField_finiteIndex (p := p) 5
   have hidx : ((cycField p 5).fixingSubgroup.index : ℚ_[p]) ≠ 0 :=
     Nat.cast_ne_zero.mpr (Subgroup.FiniteIndex.index_ne_zero)

@@ -17,3 +17,10 @@ rev = "v4.32.0"
 
 [[lean_lib]]
 name = "PadicHodge"
+
+# The p-adic logarithm (`PadicLogVolume.padicLog`), reused for the logarithm of the
+# cyclotomic character (`H¹(Γ, \hat{ℚ_p(μ_{p^∞})}) ≅ ℚ_p`). Same pin as `iut`.
+[[require]]
+name = "padic-log-volume"
+git = "https://github.com/lana-agents/padic-log-volume"
+rev = "9a190da26368465ccf92561bc283fe710ae730f0"

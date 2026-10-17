@@ -4,7 +4,9 @@ p-adic Hodge theory in Lean 4 / Mathlib, as needed for Mochizuki's relative p-ad
 Grothendieck conjecture ([LocAn] Theorem A), which feeds the formalisation of the multiradial
 algorithm of IUT III, Theorem 3.11.
 
-Mathlib pin: `v4.32.0` (commit 81a5d25), the same as `iut`. No other dependencies.
+Mathlib pin: `v4.32.0` (commit 81a5d25), the same as `iut`. One further dependency:
+`lana-agents/padic-log-volume` (pinned at `9a190da`, the same pin as `iut`), for the `p`-adic
+logarithm `PadicLogVolume.padicLog`.
 
 ## Status
 
@@ -30,8 +32,12 @@ Phase PH0 (skeleton), the `H⁰` part of PH1 (all twists), and the core of PH2 (
   inflation, degree-one inflation–restriction, finite-index averaging.
 * `PadicHodge/TateSen/H1Gamma*.lean`: `H¹(Γ, (ℂ_p(j))^{H}) = 0` for `j ≠ 0` over `ℚ_p`
   (`Γ = Gal(ℚ_p(μ_{p^∞})/ℚ_p)`), from the uniform solution of `χ(γ)^j γ m − m = z` on the
-  completion of `ℚ_p(μ_{p^∞})` (`exists_twist_eq`). The remaining input for Tate's
-  `H¹(G_K, ℂ_p(j))` is almost étaleness (`Blueprint.md`, PH1.AE).
+  completion of `ℚ_p(μ_{p^∞})` (`exists_twist_eq`); and `H¹(Γ, ℂ_p^{H}) ≅ ℚ_p`, spanned by
+  `log χ` (`H1QuotientZeroEquiv`, `finrank_H1_quotient_zero`, `TateSen/H1GammaZero.lean`), via
+  Tate's decomposition `\hat{ℚ_p(μ_{p^∞})} = (γ - 1)(…) + ℚ_p(μ_{p^n})` (`Cyclotomic/Decomp.lean`)
+  and the logarithm of the cyclotomic character (`Cyclotomic/LogChi.lean`, reusing
+  `padic-log-volume`). The remaining input for Tate's `H¹(G_K, ℂ_p(j))` is almost étaleness
+  (`Blueprint.md`, PH1.AE).
 
 No `sorry`, no `axiom`. All builds use `lake build --wfail`.
 
