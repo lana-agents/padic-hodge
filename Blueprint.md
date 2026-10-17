@@ -146,7 +146,7 @@ in place of Kähler differentials (all rings of integers here are monogenic), ev
   (`B = ∑ σ(α) c(τ_σ)`, `‖c + dB‖ ≤ 2η`) and **`exists_coboundary`**:
   `H¹_cont(Gal(ℚ̄_p/K_∞), ℂ_p) = 0`.
 
-## PH2. Hodge–Tate representations — wip (core done)
+## PH2. Hodge–Tate representations — done (as needed so far)
 
 * **done** `HodgeTate/SerreTate.lean`: abstract Serre–Tate lemma ([BC, Lemma 2.3.1], minimal
   relation argument) for a group acting semilinearly on a vector space over a field `B` with
@@ -164,8 +164,14 @@ in place of Kähler differentials (all rings of integers here are monogenic), ev
 * **done** `htWeights` (multiset of Hodge–Tate weights, `count_htWeights`, `card_htWeights`).
 * **done** `HodgeTate/Dual.lean`: `isHodgeTate_dual` (via `IsBaseChange.toDualBaseChange` and dual eigenbases).
 * **done** `HodgeTate/Tensor.lean`: `isHodgeTate_tprod` (via `AlgebraTensorModule.distribBaseChange`).
-* **planned** *existence* of splittings
-  for distinct weights (input now available: `subsingleton_H1_twist`, PH1.5).
+* **done** *existence* of splittings for distinct weights (`HodgeTate/Splitting.lean`):
+  **`isHodgeTate_of_exact_of_disjoint`**: for `0 → V' → V → V'' → 0` exact, `ρ` continuous
+  (`σ ↦ φ(ρ σ v)` continuous for the Krull topology), `V'`, `V''` Hodge–Tate and no weight of `V''`
+  a weight of `V'`, `V` is Hodge–Tate. Key lemma `exists_DHT_lift` (`D_q(V) → D_q(V'')` onto for
+  `q` not a weight of `V'`): the defect of a lift is a continuous cocycle in
+  `ℂ_p ⊗ V' ≅ ⊕ ℂ_p(q − q_i)`, killed coordinatewise by Tate's `H¹(G_L, ℂ_p(j)) = 0`
+  (`exists_twist_coboundary_GL`, transported along `L.fixingSubgroup ≅ G_L`,
+  `continuous_fixingSubgroupEquiv`).
 
 ## PH3. Finite flat group schemes, p-divisible groups, Tate's theorem — wip (foundations)
 
@@ -203,5 +209,5 @@ Next steps, in order:
 2. **Connected–étale sequence** over a henselian local ring (`O_K`): idempotent decomposition of
    `A ⊗ k`, lifting idempotents; needs étale = separable residue algebra. Estimate 2–4k lines.
 3. ~~PH1.AE~~ **done** (2026-10-17, `AlmostEtale/`, `TateSen/TateH1.lean`).
-4. Existence of splittings for distinct Hodge–Tate weights (PH2), now unblocked by
-   `subsingleton_H1_twist`.
+4. ~~Existence of splittings for distinct Hodge–Tate weights (PH2)~~ **done**
+   (`HodgeTate/Splitting.lean`).

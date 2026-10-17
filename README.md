@@ -27,7 +27,9 @@ Phase PH0 (skeleton), PH1 (Tate's `H⁰` and `H¹` of `ℂ_p(j)`, including almo
 * `PadicHodge/HodgeTate/`: Hodge–Tate representations: the Serre–Tate lemma, `D_q(V)`,
   `IsHodgeTate`, the Hodge–Tate decomposition criterion, stability under sub- and quotient
   representations, and `Hom_{G_L}(ℂ_p(a), ℂ_p(b)) = 0` for `a ≠ b`; duals and tensor products
-  (`isHodgeTate_dual`, `isHodgeTate_tprod`); Hodge–Tate weights (`htWeights`).
+  (`isHodgeTate_dual`, `isHodgeTate_tprod`); Hodge–Tate weights (`htWeights`); extensions with
+  disjoint weights are Hodge–Tate (`isHodgeTate_of_exact_of_disjoint`, `HodgeTate/Splitting.lean`,
+  the existence half of the splitting, via Tate's `H¹`).
 * `PadicHodge/Cohomology/ContH1.lean`: continuous `H¹` via crossed homomorphisms, restriction,
   inflation, degree-one inflation–restriction, finite-index averaging.
 * `PadicHodge/TateSen/H1Gamma*.lean`: `H¹(Γ, (ℂ_p(j))^{H}) = 0` for `j ≠ 0` over `ℚ_p`

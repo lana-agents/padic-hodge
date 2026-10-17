@@ -31,6 +31,7 @@ import PadicHodge.GroupScheme.TateMuZp
 import PadicHodge.HodgeTate.Basic
 import PadicHodge.HodgeTate.Dual
 import PadicHodge.HodgeTate.SerreTate
+import PadicHodge.HodgeTate.Splitting
 import PadicHodge.HodgeTate.Tensor
 import PadicHodge.TateSen.Coord
 import PadicHodge.TateSen.H1Gamma
