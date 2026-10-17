@@ -68,7 +68,7 @@ Phase PH0 (skeleton), PH1 (Tate's `H⁰` and `H¹` of `ℂ_p(j)`, including almo
   `[n]_{G^∨} = ([n]_G)^∨` (`CartierPerfect.lean`); the **Cartier dual `p`-divisible group** over
   `ℚ_p` with `T_p(G^∨) = lim G_v^∨` (`CartierDualPDiv.lean`); **`T_p G(ℚ̄_p) ≅ ℤ_p^h`** and
   `T_p G → G_v` surjective (`TateFree.lean`); **`T_p(G^∨) ≅ Hom(T_p G, ℤ_p(1))`** (perfect
-  Galois-equivariant pairing, `TatePerfect.lean`); the `ℤ_p`-module `T_p G` and the
+  Galois-equivariant pairing, `TatePerfect.lean`, `TateDual.lean`); the `ℤ_p`-module `T_p G` and the
   representation `V_p G` (`TateRep.lean`); inertia acts trivially on `T_p` of an étale
   `p`-divisible group over `ℤ_p` (`EtaleUnramified.lean`); representations with finite image are
   Hodge–Tate of weight `0` (`HodgeTate/FiniteImage.lean`).

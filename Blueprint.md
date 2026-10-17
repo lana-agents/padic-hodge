@@ -335,6 +335,9 @@ in place of Kähler differentials (all rings of integers here are monogenic), ev
   `V_p G = ℚ_p ⊗ T_p G(ℚ̄_p)` of `G_L`** (`tateRep`, dimension `h`, `finrank_tateRep`);
   unramified for étale `G` over `ℤ_p` (`tateRep_baseChange_eq_one_of_isInertia`); Hodge–Tate of
   weight `0` if the image is finite (`isHodgeTate_tateRep_of_trivial_on`).
+* **done** `GroupScheme/TateDual.lean`: **`T_p(G^∨)(ℚ̄_p) ≅ Hom_{ℤ_p}(T_p G(ℚ̄_p), ℤ_p)`**
+  intrinsically: `tatePairingZp` is `ℤ_p`-bilinear, `tateDualHom` is bijective, and
+  `tateDualHom (σ y) (σ x) = χ(σ) tateDualHom y x` ([Hong, Prop. 3.4.6], [Stix, Cor. 85]).
 * **done** `HodgeTate/FiniteImage.lean`: **representations with finite image are Hodge–Tate with
   all weights `0`** (`isHodgeTate_of_trivial_on`; Galois descent: traces over lifts of the
   embeddings `M → ℚ̄_p`, Dedekind, Serre–Tate).
@@ -345,7 +348,8 @@ in place of Kähler differentials (all rings of integers here are monogenic), ev
 ## Hand-off (2026-10-17, fourth session)
 
 Done this session (all pushed, validation green): items 1–3 of the third-session list completely
-(`CartierPerfect.lean`, `CartierDualPDiv.lean`, `TateFree.lean`, `TatePerfect.lean`), the
+(`CartierPerfect.lean`, `CartierDualPDiv.lean`, `TateFree.lean`, `TatePerfect.lean`,
+`TateDual.lean`), the
 unramifiedness half of item 4 (`EtaleUnramified.lean`, `TateRep.lean`), the representation
 `V_p G` (`TateRep.lean`), and the finite-image case of Hodge–Tate weight `0`
 (`HodgeTate/FiniteImage.lean`). Next steps, in order:
@@ -364,11 +368,14 @@ unramifiedness half of item 4 (`EtaleUnramified.lean`, `TateRep.lean`), the repr
    normal basis for the residue extension) and pass to the limit in the complete
    `O_{\hat{ℚ_p^{ur}}}`; (d) then `(ℂ_p ⊗ V)^{G_{ℚ_p}}` contains the `h` columns of `X`, and
    `finrank_DHT_zero` follows as in `finrank_DHT_zero_of_trivial_on`.
-2. **`V_p(G^∨) ≅ V_p(G)^*(1)` as representations**: make `tatePairingZp` `ℤ_p`-bilinear for the
-   module structure of `TateRep.lean` (levelwise `⟨x_v, y_v^n⟩ = ⟨x_v, y_v⟩^n`), transport
-   `DualTate` to `T_p(dualPDiv)` along `tateModule_dualPDiv`, and use `dualTateCoord_bijective`
-   and `tatePairingZp_gal`; then `isHodgeTate_dual`, `isHodgeTate_tprod`, `isHodgeTate_charRep`
-   give HT of `V_p(G^∨)` from HT of `V_p G`.
+2. **`V_p(G^∨) ≅ V_p(G)^*(1)` as representations**: the `ℤ_p`-level statement is done
+   (`TateDual.lean`: `tateDualHom : T_p(G^∨) ≃ Hom_{ℤ_p}(T_p G, ℤ_p)` bijective, `ℤ_p`-bilinear,
+   `tateDualHom_gal`). Remaining: base change to `ℚ_p` (`Hom_{ℤ_p}(T, ℤ_p) ⊗ ℚ_p ≅
+   Hom_{ℚ_p}(T ⊗ ℚ_p, ℚ_p)` for `T` free of finite rank), the resulting `G_L`-equivariant
+   isomorphism `tateRep (dualPDiv G) ≅ (tateRep G).dual ⊗ charRep 1`, and transport of
+   `IsHodgeTate` along it (`isHodgeTate_of_exact` with an isomorphism), so that
+   `isHodgeTate_dual`, `isHodgeTate_tprod`, `isHodgeTate_charRep` give HT of `V_p(G^∨)` from HT
+   of `V_p G`.
 3. **Formal Lie groups and the logarithm** ([Stix, §11.1, Example 81 (3), Lemma 82,
    Cor. 83–84, §11.3.1–11.3.2, Lemma 86, Cor. 87]; [Hong, §3.2: Def. 3.2.1, Prop. 3.2.3,
    Cor. 3.2.4, Prop. 3.2.5, Cor. 3.2.6, Prop. 3.2.7; §3.3: Def. 3.3.1, Lemmas 3.3.2–3.3.3,
