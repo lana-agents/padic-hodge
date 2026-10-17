@@ -268,7 +268,13 @@ connected component `G⁰` over a complete local ring and the `G⁰`-invariants 
 
 1. **Étale quotient** (`EtaleQuotient.lean`: `G^{et}` as an `FFGroupScheme` over a complete
    local PID, `G^{et}` étale, `ker(G → G^{et}) = G⁰`, `A` faithfully flat over `A^{et}` are
-   done): remaining is `|G| = |G⁰| · |G^{et}|`, see `EtaleQuotientFlat.lean`. Henselian version
+   done): remaining is `|G| = |G⁰| · |G^{et}|`. Plan: (i) Galois isomorphism
+   `A ⊗_{A^{et}} A ≅ A ⊗_R A⁰`, `x ⊗ y ↦ (x ⊗ 1) coactConn y`, inverse `x ⊗ π y ↦ ∑ x S(y₁) ⊗ y₂`
+   (well defined since `i₁⁻¹ i₂ ∈ G(A ⊗_{A^{et}} A)` is trivial on `A^{et}`, hence factors through
+   `G⁰` by `mapPoints_etaleQuotientHom_eq_one_iff`); (ii) base change to `K = Frac R`:
+   `A^{et}_K ≅ ∏ L_i` (Mathlib: étale over a field), `A_K = ∏ A_K e_i` with `A_K e_i` an
+   `L_i`-space of dimension `r_i > 0` (faithful flatness), and (i) gives `r_i² = r_i |G⁰|`;
+   hence `dim_K A_K = |G⁰| · dim_K A^{et}_K`. Henselian version
    needs idempotent lifting along finite algebras (Stacks 04GG), not in Mathlib.
 2. **Cartier pairing over `S`** (done over `R`, `CartierPairing.lean`): base change `S ⊗ A`;
    then `T_p(G^∨) ≅ Hom(T_p G, ℤ_p(1))` (needs the Cartier dual of a `p`-divisible group, i.e.
