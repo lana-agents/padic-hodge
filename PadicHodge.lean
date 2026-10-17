@@ -20,6 +20,10 @@ import PadicHodge.Cyclotomic.Solve
 import PadicHodge.Cyclotomic.Tower
 import PadicHodge.Cyclotomic.Trace
 import PadicHodge.Cyclotomic.Vanishing
+import PadicHodge.FormalGroup.Law
+import PadicHodge.FormalGroup.Log
+import PadicHodge.FormalGroup.OC
+import PadicHodge.FormalGroup.Points
 import PadicHodge.Galois.Basic
 import PadicHodge.Galois.Continuity
 import PadicHodge.GroupScheme.BaseChange
