@@ -259,9 +259,9 @@ connected component `G⁰` over a complete local ring and the `G⁰`-invariants 
 2. **Cartier pairing over `S`** (done over `R`, `CartierPairing.lean`): base change `S ⊗ A`;
    then `T_p(G^∨) ≅ Hom(T_p G, ℤ_p(1))` (needs the Cartier dual of a `p`-divisible group, i.e.
    the quotient maps `[p] : G_{v+1} → G_v`).
-3. **Constant `p`-divisible group** `ℚ_p/ℤ_p` (layers `const (ZMod p^v)`, transition `x ↦ px`);
-   needs `M_R(S)` for non-domains `S` (complete orthogonal idempotent families) for `range_eq`;
-   `T_p ≅ ℤ_p(0)`, weight `0` (`charRep L 0`).
+3. ~~Constant `p`-divisible group `ℚ_p/ℤ_p`~~ **done** (`ConstPDiv*.lean`). Next: morphisms
+   and base change of `p`-divisible groups, the étale `p`-divisible groups over `O_K` (unramified
+   `T_p`, weight `0` via Hilbert 90 for `\hat{K^{ur}}`).
 4. **Formal Lie groups** of connected `p`-divisible groups and Tate's Hodge–Tate decomposition
    `T_p G ⊗ ℂ_p ≅ ℂ_p(1)^d ⊕ ℂ_p^{h-d}`; then full faithfulness ([Tate] Thm. 4). [Tate] is not
    available locally; its arguments must be reconstructed and written up.
