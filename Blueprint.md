@@ -205,8 +205,8 @@ in place of Kähler differentials (all rings of integers here are monogenic), ev
   `IsConnected` (local coordinate ring), `G⁰ = G` for connected `G`.
 * **wip** `GroupScheme/EtaleInvariants.lean`: `IsEtale`, `A^{et} = etaleInvariants` (subalgebra
   of `G⁰`-invariants, antipode-stable; `π = ε` on it; `= R` for connected `G`; `= A` and
-  `|G⁰| = 1` for étale `G` and for constant groups), `comul_antipode`. Open: `A^{et}` étale,
-  `A ⊗_{A^{et}} R = A⁰`, `0 → G⁰ → G → G^{et} → 0`.
+  `|G⁰| = 1` for étale `G` and for constant groups), `comul_antipode`. Open: see the
+  next two bullets.
 * **done** `GroupScheme/EtaleQuotient.lean` (`R` a complete local PID, e.g. `O_K`, `ℤ_p`; standard
   argument, written up here): `A^{et}` is finite free (torsion free over a PID) and a sub-Hopf
   algebra: `A^{et} = ker f`, `f = (id ⊗ π)Δ - (· ⊗ 1)`; `(id ⊗ f)(Δ a) = 0` by coassociativity,
@@ -217,6 +217,15 @@ in place of Kähler differentials (all rings of integers here are monogenic), ev
   `etaleQuotientHom : G → G^{et}` (injective on coordinate rings),
   `connectedComponentHom_etaleQuotientHom` (`G⁰ → G → G^{et}` trivial), `G → G^{et}` an
   isomorphism for étale `G`, `|G^{et}| = 1` for connected `G`.
+* **done** `GroupScheme/EtaleQuotientEtale.lean` (standard arguments, written up here):
+  `idemConn_mem_etaleInvariants` (`e₀ ∈ A^{et}`: an idempotent of `A ⊗ A⁰` killed by `id ⊗ ε`
+  lies in `√(m_R (A ⊗ A⁰))`, hence vanishes); **kernel of `G → G^{et}` is `G⁰`**
+  (`map_ker_counitEt`: `A · ker(ε|A^{et}) = (1 - e₀)`, `tensorQuotEquiv : A ⊗_{A^{et}}
+  (A^{et}/ker ε) ≃ A⁰`); **`G` étale iff `G⁰` trivial** (`isEtale_iff`, `R` noetherian: formal
+  unramifiedness by the lifting criterion and the group law, `h = f₁ f₂⁻¹` kills
+  `ker ε = (ker ε)(1 - e₀)`; then Mathlib `Algebra.Etale.of_formallyUnramified_of_flat`);
+  **`G^{et}` étale** (`isEtale_etaleQuotient`, its `e₀` is `e₀`, `idemConn_etaleQuotient`).
+  Open: faithful flatness of `A` over `A^{et}`, `|G| = |G⁰| · |G^{et}|`.
 * **done** `GroupScheme/Cartier.lean`: **Cartier duality** ([BC, Exercise 12.5.3 (3), (4)]): for
   `A` finite free, commutative and cocommutative, `A^∨ = Cartier.Dual R A = WithConv (A →ₗ R)`
   (convolution product, unit `ε`) with comultiplication the transpose of `m` read through
@@ -252,10 +261,9 @@ connected component `G⁰` over a complete local ring and the `G⁰`-invariants 
 `ℚ_p(j)` and `V_p μ_{p^∞}` Hodge–Tate. Next steps, in order:
 
 1. **Étale quotient** (`EtaleQuotient.lean`: `G^{et}` as an `FFGroupScheme` over a complete
-   local PID is done): remaining are `A^{et}` étale (`A^{et} ⊗ k` should be the separable part
-   of `A ⊗ k`), `A ⊗_{A^{et}} R = A⁰` (faithful flatness of `A` over `A^{et}`), the exact
-   sequence. Henselian version needs idempotent lifting along
-   finite algebras (Stacks 04GG), not in Mathlib.
+   local PID, `G^{et}` étale and `ker(G → G^{et}) = G⁰` are done): remaining is faithful
+   flatness of `A` over `A^{et}` (equivalently `|G| = |G⁰| · |G^{et}|`). Henselian version
+   needs idempotent lifting along finite algebras (Stacks 04GG), not in Mathlib.
 2. **Cartier pairing over `S`** (done over `R`, `CartierPairing.lean`): base change `S ⊗ A`;
    then `T_p(G^∨) ≅ Hom(T_p G, ℤ_p(1))` (needs the Cartier dual of a `p`-divisible group, i.e.
    the quotient maps `[p] : G_{v+1} → G_v`).

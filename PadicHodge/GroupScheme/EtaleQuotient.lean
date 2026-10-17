@@ -37,7 +37,8 @@ is a sub-Hopf algebra of `A`, finite free over `R`, and define the étale quotie
 * `connectedComponentHom_etaleQuotientHom`: the composite `G⁰ → G → G^{et}` is trivial;
 * `etaleQuotientHom_bijective_of_isEtale`: for étale `G`, `G → G^{et}` is an isomorphism.
 
-**Open**: `G^{et}` is étale; `A ⊗_{A^{et}} R ≅ A⁰`, i.e. exactness of `0 → G⁰ → G → G^{et} → 0`.
+`GroupScheme/EtaleQuotientEtale.lean` shows that `G^{et}` is étale and that the kernel of
+`G → G^{et}` is `G⁰`. **Open**: faithful flatness of `A` over `A^{et}`, `|G| = |G⁰| · |G^{et}|`.
 -/
 
 noncomputable section
