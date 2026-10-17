@@ -294,14 +294,99 @@ in place of Kähler differentials (all rings of integers here are monogenic), ev
   module of the Cartier dual system); **`tatePairing : T_p G(S) →* DualTate G S →* RootSys p S`**
   (levelwise Cartier pairings, compatible by naturality and `i_v ∘ quot_v = [p]`); over `ℚ_p`:
   `tatePairingZp` with values in `ℤ_p`, biadditive, and **`⟨σx, σy⟩ = χ(σ)⟨x, y⟩`**
-  (`tatePairingZp_gal`), i.e. values in `ℤ_p(1)`. Open: perfectness (needs `G_v ⊗ K` étale in
-  characteristic `0` and `(G_v^∨)` a `p`-divisible group).
-* **planned** Cartier dual of a
-  `p`-divisible group, rest of the connected–étale sequence, formal Lie groups;
+  (`tatePairingZp_gal`), i.e. values in `ℤ_p(1)`. Perfectness: `TatePerfect.lean` below.
+* **done** `GroupScheme/CartierPerfect.lean` (standard arguments, written up here): the transpose
+  `End_R(A) → End_R(A^∨)` is a monoid map for convolution (`Cartier.transposeHom`), hence
+  **`[n]_{G^∨} = ([n]_G)^∨`** and `G^∨` is killed by `n` if `G` is (`dual_univPt_pow_eq_one`);
+  **injectivity of `ψ ↦ ⟨·, ψ⟩`** over a field `S` with `#G(S) = |G|`
+  (`pairing_injective_right`: the matrix `(φ(e_i))_{φ,i}` is square with independent rows by
+  Dedekind); `#Hom(M, L) ≤ #M` (`card_monoidHom_le`); perfectness `G^∨(S) ≅ Hom(G(S), S)` and
+  `G(S) ≅ Hom(G^∨(S), S)` when `#G(S) = #G^∨(S) = |G|` (`pairingHom_bijective`,
+  `pairingHom'_bijective`); over `ℚ_p`: `G_v^∨` étale, `#G_v^∨(ℚ̄_p) = p^{hv}`, the level-`v`
+  pairing over `ℚ̄_p` is perfect (`levelPairingHom_bijective`).
+* **done** `GroupScheme/CartierDualPDiv.lean`: **the Cartier dual `p`-divisible group**
+  `G^∨ = (G_v^∨, quot_v^∨)` over `ℚ_p` (`PDivGroup.dualPDiv`, same height):
+  `quot_v^∨ ∘ i_v^∨ = [p]` (`dual_quot_incl`), `p^v G_{v+1}(S) = G_{v+1}(S)[p]` by counting
+  (`pow_range_eq_ker_pow`), closed immersion (`quot_v^*` injective since the `ℚ̄_p`-points of an
+  étale algebra separate elements, `eq_zero_of_forall_algHom`), kernel condition over `ℚ̄_p` via
+  perfectness at levels `v`, `v+1` (`exists_dual_quot_eq_padicAlgCl`) and over any `ℚ_p`-algebra
+  via the ideal `J = ([p^v]^*(b) - ε(b))` of `O(G_{v+1}^∨)`, `B/J` étale
+  (`exists_dual_quot_eq`); **`T_p(G^∨) = DualTate G`** (`tateModule_dualPDiv`).
+* **done** `GroupScheme/TateFree.lean`: iterated quotient maps `quotLE` (`Nat.leRecOn`),
+  `ker(G_b → G_a) = G_b[p^{b-a}]` (`quotLE_eq_one_iff`); **`T_p G(S) → G_v(S)` surjective**
+  (`TateModule.proj_surjective`, lifting along chosen sections); coordinates
+  `phiLevel t v : (ℤ/p^v)^h → G_v(S)` injective (induction on `v`) and bijective by counting when
+  the `(t_i)_1` are an `𝔽_p`-basis of `G_1(S)` (`exists_basis_level_one`); **`T_p G(ℚ̄_p) ≃*
+  ℤ_p^h`** (`PDivGroup.tateEquivZp`).
+* **done** `GroupScheme/TatePerfect.lean`: **perfectness on Tate modules** ([Stix, §11.2.2,
+  Cor. 85], [Hong, Prop. 3.4.6]): for a `ℤ_p`-basis `(t_i)` of `T_p G(ℚ̄_p)`
+  (`exists_tateBasis`), `y ↦ (⟨t_i, y⟩)_i`, `T_p(G^∨)(ℚ̄_p) → ℤ_p^h`, is bijective
+  (`dualTateCoord_bijective`, `exists_perfect_tatePairing`; with `tatePairingZp_gal` this is
+  `T_p(G^∨) ≅ Hom_{ℤ_p}(T_p G, ℤ_p(1))`).
+* **done** `GroupScheme/EtaleUnramified.lean`: integral elements map into the unit ball
+  (`norm_le_one_of_isIntegral`); **rigidity of unramified points**
+  (`algHom_eq_of_norm_sub_lt_one`, via `Algebra.FormallyUnramified.iff_exists_tensorProduct`);
+  `IsInertia`; inertia fixes the `ℚ̄_p`-points of finite étale group schemes over `ℤ_p`-like bases
+  (`FFGroupScheme.inertia_comp_eq`); **inertia acts trivially on `T_p` of (the generic fibre of)
+  a `p`-divisible group over `ℤ_p` with étale layers** (`galTate_baseChange_eq_of_isInertia`).
+* **done** `GroupScheme/TateRep.lean`: `ℤ_p`-module structure on `T_p G(S)` (`instModuleZp`,
+  `a · x = (x_v^{a mod p^v})_v`), Galois action `ℤ_p`-linear (`galLin`), `T_p G(ℚ̄_p) ≅ ℤ_p^h`
+  linearly (`nonempty_tateLinearEquiv`, `finrank_tate`); **the representation
+  `V_p G = ℚ_p ⊗ T_p G(ℚ̄_p)` of `G_L`** (`tateRep`, dimension `h`, `finrank_tateRep`);
+  unramified for étale `G` over `ℤ_p` (`tateRep_baseChange_eq_one_of_isInertia`); Hodge–Tate of
+  weight `0` if the image is finite (`isHodgeTate_tateRep_of_trivial_on`).
+* **done** `HodgeTate/FiniteImage.lean`: **representations with finite image are Hodge–Tate with
+  all weights `0`** (`isHodgeTate_of_trivial_on`; Galois descent: traces over lifts of the
+  embeddings `M → ℚ̄_p`, Dedekind, Serre–Tate).
+* **planned** rest of the connected–étale sequence over `O_K`, formal Lie groups;
   Tate's Hodge–Tate decomposition of `T_p G ⊗ ℂ_p` and full faithfulness ([Tate] §4, Thm. 4;
-  [Tate] not available locally, statements as quoted in [LocAn] and [BC]); these need PH1.5.
+  [Tate] not available locally, statements as quoted in [LocAn] and [BC]); see the hand-off.
 
-## Hand-off (2026-10-17, third session)
+## Hand-off (2026-10-17, fourth session)
+
+Done this session (all pushed, validation green): items 1–3 of the third-session list completely
+(`CartierPerfect.lean`, `CartierDualPDiv.lean`, `TateFree.lean`, `TatePerfect.lean`), the
+unramifiedness half of item 4 (`EtaleUnramified.lean`, `TateRep.lean`), the representation
+`V_p G` (`TateRep.lean`), and the finite-image case of Hodge–Tate weight `0`
+(`HodgeTate/FiniteImage.lean`). Next steps, in order:
+
+1. **Hodge–Tate weight `0` for étale `G` over `ℤ_p` (then `O_K`)**: `V_p G` is unramified
+   (`tateRep_baseChange_eq_one_of_isInertia`) but in general of infinite image, so
+   `isHodgeTate_tateRep_of_trivial_on` does not apply. Needed: Hilbert 90 for
+   `\hat{ℚ_p^{ur}}`, i.e. for `A ∈ GL_h(ℤ_p)` (Frobenius on `T_p`) a solution
+   `X ∈ GL_h(O_{\hat{ℚ_p^{ur}}})` of `X = A φ(X)`. Plan: (a) `ℚ_p^{ur}` as the intermediate field
+   generated by the roots of unity of order prime to `p`, Frobenius `φ` (`ζ ↦ ζ^p`), its fixed
+   field `ℚ_p`, and its closure in `ℂ_p` = `ℂ_p^{I}` (Ax–Sen–Tate, `galCp_eq_self_iff_mem_closure`);
+   (b) finite level: for `A` of finite order mod `p^k` the equation is solvable in a finite
+   unramified `M / ℚ_p` by Galois descent for `O_M / p^k` (the trace/Dedekind argument of
+   `FiniteImage.lean` works integrally since unramified traces are surjective and the
+   discriminant is a unit); (c) lift solutions mod `p^k` to mod `p^{k+1}` (additive Hilbert 90 /
+   normal basis for the residue extension) and pass to the limit in the complete
+   `O_{\hat{ℚ_p^{ur}}}`; (d) then `(ℂ_p ⊗ V)^{G_{ℚ_p}}` contains the `h` columns of `X`, and
+   `finrank_DHT_zero` follows as in `finrank_DHT_zero_of_trivial_on`.
+2. **`V_p(G^∨) ≅ V_p(G)^*(1)` as representations**: make `tatePairingZp` `ℤ_p`-bilinear for the
+   module structure of `TateRep.lean` (levelwise `⟨x_v, y_v^n⟩ = ⟨x_v, y_v⟩^n`), transport
+   `DualTate` to `T_p(dualPDiv)` along `tateModule_dualPDiv`, and use `dualTateCoord_bijective`
+   and `tatePairingZp_gal`; then `isHodgeTate_dual`, `isHodgeTate_tprod`, `isHodgeTate_charRep`
+   give HT of `V_p(G^∨)` from HT of `V_p G`.
+3. **Formal Lie groups and the logarithm** ([Stix, §11.1, Example 81 (3), Lemma 82,
+   Cor. 83–84, §11.3.1–11.3.2, Lemma 86, Cor. 87]; [Hong, §3.2: Def. 3.2.1, Prop. 3.2.3,
+   Cor. 3.2.4, Prop. 3.2.5, Cor. 3.2.6, Prop. 3.2.7; §3.3: Def. 3.3.1, Lemmas 3.3.2–3.3.3,
+   Def. 3.3.4, Prop. 3.3.6]). This needs the Serre–Tate equivalence between connected
+   `p`-divisible groups over `O_K` and divisible formal group laws ([Hong, Thm. 2.2.16]; in
+   particular `lim A_v° ≅ O_K[[t_1, …, t_d]]`), which is a separate project; a possible shortcut
+   is to *define* the connected part through a formal group law `μ` with `G° = μ[p^∞]` and
+   prove Tate's theorem for those, as [Hong] does after Thm. 2.2.16.
+4. **Tate's theorem** [Stix, Thm. 91] / [Hong, Prop. 3.4.9, Thm. 3.4.10] (`G(O_K) ≅
+   Hom_Γ(T_p G^∨, 1 + m_{ℂ_K})`, `t_G(K) ≅ Hom_Γ(T_p G^∨, ℂ_K)`; uses Tate's `H⁰`, `H¹` of
+   `ℂ_p(j)`, `TateSen/TateH1.lean`), then the Hodge–Tate decomposition [Hong, Thm. 3.4.12],
+   [Stix, Cor. 92] via `isHodgeTate_of_exact_of_disjoint` (`HodgeTate/Splitting.lean`).
+5. **Full faithfulness** [Hong, Thm. 3.5.4, Cor. 3.5.5] needs the discriminant formula
+   [Hong, Prop. 3.5.1] (`disc(A_v / O_K) = (p^{d v p^{hv}})`; only sketched in [Hong], via
+   Haines' notes) and [Hong, Lemma 3.5.2, Prop. 3.5.3]; plan: compute the different of `A_v`
+   from the cotangent space `ω_{G_v} ≅ (O_K/p^v)^d` and the Cartier-duality trace form.
+
+## Hand-off (2026-10-17, third session; superseded)
 
 Literature found (free, downloaded to `~/iut-scratch/lit/dl/padic-hodge/tate/`, not committed;
 see `references/README.md`): [Stix] (Heidelberg course notes, §11: Tate's proof of the

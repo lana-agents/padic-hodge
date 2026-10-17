@@ -5,7 +5,7 @@ Authors: Claude (Anthropic)
 -/
 import PadicHodge.GroupScheme.TatePerfect
 import PadicHodge.GroupScheme.EtaleUnramified
-import PadicHodge.HodgeTate.Basic
+import PadicHodge.HodgeTate.FiniteImage
 
 /-!
 # The `ℤ_p`-module `T_p G` and the Galois representation `V_p G`
@@ -20,7 +20,9 @@ For `G` over `ℚ_p`:
 * `tateRep L`: the representation `V_p G = ℚ_p ⊗_{ℤ_p} T_p G(ℚ̄_p)` of `G_L`, of dimension `h`
   (`finrank_tateRep`);
 * `tateRep_baseChange_eq_one_of_isInertia`: for a `p`-divisible group over `ℤ_p` with étale
-  layers, inertia acts trivially on `V_p` of the generic fibre (`EtaleUnramified.lean`).
+  layers, inertia acts trivially on `V_p` of the generic fibre (`EtaleUnramified.lean`);
+* `isHodgeTate_tateRep_of_trivial_on`: if `V_p G` has finite image, it is Hodge–Tate with all
+  weights `0` (`HodgeTate/FiniteImage.lean`).
 -/
 
 noncomputable section
@@ -186,6 +188,16 @@ theorem tateRep_baseChange_eq_one_of_isInertia (G : PDivGroup ℤ_[p] p)
   change LinearMap.baseChange ℚ_[p] _ = 1
   rw [this, LinearMap.baseChange_id]
   rfl
+
+/-- **`V_p G` with finite image is Hodge–Tate with all weights `0`** (e.g. an étale `p`-divisible
+group over `ℤ_p` whose Galois action factors through a finite quotient; the general étale case
+needs Hilbert 90 for `\hat{ℚ_p^{ur}}`). -/
+theorem isHodgeTate_tateRep_of_trivial_on [FiniteDimensional ℚ_[p] L]
+    (M : IntermediateField L (PadicAlgCl p)) [FiniteDimensional L M]
+    (hρ : ∀ σ : PadicAlgCl p ≃ₐ[L] PadicAlgCl p, (∀ m ∈ M, σ m = m) → H.tateRep L σ = 1) :
+    IsHodgeTate (H.tateRep L) ∧ (htWeights (H.tateRep L)).count 0 = H.height := by
+  refine ⟨isHodgeTate_of_trivial_on (M := M) hρ, ?_⟩
+  rw [(count_htWeights_zero_of_trivial_on (M := M) hρ).1, finrank_tateRep]
 
 end PDivGroup
 
