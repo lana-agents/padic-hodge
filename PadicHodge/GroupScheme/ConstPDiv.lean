@@ -10,8 +10,9 @@ import PadicHodge.GroupScheme.PDivisible
 /-!
 # The constant `p`-divisible group `ℚ_p/ℤ_p`
 
-The constant `p`-divisible group `(ℚ_p/ℤ_p)_R` ([BC, Example 7.2.2]: `ℚ_p/ℤ_p` is the
-étale `p`-divisible group of height `1`) has layers `G_v = (ℤ/p^v)_R` (constant group schemes,
+The constant `p`-divisible group `(ℚ_p/ℤ_p)_R` (a `p`-divisible group of height `1` in the
+sense of [BC, Def. 7.2.1]; over a field, [BC, §7.2] identifies such groups with the Galois modules
+`M_n`, here `ℤ/p^n` with trivial action) has layers `G_v = (ℤ/p^v)_R` (constant group schemes,
 `CycP p v = Multiplicative (ZMod (p^v))`) and transition maps induced by the injection
 `ℤ/p^v → ℤ/p^{v+1}`, `x ↦ p x` (`mulP`), whose image is the `p^v`-torsion (`mem_range_mulP_iff`).
 
@@ -28,6 +29,8 @@ namespace PadicHodge
 universe u
 
 open FFGroupScheme
+
+section Mul
 
 variable (p : ℕ) [hp : Fact p.Prime]
 
@@ -90,10 +93,11 @@ theorem mem_range_incP_iff {v : ℕ} (y : CycP p (v + 1)) :
     obtain ⟨x, hx⟩ := (mem_range_mulP_iff (Multiplicative.toAdd y)).mpr h'
     exact ⟨Multiplicative.ofAdd x, Multiplicative.toAdd.injective hx⟩
 
-variable (R : Type u) [CommRing R] [Nontrivial R] (p)
+end Mul
 
 /-- **The constant `p`-divisible group `ℚ_p/ℤ_p`** over `R`: layers `(ℤ/p^v)_R`, height `1`. -/
-def constPDiv : PDivGroup R p where
+def constPDiv (R : Type u) [CommRing R] [Nontrivial R] (p : ℕ) [Fact p.Prime] :
+    PDivGroup R p where
   height := 1
   G v := const R (CycP p v)
   order_eq v := by

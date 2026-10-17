@@ -191,6 +191,12 @@ in place of Kähler differentials (all rings of integers here are monogenic), ev
   7.1.7(1)]): the Hopf algebra `constHopf` on `M → R` (`Δ e_k = ∑_m e_m ⊗ e_{m⁻¹k}`, antipode
   `f ↦ f ∘ (·)⁻¹`), cocommutative; `FFGroupScheme.const`, `order_const = |M|`;
   `constPointsEquiv : M ≃* M_R(S)` for a domain `S`.
+* **done** `GroupScheme/ConstPDivMap.lean`, `ConstPDiv.lean`, `ConstPDivTate.lean`: functoriality
+  `constMap h : M_R → M'_R` (closed immersion for injective `h`); points over any `S` via
+  orthogonal idempotents (`ptVal_pow`, `pow_eq_one_iff`, `exists_mapPoints_eq_iff`); the constant
+  `p`-divisible group `constPDiv R p = ℚ_p/ℤ_p` (height 1); `constTateEquiv : T_p(ℚ_p/ℤ_p)(S) ≃*
+  ℤ_p` (domain `S`), general `PDivGroup.galTate`, trivial Galois action (`galTate_constPDiv`),
+  `V_p = ℚ_p(0)` Hodge–Tate of weight `0`.
 * **done** `GroupScheme/ConnectedIdempotent.lean`, `GroupScheme/Connected.lean`: connected
   component over a complete local ring `R` (deviation: complete instead of henselian, since
   idempotent lifting along finite algebras over henselian rings is not in Mathlib): point
