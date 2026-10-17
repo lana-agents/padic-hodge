@@ -275,6 +275,12 @@ in place of Kähler differentials (all rings of integers here are monogenic), ev
   under double duality (`pairing_symm`); values in `μ_n` if `n` kills `G(S)`
   (`cartierPairingBase_pow_eq_one`); naturality `⟨f φ, ψ⟩_H = ⟨φ, ψ ∘ (f^*)^∨⟩_G`
   (`pairing_mapPoints`, `Cartier.transposeAlgHom`). [Stix, §11.2.2] for the levelwise use.
+* **done** `GroupScheme/EtaleInvertible.lean`: **a finite flat group scheme over a noetherian
+  ring killed by an invertible integer is étale** (`isEtale_of_univPt_pow_eq_one`); hence the
+  layers of a `p`-divisible group over a noetherian ring with `p` invertible (e.g. `K`, `ℚ_p`)
+  are étale (`PDivGroup.isEtale_of_isUnit`). Proof avoids Cartier's theorem: in the convolution
+  ring `Hom(A, A/I²)` the projection is `1 + d` with `d² = 0`, so `1 = q^n = 1 + n d` gives
+  `I = I²`, `I = (f)` idempotent, and the group law gives formal unramifiedness.
 * **done** `GroupScheme/TatePairing.lean` ([Stix, §11.2.2], [Hong, Prop. 3.4.6]): dual
   homomorphisms `Hom.dual` (transpose of a bialgebra map is a bialgebra map), naturality
   `pairing_dual`, `pairing_postComp`; `DualTate G S = lim_v G_v^∨(S)` along `i_v^∨` (the Tate
