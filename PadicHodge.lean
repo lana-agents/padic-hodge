@@ -26,6 +26,7 @@ import PadicHodge.GroupScheme.BaseChange
 import PadicHodge.GroupScheme.Cartier
 import PadicHodge.GroupScheme.CartierDiag
 import PadicHodge.GroupScheme.CartierDouble
+import PadicHodge.GroupScheme.CartierDualPDiv
 import PadicHodge.GroupScheme.CartierPairing
 import PadicHodge.GroupScheme.CartierPairingBase
 import PadicHodge.GroupScheme.CartierPerfect
