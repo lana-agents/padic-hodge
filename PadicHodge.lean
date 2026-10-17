@@ -26,5 +26,6 @@ import PadicHodge.TateSen.H1Gamma
 import PadicHodge.TateSen.H1GammaMain
 import PadicHodge.TateSen.H1GammaZero
 import PadicHodge.TateSen.H1K
+import PadicHodge.TateSen.H1KZero
 import PadicHodge.TateSen.Invariants
 import PadicHodge.TateSen.Twist

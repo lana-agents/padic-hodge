@@ -90,7 +90,18 @@ Lake project `PadicHodge`, Mathlib only, `--wfail`, `mk_all` check (`.orchestra/
      `(Rat.padicValuation p).Completion ≅ ℚ_p`, transported along `Padic.withValRingEquiv`).
      Proof as in [BC, proof of Thm. 14.3.4] (`H¹(Γ, \hat K_∞) = H¹(Γ, K) ⊕ H¹(Γ, X)`), using
      that `Γ` is abelian: `(γ−1)F(g) = (g−1)F(γ)`.
-   * **planned** general finite `K` via linear disjointness of `K_n` and `F_n` for large `n`.
+   * **done** general finite `K / ℚ_p` (`Γ_K = Gal(K_∞/K) = G_K/H_K`, `G_K` realised as
+     `K.fixingSubgroup ⊆ Gal(ℚ̄_p/ℚ_p)`): `subsingleton_H1_quotient_twist_K`
+     (`H¹(Γ_K, \hat K_∞(j)) = 0`, `j ≠ 0`, `TateSen/H1K.lean`) and
+     `H1QuotientZeroEquivK : K ≃ₗ[ℚ_p] H¹(Γ_K, \hat K_∞)`, `s ↦ [s log χ]`
+     (`TateSen/H1KZero.lean`). Instead of normalised traces for `K_∞` (which need Tate's
+     ramification estimates, [BC, Lemma 14.1.4]) we use linear disjointness over `F_∞`
+     (`TateSen/Coord.lean`): for a primitive element `α` of `K` of degree `d` over `F_∞`, with
+     conjugates `β_k = τ_k α` (`τ_k ∈ Gal(ℚ̄_p/F_∞)`), every `z ∈ \hat K_∞` is
+     `∑_{i<d} Y_i α^i`, `Y_i = ∑_k (V⁻¹)_{ik} τ_k z ∈ \hat F_∞` (`V` the Vandermonde matrix of the
+     `β_k`), so twisted solving / decomposition / rigidity on `\hat K_∞` reduce coordinatewise to
+     `\hat F_∞`; `γ ∈ G_K` with `χ(γ) = 1 + p^N u` from a pigeonhole argument
+     (`exists_gamma_K`). Remaining for Tate's `H¹(G_K, ℂ_p(j))`: PH1.AE.
 
 ### PH1.AE — almost étaleness of `K_∞ = K(μ_{p^∞})` (separate milestone, not started)
 

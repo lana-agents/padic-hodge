@@ -36,7 +36,9 @@ Phase PH0 (skeleton), the `H⁰` part of PH1 (all twists), and the core of PH2 (
   `log χ` (`H1QuotientZeroEquiv`, `finrank_H1_quotient_zero`, `TateSen/H1GammaZero.lean`), via
   Tate's decomposition `\hat{ℚ_p(μ_{p^∞})} = (γ - 1)(…) + ℚ_p(μ_{p^n})` (`Cyclotomic/Decomp.lean`)
   and the logarithm of the cyclotomic character (`Cyclotomic/LogChi.lean`, reusing
-  `padic-log-volume`). The remaining input for Tate's `H¹(G_K, ℂ_p(j))` is almost étaleness
+  `padic-log-volume`). For finite `K / ℚ_p`: `H¹(Gal(K_∞/K), \hat K_∞(j)) = 0` (`j ≠ 0`) and
+  `≅ K` (`j = 0`) (`TateSen/H1K.lean`, `TateSen/H1KZero.lean`, via coordinates on `\hat K_∞`
+  over `\hat F_∞`, `TateSen/Coord.lean`). The remaining input for Tate's `H¹(G_K, ℂ_p(j))` is almost étaleness
   (`Blueprint.md`, PH1.AE).
 
 No `sorry`, no `axiom`. All builds use `lake build --wfail`.
