@@ -219,7 +219,12 @@ in place of Kähler differentials (all rings of integers here are monogenic), ev
   Hodge–Tate with `htWeights = {-j}`; `V_p μ_{p^∞} ≅ ℚ_p(1)` (`tateMu_charRep`), so
   `T_p μ_{p^∞} ⊗ ℂ_p ≅ ℂ_p(1)` (`isHodgeTate_tateMu`, `htWeights_tateMu = {-1}`): the first case of
   Tate's Hodge–Tate decomposition.
-* **planned** Cartier pairing on points (`G^∨(S) = Hom(G_S, 𝔾_m)`), Cartier dual of a
+* **done** `GroupScheme/CartierPairing.lean` ([BC, Ex. 12.5.3 (5), (6)] over the base ring):
+  `isGroupLikeElem_dual_iff` (`f ∈ A^∨` group-like iff `f` is an algebra map),
+  `pointsEquivGroupLike : G(R) ≃* GroupLike(A^∨)`, `dualPointsEquivGroupLike :
+  G^∨(R) ≃* GroupLike(A)` (characters of `G`), `cartierPairing : G(R) →* G^∨(R) →* R`.
+* **planned** Cartier pairing over `R`-algebras `S` (`G^∨(S) = Hom(G_S, 𝔾_m)`, base change
+  `S ⊗ A`), Cartier dual of a
   `p`-divisible group, rest of the connected–étale sequence, formal Lie groups;
   Tate's Hodge–Tate decomposition of `T_p G ⊗ ℂ_p` and full faithfulness ([Tate] §4, Thm. 4;
   [Tate] not available locally, statements as quoted in [LocAn] and [BC]); these need PH1.5.
@@ -236,9 +241,9 @@ connected component `G⁰` over a complete local ring and the `G⁰`-invariants 
    lifted from the separable part of `A ⊗ k`), `A^{et}` finite free étale,
    `A ⊗_{A^{et}} R = A⁰`, the exact sequence. Henselian version needs idempotent lifting along
    finite algebras (Stacks 04GG), not in Mathlib.
-2. **Cartier pairing on points**: `G(R)` = group-likes of `A^∨` (`φ : A →ₐ R` iff
-   `Δ^∨ φ = φ ⊗ φ`), `⟨φ, ψ⟩ = ψ(φ)` bimultiplicative; over `S`: base change `S ⊗ A`.
-   Then `T_p(G^∨) ≅ Hom(T_p G, ℤ_p(1))`.
+2. **Cartier pairing over `S`** (done over `R`, `CartierPairing.lean`): base change `S ⊗ A`;
+   then `T_p(G^∨) ≅ Hom(T_p G, ℤ_p(1))` (needs the Cartier dual of a `p`-divisible group, i.e.
+   the quotient maps `[p] : G_{v+1} → G_v`).
 3. **Constant `p`-divisible group** `ℚ_p/ℤ_p` (layers `const (ZMod p^v)`, transition `x ↦ px`);
    needs `M_R(S)` for non-domains `S` (complete orthogonal idempotent families) for `range_eq`;
    `T_p ≅ ℤ_p(0)`, weight `0` (`charRep L 0`).
