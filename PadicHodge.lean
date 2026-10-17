@@ -48,6 +48,7 @@ import PadicHodge.GroupScheme.Mu
 import PadicHodge.GroupScheme.PDivisible
 import PadicHodge.GroupScheme.PDivisibleHom
 import PadicHodge.GroupScheme.PDivisiblePoints
+import PadicHodge.GroupScheme.TateFree
 import PadicHodge.GroupScheme.TateMu
 import PadicHodge.GroupScheme.TateMuHT
 import PadicHodge.GroupScheme.TateMuZp
