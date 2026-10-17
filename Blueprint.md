@@ -285,6 +285,9 @@ in place of Kähler differentials (all rings of integers here are monogenic), ev
   (`card_algHom_pi`); **`#G(K) = |G|` for `G` étale over a separably closed `K`**
   (`card_points_of_isEtale`, via Mathlib's `Algebra.FormallyEtale.equivPiOfIsSepClosed`);
   **`#G_v(ℚ̄_p) = p^{hv}`** for a `p`-divisible group over `ℚ_p` (`card_points_padicAlgCl`).
+* **done** `GroupScheme/PDivisiblePoints.lean`: `G_{v+1}(S)[p] ≅ G_1(S)` (`card_ker_pow`),
+  `ker(quot_v) = G_{v+1}(S)[p]`, and **`quot_v` surjective on points when `#G_w(S) = p^{hw}`**,
+  in particular on `ℚ̄_p`-points for `G` over `ℚ_p` (`quot_surjective_padicAlgCl`).
 * **done** `GroupScheme/TatePairing.lean` ([Stix, §11.2.2], [Hong, Prop. 3.4.6]): dual
   homomorphisms `Hom.dual` (transpose of a bialgebra map is a bialgebra map), naturality
   `pairing_dual`, `pairing_postComp`; `DualTate G S = lim_v G_v^∨(S)` along `i_v^∨` (the Tate
