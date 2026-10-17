@@ -24,14 +24,7 @@ over `A^{et}`. Standard argument, written up here:
   (faithfully) flat over `A^{et}`; faithfulness since `A^{et} → A` is injective and integral, so
   every maximal ideal of `A^{et}` lies under a maximal ideal of `A` (going up).
 
-**Open**: the order formula `|G| = |G⁰| · |G^{et}|`. Plan: the map
-`A ⊗_{A^{et}} A → A ⊗_R A⁰`, `x ⊗ y ↦ (x ⊗ 1)(id ⊗ π)(Δ y)` is an isomorphism, with inverse
-`x ⊗ π(y) ↦ ∑ x S(y₁) ⊗ y₂`; well-definedness of the inverse amounts to `∑ S(e₀₁) ⊗ e₀₂ = 1` in
-`A ⊗_{A^{et}} A`, which holds since the point `i₁⁻¹ i₂ ∈ G(A ⊗_{A^{et}} A)` is trivial on `A^{et}`,
-hence kills `A · ker(ε|A^{et}) = (1 - e₀)` (`map_ker_counitEt`). So `A` is finite projective over
-`A^{et}` of constant rank `|G⁰|`, and it remains to convert this into
-`rank_R A = |G⁰| · rank_R A^{et}` (e.g. after base change to the fraction field of `R`, where
-`A^{et}` becomes a product of fields).
+The order formula `|G| = |G⁰| · |G^{et}|` is `GroupScheme/EtaleQuotientOrder.lean`.
 -/
 
 noncomputable section

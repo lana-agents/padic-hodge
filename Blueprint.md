@@ -203,10 +203,9 @@ in place of Kähler differentials (all rings of integers here are monogenic), ev
   idempotent `e₀` of the counit (`exists_isPointIdempotent`, unique), `(1 - e₀)` is a Hopf ideal,
   `G⁰ = connectedComponent G` (finite free, local), closed immersion `connectedComponentHom`,
   `IsConnected` (local coordinate ring), `G⁰ = G` for connected `G`.
-* **wip** `GroupScheme/EtaleInvariants.lean`: `IsEtale`, `A^{et} = etaleInvariants` (subalgebra
+* **done** `GroupScheme/EtaleInvariants.lean`: `IsEtale`, `A^{et} = etaleInvariants` (subalgebra
   of `G⁰`-invariants, antipode-stable; `π = ε` on it; `= R` for connected `G`; `= A` and
-  `|G⁰| = 1` for étale `G` and for constant groups), `comul_antipode`. Open: see the
-  next two bullets.
+  `|G⁰| = 1` for étale `G` and for constant groups), `comul_antipode`.
 * **done** `GroupScheme/EtaleQuotient.lean` (`R` a complete local PID, e.g. `O_K`, `ℤ_p`; standard
   argument, written up here): `A^{et}` is finite free (torsion free over a PID) and a sub-Hopf
   algebra: `A^{et} = ker f`, `f = (id ⊗ π)Δ - (· ⊗ 1)`; `(id ⊗ f)(Δ a) = 0` by coassociativity,
@@ -230,8 +229,13 @@ in place of Kähler differentials (all rings of integers here are monogenic), ev
 * **done** `GroupScheme/EtaleQuotientFlat.lean`: **`A` faithfully flat over `A^{et}`**
   (`faithfullyFlat_etaleInvariants`), via `flat_of_formallyUnramified` (an `S`-module flat over
   `R` is flat over an unramified `R`-algebra `S`: the diagonal idempotent `δ ∈ S ⊗_R S` gives an
-  `S`-linear section `m ↦ δ(1 ⊗ m)` of `S ⊗_R M → M`) and going up. Open: `|G| = |G⁰| · |G^{et}|`
-  (plan in the module docstring: Galois isomorphism `A ⊗_{A^{et}} A ≅ A ⊗_R A⁰`, then ranks).
+  `S`-linear section `m ↦ δ(1 ⊗ m)` of `S ⊗_R M → M`) and going up.
+* **done** `GroupScheme/EtaleQuotientOrder.lean`: **`|G| = |G⁰| · |G^{et}|`** (`order_eq_mul`).
+  Galois isomorphism `galoisEquiv : A ⊗_{A^{et}} A ≃ₐ[A] A ⊗_R A⁰`, `x ⊗ y ↦ (x ⊗ 1)(id ⊗ π)Δy`,
+  inverse via `δ = i₁⁻¹ i₂`, which factors through `G⁰` since it dies in `G^{et}`; then
+  `rankAtStalk_{A^{et}} A = |G⁰|` everywhere (base change + faithful flatness), `A^{et}` semilocal,
+  so `A` is free of rank `|G⁰|` over `A^{et}` (Mathlib `nonempty_basis_of_flat_of_finrank_eq`,
+  Stacks 02M9), and the tower law. (No base change to the fraction field needed.)
 * **done** `GroupScheme/Cartier.lean`: **Cartier duality** ([BC, Exercise 12.5.3 (3), (4)]): for
   `A` finite free, commutative and cocommutative, `A^∨ = Cartier.Dual R A = WithConv (A →ₗ R)`
   (convolution product, unit `ε`) with comultiplication the transpose of `m` read through
