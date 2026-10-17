@@ -181,6 +181,12 @@ in place of Kähler differentials (all rings of integers here are monogenic), ev
   diagonalizable groups `diag M` (`order_diag`, `diagPointsEquiv : D(M)(S) ≃* Hom(M, S)`).
 * **done** `GroupScheme/PDivisible.lean`: `PDivGroup R p` ([BC, Def. 7.2.1], kernel condition
   on points for all `R`-algebras, closed immersions), `TateModule`.
+* **done** `GroupScheme/PDivisibleHom.lean`: `G_v` killed by `p^v` (`pow_eq_one`); the quotient
+  maps `quot v : G_{v+1} → G_v` with `i_v ∘ quot_v = [p]` (`incl_quot`; Yoneda: the universal point
+  `id^p` comes from `G_v`, and an algebra map inducing group homomorphisms on all points is a
+  bialgebra map, `homOfPoints`); Tate module points are `quot`-compatible systems
+  (`TateModule.val_eq_quot`); morphisms `PDivGroup.Hom` (levelwise, compatible with `i_v`), `id`,
+  `comp`, `quot_comm`, and the functor `Hom.mapTate : T_p G(S) →* T_p H(S)`.
 * **done** `GroupScheme/Mu.lean`: `muPDiv R p = μ_{p^∞}` of height `1`.
 * **done** `GroupScheme/TateMu.lean`: `muPointsEquiv : μ_{p^v}(S) ≃* rootsOfUnity (p^v) S`,
   `tateMuEquiv : T_p μ_{p^∞}(S) ≃* RootSys p S` (compatible systems of `p`-power roots of unity).
