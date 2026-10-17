@@ -191,6 +191,16 @@ in place of Kähler differentials (all rings of integers here are monogenic), ev
   7.1.7(1)]): the Hopf algebra `constHopf` on `M → R` (`Δ e_k = ∑_m e_m ⊗ e_{m⁻¹k}`, antipode
   `f ↦ f ∘ (·)⁻¹`), cocommutative; `FFGroupScheme.const`, `order_const = |M|`;
   `constPointsEquiv : M ≃* M_R(S)` for a domain `S`.
+* **done** `GroupScheme/ConnectedIdempotent.lean`, `GroupScheme/Connected.lean`: connected
+  component over a complete local ring `R` (deviation: complete instead of henselian, since
+  idempotent lifting along finite algebras over henselian rings is not in Mathlib): point
+  idempotent `e₀` of the counit (`exists_isPointIdempotent`, unique), `(1 - e₀)` is a Hopf ideal,
+  `G⁰ = connectedComponent G` (finite free, local), closed immersion `connectedComponentHom`,
+  `IsConnected` (local coordinate ring), `G⁰ = G` for connected `G`.
+* **wip** `GroupScheme/EtaleInvariants.lean`: `IsEtale`, `A^{et} = etaleInvariants` (subalgebra
+  of `G⁰`-invariants, antipode-stable; `π = ε` on it; `= R` for connected `G`; `= A` and
+  `|G⁰| = 1` for étale `G` and for constant groups), `comul_antipode`. Open: `Δ(A^{et}) ⊆
+  A^{et} ⊗ A^{et}`, `A^{et}` finite free étale, `A ⊗_{A^{et}} R = A⁰`, `0 → G⁰ → G → G^{et} → 0`.
 * **done** `GroupScheme/Cartier.lean`: **Cartier duality** ([BC, Exercise 12.5.3 (3), (4)]): for
   `A` finite free, commutative and cocommutative, `A^∨ = Cartier.Dual R A = WithConv (A →ₗ R)`
   (convolution product, unit `ε`) with comultiplication the transpose of `m` read through
@@ -210,7 +220,7 @@ in place of Kähler differentials (all rings of integers here are monogenic), ev
   `T_p μ_{p^∞} ⊗ ℂ_p ≅ ℂ_p(1)` (`isHodgeTate_tateMu`, `htWeights_tateMu = {-1}`): the first case of
   Tate's Hodge–Tate decomposition.
 * **planned** Cartier pairing on points (`G^∨(S) = Hom(G_S, 𝔾_m)`), Cartier dual of a
-  `p`-divisible group, connected–étale sequence over `O_K`, formal Lie groups;
+  `p`-divisible group, rest of the connected–étale sequence, formal Lie groups;
   Tate's Hodge–Tate decomposition of `T_p G ⊗ ℂ_p` and full faithfulness ([Tate] §4, Thm. 4;
   [Tate] not available locally, statements as quoted in [LocAn] and [BC]); these need PH1.5.
 
