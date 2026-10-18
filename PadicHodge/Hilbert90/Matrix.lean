@@ -25,18 +25,18 @@ namespace PadicHodge
 
 namespace Hilbert90
 
-variable {p : ℕ} [hp : Fact p.Prime] {h : ℕ}
+variable {p : ℕ} [hp : Fact p.Prime] {h : ℕ} {F : Type*} [Field F] [Algebra F (PadicAlgCl p)]
 
 local notation "K" => PadicAlgCl p
 
 /-- All entries lie in `O_M`. -/
-def InO (M : IntermediateField ℚ_[p] K) (X : Matrix (Fin h) (Fin h) K) : Prop :=
+def InO (M : IntermediateField F K) (X : Matrix (Fin h) (Fin h) K) : Prop :=
   ∀ i j, X i j ∈ OM M
 
 /-- All entries have absolute value `≤ r`. -/
 def Bd (X : Matrix (Fin h) (Fin h) K) (r : ℝ) : Prop := ∀ i j, ‖X i j‖ ≤ r
 
-variable {M M' : IntermediateField ℚ_[p] (PadicAlgCl p)}
+variable {M M' : IntermediateField F (PadicAlgCl p)}
 
 /-- The matrix over the subring `O_M`. -/
 def InO.toO {X : Matrix (Fin h) (Fin h) K} (hX : InO M X) : Matrix (Fin h) (Fin h) (OM M) :=
@@ -71,11 +71,13 @@ theorem InO.smul {X : Matrix (Fin h) (Fin h) K} (hX : InO M X) {c : K} (hc : c �
 theorem InO.mono {X : Matrix (Fin h) (Fin h) K} (hX : InO M X) (hMM : M ≤ M') : InO M' X :=
   fun i j => ⟨hMM (hX i j).1, (hX i j).2⟩
 
-theorem inO_padicInt (A : Matrix (Fin h) (Fin h) ℤ_[p]) :
+theorem inO_padicInt [Algebra ℚ_[p] F] [IsScalarTower ℚ_[p] F K]
+    (A : Matrix (Fin h) (Fin h) ℤ_[p]) :
     InO M (A.map (algebraMap ℤ_[p] K)) := fun i j => algebraMap_padicInt_mem (A i j)
 
-theorem InO.map_gal (hM : IsUnrStable M) {X : Matrix (Fin h) (Fin h) K} (hX : InO M X)
-    (σ : GalQp p) : InO M (X.map σ) := fun i j => mem_OM_gal hM σ (hX i j)
+theorem InO.map_gal [Algebra ℚ_[p] F] [IsScalarTower ℚ_[p] F K] {π : F}
+    (hM : IsUnrStableOver F π M) {X : Matrix (Fin h) (Fin h) K} (hX : InO M X)
+    (σ : GalOver p F) : InO M (X.map σ) := fun i j => mem_OM_gal hM σ (hX i j)
 
 theorem InO.det {X : Matrix (Fin h) (Fin h) K} (hX : InO M X) : X.det ∈ OM M := by
   have h1 : X.det = (OM M).subtype hX.toO.det := by rw [RingHom.map_det]; rfl
@@ -132,8 +134,9 @@ theorem Bd.smul {X : Matrix (Fin h) (Fin h) K} {r : ℝ} (hX : Bd X r) (c : K) :
 theorem Bd.mono {X : Matrix (Fin h) (Fin h) K} {r s : ℝ} (hX : Bd X r) (hrs : r ≤ s) : Bd X s :=
   fun i j => (hX i j).trans hrs
 
-theorem Bd.map_gal {X : Matrix (Fin h) (Fin h) K} {r : ℝ} (hX : Bd X r) (σ : GalQp p) :
-    Bd (X.map σ) r := fun i j => by rw [map_apply, norm_aut_apply]; exact hX i j
+theorem Bd.map_gal [Algebra ℚ_[p] F] [IsScalarTower ℚ_[p] F K] {X : Matrix (Fin h) (Fin h) K}
+    {r : ℝ} (hX : Bd X r) (σ : GalOver p F) :
+    Bd (X.map σ) r := fun i j => by rw [map_apply, norm_galOver_apply]; exact hX i j
 
 /-- Products of close families are close. -/
 theorem norm_prod_sub_le {ι : Type*} (s : Finset ι) (a b : ι → K) {r : ℝ} (hr : 0 ≤ r)
@@ -174,7 +177,7 @@ theorem norm_det_sub_le {X Y : Matrix (Fin h) (Fin h) K} {r : ℝ} (hr : 0 ≤ r
 `1`. -/
 theorem norm_det_eq_one_of_bd {X : Matrix (Fin h) (Fin h) K} {r : ℝ} (hr0 : 0 ≤ r) (hr : r < 1)
     (hX : Bd X 1) (hX1 : Bd (X - 1) r) : ‖X.det‖ = 1 := by
-  have h1 : Bd (1 : Matrix (Fin h) (Fin h) K) 1 := inO_one (M := ⊥).bd
+  have h1 : Bd (1 : Matrix (Fin h) (Fin h) K) 1 := inO_one (M := (⊥ : IntermediateField ℚ_[p] K)).bd
   have hd := norm_det_sub_le hr0 hX h1 hX1
   rw [det_one] at hd
   have : X.det = 1 + (X.det - 1) := by ring

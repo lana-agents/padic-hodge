@@ -9,20 +9,20 @@ import Mathlib.LinearAlgebra.Basis.VectorSpace
 import Mathlib.NumberTheory.Padics.RingHoms
 
 /-!
-# Hilbert 90 for `GL_h` modulo `p` over an unramified level
+# Hilbert 90 for `GL_h` modulo `π` over an unramified level
 
-For `M` as in `Hilbert90/Residue.lean` (`IsUnrStable`) and a homomorphism
-`B : Gal(ℚ̄_p/ℚ_p) → GL_h(ℤ_p)` which is `≡ 1 mod p` on `Gal(ℚ̄_p/M)`, there is
-`X ∈ M_h(O_M)` with `|det X| = 1` and `B(σ) σ(X) ≡ X mod p` for all `σ`
+For `M` as in `Hilbert90/Residue.lean` (`IsUnrStableOver F π M`) and a homomorphism
+`B : G_F → GL_h(ℤ_p)` which is `≡ 1` modulo the maximal ideal on `Gal(ℚ̄_p/M)`, there is
+`X ∈ M_h(O_M)` with `|det X| = 1` and `B(σ) σ(X) ≡ X mod π` for all `σ ∈ G_F`
 (**`exists_GL_mod_p`**).
 
 Proof (Speiser's descent over the residue field `κ = κ_M`, standard; written up here): the
-twisted action `σ * x = B̄(σ) σ̄(x)` on `κ^h` factors through the finite set of embeddings
-`e : M → ℚ̄_p`; the traces `Tr(x) = ∑_e σ_e * x` are invariant. They span `κ^h`: a linear form
-`λ` vanishing on them satisfies `∑_e ē(m) λ(B̄(σ_e) e_i) = 0` for all `m ∈ κ`, so all
+twisted action `σ * x = B̄(σ) σ̄(x)` on `κ^h` factors through the finite set of
+`F`-embeddings `e : M → ℚ̄_p`; the traces `Tr(x) = ∑_e σ_e * x` are invariant. They span `κ^h`:
+a linear form `λ` vanishing on them satisfies `∑_e ē(m) λ(B̄(σ_e) e_i) = 0` for all `m ∈ κ`, so all
 coefficients vanish by Dedekind (`linearIndependent_resAut`), and the coefficient of the
 inclusion `M ⊆ ℚ̄_p` is `λ(e_i)`. An invariant basis of `κ^h` gives `X̄ ∈ GL_h(κ)` with
-`B̄(σ) σ̄(X̄) = X̄`; any lift `X` works, since `|z| < 1` implies `|z| ≤ |p|` on `M`.
+`B̄(σ) σ̄(X̄) = X̄`; any lift `X` works, since `|z| < 1` implies `|z| ≤ |π|` on `M`.
 -/
 
 noncomputable section
@@ -33,17 +33,22 @@ namespace PadicHodge
 
 namespace Hilbert90
 
-variable {p : ℕ} [hp : Fact p.Prime] {M : IntermediateField ℚ_[p] (PadicAlgCl p)}
+variable {p : ℕ} [hp : Fact p.Prime] {F : Type*} [Field F] [Algebra F (PadicAlgCl p)]
+  [Algebra ℚ_[p] F] [IsScalarTower ℚ_[p] F (PadicAlgCl p)]
+  {M : IntermediateField F (PadicAlgCl p)}
 
 theorem algebraMap_padicInt_mem (a : ℤ_[p]) : algebraMap ℤ_[p] (PadicAlgCl p) a ∈ OM M := by
   rw [IsScalarTower.algebraMap_apply ℤ_[p] ℚ_[p] (PadicAlgCl p)]
-  refine ⟨M.algebraMap_mem _, ?_⟩
-  rw [PadicAlgCl.norm_extends]
-  exact PadicInt.norm_le_one a
+  refine ⟨?_, ?_⟩
+  · rw [IsScalarTower.algebraMap_apply ℚ_[p] F (PadicAlgCl p)]
+    exact M.algebraMap_mem _
+  · rw [PadicAlgCl.norm_extends]
+    exact PadicInt.norm_le_one a
 
-theorem gal_algebraMap_padicInt (σ : GalQp p) (a : ℤ_[p]) :
+theorem gal_algebraMap_padicInt (σ : GalOver p F) (a : ℤ_[p]) :
     σ (algebraMap ℤ_[p] (PadicAlgCl p) a) = algebraMap ℤ_[p] (PadicAlgCl p) a := by
-  rw [IsScalarTower.algebraMap_apply ℤ_[p] ℚ_[p] (PadicAlgCl p), AlgEquiv.commutes]
+  rw [IsScalarTower.algebraMap_apply ℤ_[p] ℚ_[p] (PadicAlgCl p)]
+  exact (σ.restrictScalars ℚ_[p]).commutes _
 
 theorem norm_algebraMap_padicInt (a : ℤ_[p]) :
     ‖algebraMap ℤ_[p] (PadicAlgCl p) a‖ = ‖a‖ := by
@@ -58,22 +63,22 @@ def zO : ℤ_[p] →+* OM M :=
 @[simp] theorem zO_coe (a : ℤ_[p]) :
     (zO M a : PadicAlgCl p) = algebraMap ℤ_[p] (PadicAlgCl p) a := rfl
 
-variable (hM : IsUnrStable M)
+variable {π : F} (hM : IsUnrStableOver F π M)
 
-theorem sO_zO (σ : GalQp p) (a : ℤ_[p]) : sO hM σ (zO M a) = zO M a :=
+theorem sO_zO (σ : GalOver p F) (a : ℤ_[p]) : sO hM σ (zO M a) = zO M a :=
   Subtype.ext (gal_algebraMap_padicInt σ a)
 
-theorem sO_mul (σ τ : GalQp p) (x : OM M) : sO hM (σ * τ) x = sO hM σ (sO hM τ x) := rfl
+theorem sO_mul (σ τ : GalOver p F) (x : OM M) : sO hM (σ * τ) x = sO hM σ (sO hM τ x) := rfl
 
-theorem sO_fix (ν : GalQp p) (hν : ∀ z ∈ M, ν z = z) (x : OM M) : sO hM ν x = x :=
+theorem sO_fix (ν : GalOver p F) (hν : ∀ z ∈ M, ν z = z) (x : OM M) : sO hM ν x = x :=
   Subtype.ext (hν x x.2.1)
 
-theorem resAut_mul (σ τ : GalQp p) (x : ResidueField (OM M)) :
+theorem resAut_mul (σ τ : GalOver p F) (x : ResidueField (OM M)) :
     resAut hM (σ * τ) x = resAut hM σ (resAut hM τ x) := by
   obtain ⟨x, rfl⟩ := residue_surjective x
   simp only [resAut_residue, sO_mul]
 
-theorem resAut_fix (ν : GalQp p) (hν : ∀ z ∈ M, ν z = z) (x : ResidueField (OM M)) :
+theorem resAut_fix (ν : GalOver p F) (hν : ∀ z ∈ M, ν z = z) (x : ResidueField (OM M)) :
     resAut hM ν x = x := by
   obtain ⟨x, rfl⟩ := residue_surjective x
   rw [resAut_residue, sO_fix hM ν hν]
@@ -82,7 +87,7 @@ variable (M) in
 /-- `ℤ_p → κ_M`. -/
 def rZ : ℤ_[p] →+* ResidueField (OM M) := (residue (OM M)).comp (zO M)
 
-theorem resAut_rZ (σ : GalQp p) (a : ℤ_[p]) : resAut hM σ (rZ M a) = rZ M a := by
+theorem resAut_rZ (σ : GalOver p F) (a : ℤ_[p]) : resAut hM σ (rZ M a) = rZ M a := by
   simp only [rZ, RingHom.comp_apply, resAut_residue, sO_zO]
 
 theorem rZ_eq_of_norm_lt {a b : ℤ_[p]} (h : ‖a - b‖ < 1) : rZ M a = rZ M b := by
@@ -90,10 +95,10 @@ theorem rZ_eq_of_norm_lt {a b : ℤ_[p]} (h : ‖a - b‖ < 1) : rZ M a = rZ M b
   rw [residue_eq_iff, zO_coe, zO_coe, ← map_sub, norm_algebraMap_padicInt]
   exact h
 
-variable {h : ℕ} (B : GalQp p →* Matrix (Fin h) (Fin h) ℤ_[p])
+variable {h : ℕ} (B : GalOver p F →* Matrix (Fin h) (Fin h) ℤ_[p])
 
 /-- The twisted action `x ↦ B̄(σ) σ̄(x)` on `κ^h`. -/
-def act (σ : GalQp p) : (Fin h → ResidueField (OM M)) →+ (Fin h → ResidueField (OM M)) where
+def act (σ : GalOver p F) : (Fin h → ResidueField (OM M)) →+ (Fin h → ResidueField (OM M)) where
   toFun x := (B σ).map (rZ M) *ᵥ fun i => resAut hM σ (x i)
   map_zero' := by simp only [Pi.zero_apply, map_zero]; exact mulVec_zero _
   map_add' x y := by
@@ -102,10 +107,10 @@ def act (σ : GalQp p) : (Fin h → ResidueField (OM M)) →+ (Fin h → Residue
     funext i
     simp
 
-theorem act_apply (σ : GalQp p) (x : Fin h → ResidueField (OM M)) :
+theorem act_apply (σ : GalOver p F) (x : Fin h → ResidueField (OM M)) :
     act hM B σ x = (B σ).map (rZ M) *ᵥ fun i => resAut hM σ (x i) := rfl
 
-theorem act_mul (σ τ : GalQp p) (x : Fin h → ResidueField (OM M)) :
+theorem act_mul (σ τ : GalOver p F) (x : Fin h → ResidueField (OM M)) :
     act hM B (σ * τ) x = act hM B σ (act hM B τ x) := by
   simp only [act_apply]
   have h1 : (fun i => resAut hM σ (((B τ).map (rZ M) *ᵥ fun i => resAut hM τ (x i)) i)) =
@@ -117,7 +122,7 @@ theorem act_mul (σ τ : GalQp p) (x : Fin h → ResidueField (OM M)) :
     · funext j; simp [resAut_mul]
   rw [h1, mulVec_mulVec, ← Matrix.map_mul, ← map_mul]
 
-theorem act_fix (ν : GalQp p) (hν : ∀ z ∈ M, ν z = z)
+theorem act_fix (ν : GalOver p F) (hν : ∀ z ∈ M, ν z = z)
     (hB : ∀ i j, ‖B ν i j - (1 : Matrix (Fin h) (Fin h) ℤ_[p]) i j‖ < 1)
     (x : Fin h → ResidueField (OM M)) : act hM B ν x = x := by
   rw [act_apply]
@@ -129,17 +134,17 @@ theorem act_fix (ν : GalQp p) (hν : ∀ z ∈ M, ν z = z)
   funext i
   exact resAut_fix hM ν hν (x i)
 
-variable (hB : ∀ ν : GalQp p, (∀ z ∈ M, ν z = z) →
+variable (hB : ∀ ν : GalOver p F, (∀ z ∈ M, ν z = z) →
   ∀ i j, ‖B ν i j - (1 : Matrix (Fin h) (Fin h) ℤ_[p]) i j‖ < 1)
 
-variable [FiniteDimensional ℚ_[p] M]
+variable [Normal F (PadicAlgCl p)] [FiniteDimensional F M]
 
 /-- The trace `∑_e σ_e * x`. -/
 def trace (x : Fin h → ResidueField (OM M)) : Fin h → ResidueField (OM M) :=
-  ∑ e : M →ₐ[ℚ_[p]] PadicAlgCl p, act hM B (liftE M e) x
+  ∑ e : M →ₐ[F] PadicAlgCl p, act hM B (liftE M e) x
 
 include hB in
-theorem act_trace (σ : GalQp p) (x : Fin h → ResidueField (OM M)) :
+theorem act_trace (σ : GalOver p F) (x : Fin h → ResidueField (OM M)) :
     act hM B σ (trace hM B x) = trace hM B x := by
   rw [trace, map_sum]
   conv_rhs => rw [← Equiv.sum_comp (reindex M σ)]
@@ -199,12 +204,12 @@ theorem span_trace :
   exact LinearMap.pi_ext' fun i => LinearMap.ext_ring (by simpa using hι i)
 
 include hM hB in
-/-- **Hilbert 90 for `GL_h` modulo `p`.** -/
+/-- **Hilbert 90 for `GL_h` modulo `π`.** -/
 theorem exists_GL_mod_p : ∃ X : Matrix (Fin h) (Fin h) (PadicAlgCl p),
     (∀ i j, X i j ∈ OM M) ∧ ‖X.det‖ = 1 ∧
-      ∀ σ : GalQp p, ∀ i j,
+      ∀ σ : GalOver p F, ∀ i j,
         ‖((B σ).map (algebraMap ℤ_[p] (PadicAlgCl p)) * X.map σ - X) i j‖ ≤
-          ‖(p : PadicAlgCl p)‖ := by
+          ‖algebraMap F (PadicAlgCl p) π‖ := by
   classical
   set κ := ResidueField (OM M)
   -- an invariant basis of `κ^h`
@@ -218,7 +223,7 @@ theorem exists_GL_mod_p : ∃ X : Matrix (Fin h) (Fin h) (PadicAlgCl p),
   have hXb : IsUnit Xb := by
     rw [← linearIndependent_cols_iff_isUnit]
     exact hyli
-  have hXinv : ∀ σ : GalQp p, (B σ).map (rZ M) * Xb.map (resAut hM σ) = Xb := by
+  have hXinv : ∀ σ : GalOver p F, (B σ).map (rZ M) * Xb.map (resAut hM σ) = Xb := by
     intro σ
     ext i j
     have := congrFun (act_trace hM B hB σ (a (eqv j))) i
