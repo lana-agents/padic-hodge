@@ -104,9 +104,9 @@ theorem alphaZp_mul (x : P.F.Pt p) (y y' : P.pdivGroup.DualTate (OCd p)) :
 
 theorem alphaZp_gal (σ : PadicAlgCl p ≃ₐ[ℚ_[p]] PadicAlgCl p) (x : P.F.Pt p)
     (y : P.pdivGroup.DualTate (OCd p)) :
-    ((P.alphaZp (FGL.galPt σ x) (P.galDual ZpD.galFixed σ y) : OC p) : ℂ_[p]) =
+    ((P.alphaZp (FGL.galPt σ x) (P.galDual σ (ZpD.galFixed σ) y) : OC p) : ℂ_[p]) =
       autCp σ ((P.alphaZp x y : OC p) : ℂ_[p]) :=
-  P.alpha_gal ZpD.galFixed ZpD.p_mem σ x y
+  P.alpha_gal σ (ZpD.galFixed σ) ZpD.p_mem x y
 
 /-- The left square of [Hong, Prop. 3.4.9] over `ℤ_p`: on `p^v`-torsion, `α` is the Cartier
 pairing. -/

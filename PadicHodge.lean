@@ -58,6 +58,7 @@ import PadicHodge.FormalGroup.Mult
 import PadicHodge.FormalGroup.Neg
 import PadicHodge.FormalGroup.OC
 import PadicHodge.FormalGroup.OCAdic
+import PadicHodge.FormalGroup.OCAdicPi
 import PadicHodge.FormalGroup.Points
 import PadicHodge.FormalGroup.PointsOC
 import PadicHodge.FormalGroup.SerreTateHom

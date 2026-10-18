@@ -9,9 +9,10 @@ import PadicHodge.FormalGroup.GaloisAction
 /-!
 # Galois equivariance of `α`
 
-([Hong, Prop. 3.4.9]: "`α` and `dα` are `Γ_K`-equivariant".) Let the coefficients `R → O_{ℂ_p}`
-be Galois-fixed (`GalFixed p R`, e.g. `R = ℤ_p`). Then `σ ∈ Gal(ℚ̄_p/ℚ_p)` acts on `O_{ℂ_p}` by
-`R`-algebra automorphisms (`galS`), on `T_p(G^∨)(O_{ℂ_p})` (`galDual`) and on `F(m_{ℂ_p})`
+([Hong, Prop. 3.4.9]: "`α` and `dα` are `Γ_K`-equivariant".) Let `σ ∈ Gal(ℚ̄_p/ℚ_p)` fix the
+coefficients `R → O_{ℂ_p}` (hypothesis `hR`; for all `σ` if `GalFixed p R`, e.g. `R = ℤ_p`; for
+`R = O_{K'}` the `σ ∈ Gal(ℚ̄_p/K')`). Then `σ` acts on `O_{ℂ_p}` by `R`-algebra automorphisms
+(`galS`), on `T_p(G^∨)(O_{ℂ_p})` (`galDual`) and on `F(m_{ℂ_p})`
 (`FGL.galPt`), and
 
 * `charSeries_gal`: `U_{σy} = σ(U_y)` (coefficientwise), from the uniqueness of `U` and
@@ -70,12 +71,13 @@ open FFGroupScheme
 
 variable {p : ℕ} [hp : Fact p.Prime] {R : Type} [CommRing R] [IsLocalRing R]
   [IsAdicComplete (maximalIdeal R) R] [UniformSpace R] [DiscreteUniformity R] [Algebra R (OC p)]
-  {d : ℕ} (P : PDivFGL R d p) (hR : GalFixed p R)
+  {d : ℕ} (P : PDivFGL R d p) (σ : PadicAlgCl p ≃ₐ[ℚ_[p]] PadicAlgCl p)
+  (hR : ∀ r : R, autCp σ ((algebraMap R (OC p) r : OC p) : ℂ_[p]) = algebraMap R (OC p) r)
 
 local notation "S" => OCd p
 
 /-- `σ ∈ Gal(ℚ̄_p/ℚ_p)` as an `R`-algebra automorphism of `O_{ℂ_p}`. -/
-def galS (σ : PadicAlgCl p ≃ₐ[ℚ_[p]] PadicAlgCl p) : S →ₐ[R] S where
+def galS : S →ₐ[R] S where
   toFun := autOC σ
   map_one' := Subtype.ext (show autCp σ ((1 : OC p) : ℂ_[p]) = ((1 : OC p) : ℂ_[p]) by
     rw [OneMemClass.coe_one, map_one])
@@ -87,43 +89,43 @@ def galS (σ : PadicAlgCl p ≃ₐ[ℚ_[p]] PadicAlgCl p) : S →ₐ[R] S where
   map_add' a b := Subtype.ext (show autCp σ ((OCd.toOC a + OCd.toOC b : OC p) : ℂ_[p]) =
       autCp σ (OCd.toOC a : ℂ_[p]) + autCp σ (OCd.toOC b : ℂ_[p]) by
     rw [Subring.coe_add, map_add])
-  commutes' r := Subtype.ext (hR σ r)
+  commutes' r := Subtype.ext (hR r)
 
 omit [IsLocalRing R] [IsAdicComplete (maximalIdeal R) R] [UniformSpace R]
   [DiscreteUniformity R] in
-theorem galS_apply (σ : PadicAlgCl p ≃ₐ[ℚ_[p]] PadicAlgCl p) (a : S) :
-    ((OCd.toOC (galS hR σ a) : OC p) : ℂ_[p]) = autCp σ (OCd.toOC a : ℂ_[p]) :=
+theorem galS_apply (a : S) :
+    ((OCd.toOC (galS σ hR a) : OC p) : ℂ_[p]) = autCp σ (OCd.toOC a : ℂ_[p]) :=
   rfl
 
 /-- The Galois action on `T_p(G^∨)(O_{ℂ_p})`. -/
-def galDual (σ : PadicAlgCl p ≃ₐ[ℚ_[p]] PadicAlgCl p) (y : P.pdivGroup.DualTate S) :
+def galDual (y : P.pdivGroup.DualTate S) :
     P.pdivGroup.DualTate S :=
-  ⟨fun v => (P.groupScheme v).dual.postComp (galS hR σ) (y.1 v), fun v => by
+  ⟨fun v => (P.groupScheme v).dual.postComp (galS σ hR) (y.1 v), fun v => by
     beta_reduce
     rw [y.2 v]
     rfl⟩
 
 omit [UniformSpace R] [DiscreteUniformity R] in
-theorem charB_gal (σ : PadicAlgCl p ≃ₐ[ℚ_[p]] PadicAlgCl p) (y : P.pdivGroup.DualTate S)
-    (v : ℕ) : P.charB (P.galDual hR σ y) v =
-      Algebra.TensorProduct.map (galS hR σ) (AlgHom.id R (P.A v)) (P.charB y v) :=
-  (P.groupScheme v).charOf_postComp S (galS hR σ) (y.1 v)
+theorem charB_gal (y : P.pdivGroup.DualTate S)
+    (v : ℕ) : P.charB (P.galDual σ hR y) v =
+      Algebra.TensorProduct.map (galS σ hR) (AlgHom.id R (P.A v)) (P.charB y v) :=
+  (P.groupScheme v).charOf_postComp S (galS σ hR) (y.1 v)
 
 variable [hC : IsAdicComplete ((maximalIdeal R).map (algebraMap R (OC p))) (OC p)]
   (hpm : (p : R) ∈ maximalIdeal R)
 
 omit [IsAdicComplete (maximalIdeal R) R] [UniformSpace R] [DiscreteUniformity R] in
 /-- **Evaluation `S[[T]] → S ⊗ A_v` commutes with `σ`.** -/
-theorem evB_map_gal (σ : PadicAlgCl p ≃ₐ[ℚ_[p]] PadicAlgCl p) (v : ℕ)
+theorem evB_map_gal (v : ℕ)
     (U : MvPowerSeries (Fin d) S) :
-    P.evB S v (MvPowerSeries.map (galS hR σ).toRingHom U) =
-      Algebra.TensorProduct.map (galS hR σ) (AlgHom.id R (P.A v)) (P.evB S v U) := by
+    P.evB S v (MvPowerSeries.map (galS σ hR).toRingHom U) =
+      Algebra.TensorProduct.map (galS σ hR) (AlgHom.id R (P.A v)) (P.evB S v U) := by
   haveI := AdicEval.isHausdorff_evIdeal (𝔪 := (maximalIdeal R).map (algebraMap R S))
     (P.tnfB S v)
   have key := AdicEval.ringHom_ext (AdicEval.evIdeal ((maximalIdeal R).map (algebraMap R S))
       fun j => (1 : S) ⊗ₜ[R] P.t v j)
-    (φ := (P.evB S v).toRingHom.comp (MvPowerSeries.map (galS hR σ).toRingHom))
-    (ψ := (Algebra.TensorProduct.map (galS hR σ) (AlgHom.id R (P.A v))).toRingHom.comp
+    (φ := (P.evB S v).toRingHom.comp (MvPowerSeries.map (galS σ hR).toRingHom))
+    (ψ := (Algebra.TensorProduct.map (galS σ hR) (AlgHom.id R (P.A v))).toRingHom.comp
       (P.evB S v).toRingHom)
     (fun i => by
       simp only [RingHom.comp_apply, map_X, AlgHom.toRingHom_eq_coe, RingHom.coe_coe, evB_X]
@@ -139,9 +141,9 @@ theorem evB_map_gal (σ : PadicAlgCl p ≃ₐ[ℚ_[p]] PadicAlgCl p) (v : ℕ)
 
 omit [UniformSpace R] [DiscreteUniformity R] in
 /-- **`U_{σy} = σ(U_y)`.** -/
-theorem charSeries_gal (σ : PadicAlgCl p ≃ₐ[ℚ_[p]] PadicAlgCl p) (y : P.pdivGroup.DualTate S) :
-    P.charSeries hpm (P.galDual hR σ y) =
-      MvPowerSeries.map (galS hR σ).toRingHom (P.charSeries hpm y) :=
+theorem charSeries_gal (y : P.pdivGroup.DualTate S) :
+    P.charSeries hpm (P.galDual σ hR y) =
+      MvPowerSeries.map (galS σ hR).toRingHom (P.charSeries hpm y) :=
   (P.charSeries_unique hpm _ _ fun v => by
     rw [evB_map_gal, evB_charSeries, charB_gal]).symm
 
@@ -149,17 +151,17 @@ omit [IsLocalRing R] [IsAdicComplete (maximalIdeal R) R] [UniformSpace R] [Discr
   hC in
 /-- Evaluation of `O_{ℂ_p}`-coefficient power series commutes with `σ` (acting on coefficients
 and points). -/
-theorem ev_gal (σ : PadicAlgCl p ≃ₐ[ℚ_[p]] PadicAlgCl p) {σ' : Type*} [Finite σ']
+theorem ev_gal {σ' : Type*} [Finite σ']
     (f : MvPowerSeries σ' S) {a : σ' → OC p} (ha : ∀ s, ‖((a s : OC p) : ℂ_[p])‖ < 1) :
     autCp σ ((ev p f a : OC p) : ℂ_[p]) =
-      ev p (MvPowerSeries.map (galS hR σ).toRingHom f) (fun s => autOC σ (a s)) := by
+      ev p (MvPowerSeries.map (galS σ hR).toRingHom f) (fun s => autOC σ (a s)) := by
   have ha' : ∀ s, ‖((autOC σ (a s) : OC p) : ℂ_[p])‖ < 1 := fun s => by
     rw [autOC_coe, norm_autCp]; exact ha s
   have h1 := ((hasSum_eval₂ continuous_algebraMap_OC (hasEval_of_norm_lt_one ha) f).map
     (OC p).subtype.toAddMonoidHom continuous_subtype_val).map (autCp σ).toAddMonoidHom
     (continuous_autCp σ)
   have h2 := (hasSum_eval₂ continuous_algebraMap_OC (hasEval_of_norm_lt_one ha')
-    (MvPowerSeries.map (galS hR σ).toRingHom f)).map
+    (MvPowerSeries.map (galS σ hR).toRingHom f)).map
     (OC p).subtype.toAddMonoidHom continuous_subtype_val
   refine h1.unique (h2.congr_fun fun m => ?_)
   simp only [Function.comp_apply, RingHom.toAddMonoidHom_eq_coe, AddMonoidHom.coe_coe,
@@ -169,11 +171,11 @@ theorem ev_gal (σ : PadicAlgCl p ≃ₐ[ℚ_[p]] PadicAlgCl p) {σ' : Type*} [F
 
 omit [UniformSpace R] [DiscreteUniformity R] in
 /-- **Galois equivariance of `α`** ([Hong, Prop. 3.4.9]): `α(σx)(σy) = σ(α(x)(y))`. -/
-theorem alpha_gal (σ : PadicAlgCl p ≃ₐ[ℚ_[p]] PadicAlgCl p) (x : P.F.Pt p)
+theorem alpha_gal (x : P.F.Pt p)
     (y : P.pdivGroup.DualTate S) :
-    ((P.alpha hpm (galPt σ x) (P.galDual hR σ y) : OC p) : ℂ_[p]) =
+    ((P.alpha hpm (galPt σ x) (P.galDual σ hR y) : OC p) : ℂ_[p]) =
       autCp σ ((P.alpha hpm x y : OC p) : ℂ_[p]) := by
-  rw [alpha, alpha, charSeries_gal, ev_gal hR σ _ x.2]
+  rw [alpha, alpha, charSeries_gal, ev_gal σ hR _ x.2]
   rfl
 
 end PDivFGL

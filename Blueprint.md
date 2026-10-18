@@ -528,10 +528,13 @@ in place of Kähler differentials (all rings of integers here are monogenic), ev
 * **done** `FormalGroup/AlphaLog.lean`: `u_y = U_y − 1 : F_{O_C} → Ĝ_m` is a formal homomorphism
   (`charHom`, (3.7)); **`dα(z)(y) = ∑_j ∂_jU_y(0) z_j`** (`dalpha`, additive in `y`); **right
   square** `log_{Ĝ_m}(α(x)(y) − 1) = dα(log_F x)(y)` (`logGm_alpha`, from `LogNat`).
-* **done** `FormalGroup/AlphaGal.lean`: for Galois-fixed coefficients, `σ` acts on `O_C` as an
-  `R`-algebra map (`galS`) and on `T_p(G^∨)(O_C)` (`galDual`); `U_{σy} = σ(U_y)`
-  (`charSeries_gal`, via `evB_map_gal` and the general `AdicEval.ringHom_ext`); **`α(σx)(σy) =
-  σ(α(x)(y))`** (`alpha_gal`).
+* **done** `FormalGroup/AlphaGal.lean`: for `σ` fixing the coefficients `R → O_C` (hypothesis per
+  `σ`, so `σ ∈ Gal(ℚ̄_p/K')` for `R = O_{K'}`), `σ` acts on `O_C` as an `R`-algebra map (`galS`)
+  and on `T_p(G^∨)(O_C)` (`galDual`); `U_{σy} = σ(U_y)` (`charSeries_gal`, via `evB_map_gal` and
+  the general `AdicEval.ringHom_ext`); **`α(σx)(σy) = σ(α(x)(y))`** (`alpha_gal`).
+* **done** `FormalGroup/OCAdicPi.lean`: `O_{ℂ_p}` is `π`-adically complete for every
+  `0 < |π| < 1` (`OC.isAdicComplete_span`, `OC.isAdicComplete_of_map_eq_span`): the completeness
+  hypothesis of `Alpha.lean` for `R = O_{K'}` with `𝔪_{K'} O_C = (π)`.
 * **done** `FormalGroup/Zp.lean`: `ZpD p` (`ℤ_p` with the discrete uniformity, `ℤ_p → O_{ℂ_p}`)
   discharges all hypotheses (`p ∈ 𝔪`, `𝔪 ↦ m_{ℂ_p}`, `O_{ℂ_p}` complete for `𝔪 O_{ℂ_p}`,
   `GalFixed`): `alphaZp` with `alphaZp_add`, `alphaZp_mul`, `alphaZp_gal`, `alphaZp_torsion`,
@@ -602,10 +605,13 @@ Next steps, in order:
    defined (`dalpha`); needs injectivity (1), the `ℚ_p`-linear algebra of (3.9)–(3.11)
    (`tateDualHom`, `sum_finrank_DHT_le` exist), the identification of `DualTate (OC p)` of `G`
    over `ℤ_p` with `T_p(G^∨_{ℚ_p})(ℚ̄_p)` (`dualPDiv`, via `G_v^∨(O_C) = G_v^∨(ℚ̄_p)`), and (2).
-4. Base `O_{K'}` (item 4 of the task): `Zp.lean` is the template — an `O_{K'}` analogue needs
-   `𝔪_{K'} O_C = (π)` and `π`-adic completeness of `O_C` (generalise `OCAdic` from `p` to any
-   `0 < |π| < 1`), and `GalFixed` relative to `Gal(ℚ̄_p/K')` (currently `GalFixed` quantifies
-   over all of `Gal(ℚ̄_p/ℚ_p)`; `ev_autCp`, `galPt`, `galDual` work verbatim for a subgroup).
+4. Base `O_{K'}` (item 4 of the task): `Alpha.lean`, `AlphaLog.lean` are for a general complete
+   local `R` with `p ∈ 𝔪_R`; `OCAdicPi` gives the completeness of `O_C` for `𝔪_{K'} O_C = (π)`,
+   and `AlphaGal` needs only `σ` to fix `R` (so `σ ∈ Gal(ℚ̄_p/K')`). Missing: a concrete
+   `O_{K'}` (Mathlib: integral closure of `ℤ_p` in a finite `K'/ℚ_p`, its local ring /
+   adic completeness instances, `O_{K'} → O_C`, `𝔪_{K'} O_C = (π)`), and the Tate-module /
+   Hodge–Tate wiring (`tateRep`, `dualPDiv`, `tatePairingZp`) over `K'` instead of `ℚ_p`
+   (`GalFixed` quantifies over all of `Gal(ℚ̄_p/ℚ_p)`; `ev_autCp`, `galPt` work per `σ`).
 5. Full faithfulness, existence half [Hong, Thm. 3.5.4] (Prop. 3.5.3, Lemma 3.5.2 with the
    discriminant formula above).
 
