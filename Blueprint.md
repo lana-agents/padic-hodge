@@ -457,6 +457,9 @@ in place of Kähler differentials (all rings of integers here are monogenic), ev
   (`fE_addE`, `fE_mulE`, `fE_comp`), the bialgebra maps `A'_v → A_v`, `t' ↦ f(t)`
   (`layerHom`) and **the induced homomorphism `F[p^∞] → F'[p^∞]`** (`FGL.Hom.toPDiv`; the
   functor of [Hong, Thm. 2.2.16] on morphisms, formal → `p`-divisible direction).
+* **done** `FormalGroup/FGLHomPoints.lean`: `FGL.Hom.ptHom : F(m_{ℂ_p}) →+ F'(m_{ℂ_p})`,
+  Galois-equivariant (`ptMap_galPt`), preserving `p^v`-torsion; `layerMap_mk` (`g ↦ g(f)`),
+  `layerPt_comp_layerMap` (`toPDiv` induces `ptHom` on `F(m)[p^∞] = F[p^∞](O_{ℂ_p})`).
 * **done** `FormalGroup/ExactSeq.lean` ([Hong, Prop. 3.4.7] for `G = F[p^∞]`):
   `phiPt v : G_v(O_{ℂ_p}) ↪ F(m_{ℂ_p})` (inverse of `layerPtEquiv`), compatible with
   `G_v ↪ G_{v+1}` (`phiPt_incl`); `exact_logHom`: `ker log_F = ⋃_v phiPt(G_v(O_{ℂ_p}))`
