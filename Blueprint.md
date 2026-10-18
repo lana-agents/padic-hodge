@@ -508,6 +508,10 @@ in place of Kähler differentials (all rings of integers here are monogenic), ev
   **`O_{ℂ_p}` is `p`-adically complete** (`OC.isAdicComplete_span_p`), hence
   `𝔪_{ℤ_p}`-adically complete for any `ℤ_p`-algebra structure (`OC.isAdicComplete_padicInt`):
   `LayerLimitBase` applies to `S = O_{ℂ_p}`.
+* **done** `FormalGroup/PointsOC.lean`: `OCd p` (`O_{ℂ_p}` with the discrete uniformity) as a
+  coefficient ring for the points framework; `ev_map`, `ev_mul`; **`ev_add_of_groupLike`**: if
+  `U ∈ O_{ℂ_p}[[T]]` satisfies `U(Φ(T,T')) = U(T)U(T')`, then `U(x +_F y) = U(x)U(y)` on
+  `F(m_{ℂ_p})` (the homomorphism property of `α(·)(u)` in [Hong, Prop. 3.4.9]).
 
 ## Hand-off (2026-10-18, ninth session)
 
@@ -523,8 +527,8 @@ noetherianity of `R[[T]]` needed: the coefficient filtration `N_w` replaces the 
 topology, so Mathlib's missing `IsNoetherianRing (MvPowerSeries (Fin n) R)` is not a blocker),
 `202ad58` (`LayerLimitBase`: `S[[T]] ≅ lim_v S ⊗_R A_v` for `S` complete for `𝔪_R S`, and
 compatible group-like families `b_v ∈ S ⊗ A_v` give `U ∈ S[[T]]` with
-`U(Φ(T, T')) = U(T) U(T')`), and the commit with `OCAdic` (`O_{ℂ_p}` is `p`-adically complete)
-and this hand-off.
+`U(Φ(T, T')) = U(T) U(T')`), `1837e2f` (`OCAdic`: `O_{ℂ_p}` is `p`-adically complete; hand-off) and the commit with
+`PointsOC` (`U(x +_F y) = U(x)U(y)` for group-like `U ∈ O_{ℂ_p}[[T]]`).
 
 **[Hong, Prop. 3.5.1] (discriminant formula `disc(A_v/O_K) = (p^{d v p^{hv}})`)**: no proof in
 the local literature. [Hong] states it without proof (remark after Prop. 3.5.1: sketch via
@@ -547,10 +551,9 @@ Next steps, in order:
    in `v` along `inclB`; over `ℚ̄_p` the values lie in `O_{ℚ̄_p} ⊆ O_{ℂ_p}` (integrality of finite
    `ℤ_p`-algebras). Note `dualPDiv` is only defined over `ℚ_p` (generic fibre); work with
    `(G_v)^∨` over `ℤ_p` levelwise.
-   (b) evaluation of `U ∈ O_{ℂ_p}[[T]]` at `x ∈ F(m_{ℂ_p})`: the `Pt`/`ev` framework needs a
-   *discrete* coefficient ring; use a type synonym of `O_{ℂ_p}` with the discrete topology (any
-   map out of it is continuous) or `MvPowerSeries.eval₂` with `HasEval` directly
-   (`|x_j| < 1`, bounded coefficients: `norm_eval₂_le`).
+   (b) evaluation of `U ∈ O_{ℂ_p}[[T]]` at `x ∈ F(m_{ℂ_p})`: **done** (`PointsOC.lean`, synonym
+   `OCd p`; `ev_add_of_groupLike`). To combine with `exists_groupLike` take `S = OCd p` with
+   `Algebra ℤ_[p] (OCd p)` and `OC.isAdicComplete_padicInt` (transported along the synonym).
    (c) `α(x)(u) = U_u(x)`, homomorphism in `x` (from `U(Φ) = U·U`) and in `u`, Galois-equivariant;
    left square of [Hong, Prop. 3.4.9] (on torsion: the Cartier pairing `tatePairing`); right square
    via `LogNat`-type argument for `log(U(x))` (`dα`).
