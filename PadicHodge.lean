@@ -27,6 +27,7 @@ import PadicHodge.FormalGroup.AlphaGal
 import PadicHodge.FormalGroup.AlphaInj
 import PadicHodge.FormalGroup.AlphaInjK
 import PadicHodge.FormalGroup.AlphaLog
+import PadicHodge.FormalGroup.DAlphaDual
 import PadicHodge.FormalGroup.DAlphaHT
 import PadicHodge.FormalGroup.DAlphaInj
 import PadicHodge.FormalGroup.DerivStable
@@ -48,6 +49,7 @@ import PadicHodge.FormalGroup.GmHom
 import PadicHodge.FormalGroup.GmLog
 import PadicHodge.FormalGroup.GmMu
 import PadicHodge.FormalGroup.HeightIneq
+import PadicHodge.FormalGroup.HodgeTateFGL
 import PadicHodge.FormalGroup.InvDeriv
 import PadicHodge.FormalGroup.Invariants
 import PadicHodge.FormalGroup.InvariantsK
@@ -128,6 +130,7 @@ import PadicHodge.GroupScheme.SerreTateLift
 import PadicHodge.GroupScheme.SerreTatePDiv
 import PadicHodge.GroupScheme.SerreTateSpecial
 import PadicHodge.GroupScheme.SpecialFibre
+import PadicHodge.GroupScheme.TateCont
 import PadicHodge.GroupScheme.TateDual
 import PadicHodge.GroupScheme.TateDualRep
 import PadicHodge.GroupScheme.TateFree
@@ -145,6 +148,7 @@ import PadicHodge.HodgeTate.Basic
 import PadicHodge.HodgeTate.Character
 import PadicHodge.HodgeTate.Dual
 import PadicHodge.HodgeTate.FiniteImage
+import PadicHodge.HodgeTate.OrthSplit
 import PadicHodge.HodgeTate.Orthogonal
 import PadicHodge.HodgeTate.SerreTate
 import PadicHodge.HodgeTate.Splitting

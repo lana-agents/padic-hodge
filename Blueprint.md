@@ -697,8 +697,64 @@ in place of Kähler differentials (all rings of integers here are monogenic), ev
   (`finrank_baseChange_frobKer_le`, coordinates `ℤ_p[[T]] ↠ A_1`) and `|ker φ_{X^∨}| ≤ p^{d'}`
   (`finrank_frobKer_dual_baseChange_le`: Cartier duality and base change, the Frobenius kernel
   only sees `(G_1^∨)°`, Serre–Tate iso).
+* **done** `FormalGroup/DAlphaDual.lean` (**step (3.10)**, **[Hong, Thm. 3.4.10] (`dα_K` half),
+  Cor. 3.4.11** for `G = F[p^∞]` over `ℤ_p`): morphisms of `p`-divisible groups over `ℚ_p` are
+  Galois equivariant and `ℤ_p`-linear on Tate modules (`Hom.tateLin`); `F'[p^∞] ≅ (G^∨)° ↪ G^∨`
+  gives an injective equivariant `T_p(F'[p^∞]_{ℚ_p}) → T_p((G_{ℚ_p})^∨)` (`dualConnTateLin`,
+  levelwise injectivity, flatness of `ℚ_p / ℤ_p`); composing `dα_K` for `F'` with the twist-`0`
+  map and the twist-`(-1)` map along `V_p(G^∨) ≅ V^∨ ⊗ ℚ_p(1)` gives **`dalphaDual : ℚ_p^{d'} ↪
+  D_0(V^∨)`** (no double duality). With (3.9), (3.11) and `h ≤ d + d'`: **`tate_dalpha`**
+  (both maps bijective, `dim D_{-1}(V) = d`, `dim D_0(V^∨) = d'`, `h = d + d'`),
+  **`dalphaK_bijective`** ([Hong, Thm. 3.4.10] for `dα_K`), **`finrank_DHT_tateRepDual_dual`**,
+  **`finrank_DHT_tateRep_neg_one`** ([Hong, Cor. 3.4.11]).
+* **done** `GroupScheme/TateCont.lean`: **`continuous_tateRep`**: `V_p G` is a continuous
+  representation of `G_L` (points over `ℚ̄_p` are fixed by open subgroups,
+  `ker(T_p G → G_n) = p^n T_p G`, `ℤ_p`-linear forms on `T_p G` are bounded).
+* **done** `HodgeTate/OrthSplit.lean` ([Hong, proof of Thm. 3.4.12]): `exists_DHT_of_defect`
+  (lifting along a `ℂ_p`-span of eigenvectors of other weights, Tate's `H¹(G_L, ℂ_p(j)) = 0`);
+  **`isHodgeTate_dual_of_finrank_add_eq`**: `dim D_q(V) + dim D_{q'}(V^∨) = dim V`, `q + q' ≠ 0`
+  ⇒ `V^∨` Hodge–Tate with `dim D_{-q}(V^∨) = dim D_q(V)`; `isHodgeTate_of_dual`.
+* **done** `FormalGroup/HodgeTateFGL.lean`: **[Hong, Thm. 3.4.12]** (`hodgeTate_decomposition`:
+  `ℂ_p ⊗ V^∨ = Hom(T_p G, ℂ_p)` is Hodge–Tate with weight-`0` part of dimension `d' = h − d`
+  and weight-`1` part of dimension `d`) and **[Hong, Cor. 3.4.14]** (`isHodgeTate_tateRep`) for
+  `G = F[p^∞]` over `ℤ_p`.
 
-## Hand-off (2026-10-18, twelfth session)
+## Hand-off (2026-10-18, thirteenth session)
+
+Scope (unchanged, `~/iut-scratch/multiradial/MR6-scoping.md`, item A2): [LocAn] needs Tate's
+Theorem 4 (full faithfulness of `G ↦ T_p G` over `O_{K'}`) for `p`-divisible groups of Jacobians.
+
+Done this session (file summaries in PH4 above): `DAlphaDual` (step (3.10); **[Hong,
+Thm. 3.4.10]** for `dα_K` and **Cor. 3.4.11** for `G = F[p^∞]` over `ℤ_p`; `h = d + d^∨`),
+`TateCont` (`V_p G` is continuous), `OrthSplit` (splitting of the orthogonal-complement sequence by
+Tate's `H¹`), `HodgeTateFGL` (**[Hong, Thm. 3.4.12, Cor. 3.4.14]** for `F[p^∞]` over `ℤ_p`).
+
+Next steps, in order:
+
+1. **`α_K` bijective** ([Hong, Thm. 3.4.10], first half; not needed for full faithfulness): for a
+   Γ-equivariant character `f` of `T_p(G^∨)(O_C)` with values in `1 + m_C`, continuous for the
+   `p`-adic topology (needed: additive maps `ℤ_p^h → ℂ_p` need not be `ℤ_p`-linear), `log ∘ f`
+   is `dα(z)` with `z ∈ ℚ_p^d` (`dalphaK_bijective`); take `x` with `log_F x = z`
+   (`exact_logHom`), then `α(x)/f` is `μ_{p^∞}`-valued and factors through some `G_v^∨`, so it is
+   `α(t)` for a torsion `t` (generalise `exists_torsion_alpha_eq` from `p` to `p^v`); `x − t` is
+   Γ-invariant by injectivity of `α` and `alpha_gal`.
+2. **Non-connected `G` over `ℤ_p`: Cor. 3.4.11 `dim D_{-1}(V_p G) = dim G°`** (this is what
+   Lemma 3.5.2 needs). Lower bound: `V_p(G°) ↪ V_p G` (as in `dualConnTateLin`). Upper bound:
+   `ker(T_p G → lim G_v^{et}(ℚ̄_p)) = T_p(G°)` (`mapPoints_etaleQuotientHom_eq_one_iff`,
+   lifting along `T_p(G°) ↠ G_k°`), `T/T°` torsion free, and `D_{-1}(T/T° ⊗ ℚ_p) = 0`. For the
+   last point either build `G^{et}` as a `PDivGroup` (hard part: `range_eq` for all `S`, i.e. the
+   schematic image of `G_v` in `G_{v+1}^{et}` is `G_{v+1}^{et}[p^v]`; compare orders using
+   faithful flatness of `A` over `A^{et}`) and use `isHodgeTate_tateRep_of_etale`, or run
+   `Hilbert90.exists_hilbert90` directly on a basis of `T/T°` (`A(ν) ≡ 1 mod p^k` on
+   `Gal(/coordField(G^{et}, k))`, since `ν t − t ∈ T° + p^k T`). Note `EtaleHT` is stated over
+   `ℤ_[p]`, the formal-group files over `ZpD p` (a type synonym).
+3. Base `O_{K'}`: Serre–Tate over `O_{K'}` (residue field `𝔽_q`: Frobenius twists), then redo
+   `HeightIneq`, `DAlphaHT`, `DAlphaDual` with `L = K'` (`AlphaInjK` already gives injectivity).
+4. §3.5: discriminant formula [Hong, Prop. 3.5.1] (Tate §(2.2) Prop. 2, Haines §2.3, Lipnowski
+   appendix in `lit/dl/padic-hodge/disc/`), Lemma 3.5.2, Prop. 3.5.3 (scheme-theoretic closure),
+   Thm. 3.5.4; plan in hand-off 10.
+
+## Hand-off (2026-10-18, twelfth session; superseded)
 
 Scope (unchanged, `~/iut-scratch/multiradial/MR6-scoping.md`, item A2): [LocAn] needs Tate's
 Theorem 4 (full faithfulness of `G ↦ T_p G` over `O_{K'}`) for `p`-divisible groups of Jacobians.
