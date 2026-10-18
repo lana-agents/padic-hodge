@@ -30,6 +30,7 @@ import PadicHodge.FormalGroup.AlphaLog
 import PadicHodge.FormalGroup.DAlphaInj
 import PadicHodge.FormalGroup.DerivStable
 import PadicHodge.FormalGroup.Divisible
+import PadicHodge.FormalGroup.DualPDivFGL
 import PadicHodge.FormalGroup.DualTateGal
 import PadicHodge.FormalGroup.DualTateZp
 import PadicHodge.FormalGroup.ExactSeq
@@ -96,6 +97,7 @@ import PadicHodge.GroupScheme.ConstPDivMap
 import PadicHodge.GroupScheme.ConstPDivTate
 import PadicHodge.GroupScheme.Constant
 import PadicHodge.GroupScheme.DualBaseChange
+import PadicHodge.GroupScheme.DualPDivFree
 import PadicHodge.GroupScheme.DualTateField
 import PadicHodge.GroupScheme.DualTateOC
 import PadicHodge.GroupScheme.EtaleFrobenius

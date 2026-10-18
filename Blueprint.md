@@ -660,6 +660,15 @@ in place of Kähler differentials (all rings of integers here are monogenic), ev
   (`Coords.fgl`), `p`-divisibility by levelwise bijectivity `A_v^{p^h} → A_{v+1}`
   (`Coords.isPDivisible`), levelwise bialgebra isomorphisms (`levelEquiv`). With
   `FGL.Hom.pdivEquiv` this is the Serre–Tate equivalence over `ℤ_p`.
+* **done** `GroupScheme/DualPDivFree.lean`, `FormalGroup/DualPDivFGL.lean`: **the Cartier dual
+  `p`-divisible group over the base** ([Hong, Prop. 2.1.7 (2), Def. 2.1.8]) for `G = F[p^∞]`
+  over a complete local `R` (e.g. `ℤ_p`): `PDivFGL.dualPDiv` (layers `G_v^∨`, transitions
+  `quot_v^∨`, height `h`), from `DualPDivData` (a `quot^*`-linear retraction with `retr 1 = 1`,
+  `ker(A_{v+1} ↠ A_1) ⊆ (quot^*(I_v))`, `[p^v]^*` split through `A_1`): closed immersion
+  (`dual_quot_surjective`), kernel condition over every `S` (`exists_dual_quot_eq`; characters
+  killed by `p^v` are `G_1`-invariant, invariants descend via an explicit inverse-Galois-map
+  argument, `HopfInvariants.eq_of_invariant`); `T_p(G^∨) = DualTate`, base change to `ℚ_p`
+  agrees with `dualPDiv` of the generic fibre on points and Tate modules.
 
 ## Hand-off (2026-10-18, eleventh session)
 
