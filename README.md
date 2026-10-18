@@ -91,7 +91,7 @@ Phase PH0 (skeleton), PH1 (Tate's `H⁰` and `H¹` of `ℂ_p(j)`, including almo
   `[m+n] = Φ([m],[n])`, `[m]∘[n] = [mn]` (`Formal.lean`); Galois-equivariance of `log_F`
   (`GaloisAction.lean`); `p`-divisible formal groups have surjective `log_F`, and for `Ĝ_m` the
   exact sequence `0 → μ_{p^∞} → 1 + m_{ℂ_p} → ℂ_p → 0` (`Gm.lean`), `log_{Ĝ_m} = log(1 + ·)`
-  (`GmLog.lean`); the layers
+  (`GmLog.lean`); `F(m_{ℂ_p})^{G_L} = F(m_L)`, `⋂ p^n F(p ℤ_p) = 0` (`Invariants.lean`); the layers
   `A_v = R[[T]]/[p^v](I)` with `A_{v+1} ↠ A_v`, `A_v → A_{v+1}` and the injective,
   Galois-equivariant map `F(m)[p^v] → Hom_R(A_v, O_{ℂ_p})` (`Layers.lean`, `LayerPoints.lean`).
 
