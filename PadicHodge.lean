@@ -142,6 +142,7 @@ import PadicHodge.HodgeTate.Basic
 import PadicHodge.HodgeTate.Character
 import PadicHodge.HodgeTate.Dual
 import PadicHodge.HodgeTate.FiniteImage
+import PadicHodge.HodgeTate.Orthogonal
 import PadicHodge.HodgeTate.SerreTate
 import PadicHodge.HodgeTate.Splitting
 import PadicHodge.HodgeTate.Tensor

@@ -669,6 +669,12 @@ in place of Kähler differentials (all rings of integers here are monogenic), ev
   killed by `p^v` are `G_1`-invariant, invariants descend via an explicit inverse-Galois-map
   argument, `HopfInvariants.eq_of_invariant`); `T_p(G^∨) = DualTate`, base change to `ℚ_p`
   agrees with `dualPDiv` of the generic fibre on points and Tate modules.
+* **done** `HodgeTate/Orthogonal.lean` (**step (3.11) of [Hong, proof of Thm. 3.4.10]**): for a
+  representation `V` and `q + q' ≠ 0`, invariants of `V ⊗ ℂ_p(q)` and `V^∨ ⊗ ℂ_p(q')` are
+  orthogonal (`dualEquiv_eq_zero_of_mem_DHT`, via `ℂ_p(j)^{G_L} = 0` [Hong, Thm. 3.1.12]), so
+  `dim D_q(V) + dim D_{q'}(V^∨) ≤ dim V` (`finrank_DHT_add_finrank_DHT_dual_le`, [Hong,
+  Lemma 3.1.13]); **`bijective_of_finrank_le_add_fin`**: injections `L^d ↪ D_{-1}(V)`,
+  `L^{d'} ↪ D_0(V^∨)` with `dim V ≤ d + d'` are bijective (equality in (3.9), (3.10)).
 
 ## Hand-off (2026-10-18, eleventh session)
 
