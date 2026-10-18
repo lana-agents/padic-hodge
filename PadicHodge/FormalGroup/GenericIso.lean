@@ -192,6 +192,34 @@ theorem Hom.bijective_of_mapPoints_bijective_OL {G H : PDivGroup (OL L) p} (f : 
   exact bijective_of_discIdeal_eq K hrank OL.algebraMap_qbar_injective
     (f.f v : (H.G v).A →ₐ[OL L] (G.G v).A) hK (hdA.trans hdB.symm) h0
 
+/-- **[Hong, Lemma 3.5.2] over `O_L`, generic-fibre form**: if `f_L : G_L → H_L` has an inverse
+homomorphism of `p`-divisible groups over `L`, then `f` is an isomorphism. -/
+theorem Hom.bijective_of_baseChange_inverse_OL {G H : PDivGroup (OL L) p} (f : Hom G H)
+    (g : Hom (H.baseChange L) (G.baseChange L))
+    (h1 : (Hom.baseChange (S := L) f).comp g = Hom.id _)
+    (h2 : g.comp (Hom.baseChange (S := L) f) = Hom.id _) (v : ℕ) :
+    Function.Bijective (f.f v) := by
+  refine f.bijective_of_mapPoints_bijective_OL (fun w => ?_) v
+  let EG := (G.G w).baseChangePointsEquiv (S := L) K
+  let EH := (H.G w).baseChangePointsEquiv (S := L) K
+  have hf : ⇑((f.f w).mapPoints K) =
+      EH ∘ ((Hom.baseChange (S := L) f).f w).mapPoints K ∘ EG.symm := by
+    funext x
+    change _ = (f.f w).mapPoints K (EG (EG.symm x))
+    rw [MulEquiv.apply_symm_apply]
+  have hl : Function.LeftInverse ((g.f w).mapPoints K)
+      (((Hom.baseChange (S := L) f).f w).mapPoints K) := fun x => by
+    have := congrArg (fun φ : Hom _ _ => (φ.f w).mapPoints K x) h2
+    exact this
+  have hr : Function.RightInverse ((g.f w).mapPoints K)
+      (((Hom.baseChange (S := L) f).f w).mapPoints K) := fun x => by
+    have := congrArg (fun φ : Hom _ _ => (φ.f w).mapPoints K x) h1
+    exact this
+  rw [hf]
+  have hb : Function.Bijective (((Hom.baseChange (S := L) f).f w).mapPoints K) :=
+    ⟨hl.injective, hr.surjective⟩
+  exact EH.bijective.comp (hb.comp EG.symm.bijective)
+
 end PDivGroup
 
 end PadicHodge

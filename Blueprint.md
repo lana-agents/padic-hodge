@@ -871,6 +871,8 @@ in place of Kähler differentials (all rings of integers here are monogenic), ev
   `Hom.mapTate_bijective`, `Hom.dim_eq_of_mapPoints_bijective_OL` (same `d` via `V_p(G_L) ≅
   V_p(H_L)` and Cor. 3.4.11 over `L`), heights by counting points, Prop. 3.5.1,
   `bijective_of_discIdeal_eq`.
+  Generic-fibre form: **`PDivGroup.Hom.bijective_of_baseChange_inverse_OL`** (`f_L` has an
+  inverse homomorphism over `L`).
 
 ## Hand-off (2026-10-18, seventeenth session)
 
