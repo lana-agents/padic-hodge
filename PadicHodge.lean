@@ -77,6 +77,7 @@ import PadicHodge.FormalGroup.OCAdic
 import PadicHodge.FormalGroup.OCAdicPi
 import PadicHodge.FormalGroup.OK
 import PadicHodge.FormalGroup.OLCompact
+import PadicHodge.FormalGroup.OLFrob
 import PadicHodge.FormalGroup.PDeriv
 import PadicHodge.FormalGroup.Points
 import PadicHodge.FormalGroup.PointsOC
@@ -111,6 +112,7 @@ import PadicHodge.GroupScheme.DualTateField
 import PadicHodge.GroupScheme.DualTateOC
 import PadicHodge.GroupScheme.EtaleFrobenius
 import PadicHodge.GroupScheme.EtaleHT
+import PadicHodge.GroupScheme.EtaleHTOL
 import PadicHodge.GroupScheme.EtaleInvariants
 import PadicHodge.GroupScheme.EtaleInvertible
 import PadicHodge.GroupScheme.EtalePoints
@@ -149,6 +151,7 @@ import PadicHodge.Hilbert90.Linear
 import PadicHodge.Hilbert90.Main
 import PadicHodge.Hilbert90.Matrix
 import PadicHodge.Hilbert90.Residue
+import PadicHodge.Hilbert90.UnrOver
 import PadicHodge.HodgeTate.Basic
 import PadicHodge.HodgeTate.Character
 import PadicHodge.HodgeTate.Dual
