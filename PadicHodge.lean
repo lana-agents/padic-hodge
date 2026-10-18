@@ -29,6 +29,7 @@ import PadicHodge.FormalGroup.AlphaInjK
 import PadicHodge.FormalGroup.AlphaLog
 import PadicHodge.FormalGroup.DAlphaDual
 import PadicHodge.FormalGroup.DAlphaHT
+import PadicHodge.FormalGroup.DAlphaHTOL
 import PadicHodge.FormalGroup.DAlphaInj
 import PadicHodge.FormalGroup.DerivStable
 import PadicHodge.FormalGroup.Divisible
