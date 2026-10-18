@@ -504,8 +504,75 @@ in place of Kähler differentials (all rings of integers here are monogenic), ev
   power series `U ∈ S[[T]]` with `U(Φ(T, T')) = U(T) U(T')`** (`exists_groupLike`: the step
   `lim_v Hom(G_v ⊗ S, μ_{p^v}) → Hom(F_S, Ĝ_m)` of [Hong, Prop. 3.4.9, (3.7)]). Generic kernel
   lemma `MvPowerSeries.mem_sup_pow_of_comp_eq_mk`.
+* **done** `FormalGroup/OCAdic.lean`: `x ∈ p^n O_{ℂ_p}` iff `|x| ≤ |p|^n`;
+  **`O_{ℂ_p}` is `p`-adically complete** (`OC.isAdicComplete_span_p`), hence
+  `𝔪_{ℤ_p}`-adically complete for any `ℤ_p`-algebra structure (`OC.isAdicComplete_padicInt`):
+  `LayerLimitBase` applies to `S = O_{ℂ_p}`.
 
-## Hand-off (2026-10-18, eighth session)
+## Hand-off (2026-10-18, ninth session)
+
+Scope (unchanged, `~/iut-scratch/multiradial/MR6-scoping.md`, item A2): [LocAn] needs Tate's
+Theorem 4 (full faithfulness of `G ↦ T_p G` over `O_{K'}`), for `p`-divisible groups of Jacobians,
+so formal groups of **dimension `d = g`** (everything below is for arbitrary `d`, `d'`).
+
+Done this session (all pushed with green validation, `origin/main`): `0e22c06`
+(`Filtration`, `LayerLimit`, `SerreTateHom`: [Hong, Lemma 2.2.14, Lemma 2.2.15]
+`R[[T]] ≅ lim_v A_v`, and **[Hong, Thm. 2.2.16] full faithfulness**
+`FGL.Hom.pdivEquiv : Hom(F, F') ≃ Hom(F[p^∞], F'[p^∞])`, hypothesis `p ∈ 𝔪_R`; no
+noetherianity of `R[[T]]` needed: the coefficient filtration `N_w` replaces the `(𝔪, T)`-adic
+topology, so Mathlib's missing `IsNoetherianRing (MvPowerSeries (Fin n) R)` is not a blocker),
+`202ad58` (`LayerLimitBase`: `S[[T]] ≅ lim_v S ⊗_R A_v` for `S` complete for `𝔪_R S`, and
+compatible group-like families `b_v ∈ S ⊗ A_v` give `U ∈ S[[T]]` with
+`U(Φ(T, T')) = U(T) U(T')`), and the commit with `OCAdic` (`O_{ℂ_p}` is `p`-adically complete)
+and this hand-off.
+
+**[Hong, Prop. 3.5.1] (discriminant formula `disc(A_v/O_K) = (p^{d v p^{hv}})`)**: no proof in
+the local literature. [Hong] states it without proof (remark after Prop. 3.5.1: sketch via
+`0 → G_1 → G_{v+1} → G_v → 0`); [Horawa] (`tate/horawa.txt`, Prop. 2.9.3) gives the same sketch
+and says "This is hard so we omit the details"; [BC] (`bc.txt`) has no discriminant formula for
+finite flat group schemes (its discriminants are those of field extensions, §13). [Tate] is not
+available locally. A proof has to be found elsewhere (e.g. [Tate, §2.3, Prop. 2] or Faltings–
+Chai / Messing) or reconstructed: `disc(A_1) = (p^{d p^h})` via `Ω_{A_1/O_K} ≅ A_1 ⊗ ω_{G_1}`,
+`ω_{G_1} ≅ (O_K/p)^d` for `G_1 = F[p]` (the cotangent space of `A_1 = R[[T]]/[p](T)` is
+`(T)/((T)^2 + [p](T)) ≅ (R/p)^d` by [Hong, Lemma 2.2.14] = `mulPS_sub_mem`), different = Fitting
+ideal of `Ω`, discriminant = norm of different, and multiplicativity in towers.
+
+Next steps, in order:
+
+1. **`α` for connected `G = F[p^∞]`** ([Hong, Prop. 3.4.9]). Available: `exists_groupLike`
+   (`S = O_{ℂ_p}`, needs an `Algebra ℤ_[p] (OC p)` instance compatible with the existing
+   `[Algebra R (OC p)]` setups, and `OC.isAdicComplete_padicInt`). Remaining:
+   (a) `T_p(G^∨)` points as group-likes: a point `y ∈ G_v^∨(S) = Hom_alg(A_v^∨, S)` is a group-like
+   element of `S ⊗ A_v` (Cartier: `CartierPairingBase.hat`/`theta`, `CartierDouble`), compatible
+   in `v` along `inclB`; over `ℚ̄_p` the values lie in `O_{ℚ̄_p} ⊆ O_{ℂ_p}` (integrality of finite
+   `ℤ_p`-algebras). Note `dualPDiv` is only defined over `ℚ_p` (generic fibre); work with
+   `(G_v)^∨` over `ℤ_p` levelwise.
+   (b) evaluation of `U ∈ O_{ℂ_p}[[T]]` at `x ∈ F(m_{ℂ_p})`: the `Pt`/`ev` framework needs a
+   *discrete* coefficient ring; use a type synonym of `O_{ℂ_p}` with the discrete topology (any
+   map out of it is continuous) or `MvPowerSeries.eval₂` with `HasEval` directly
+   (`|x_j| < 1`, bounded coefficients: `norm_eval₂_le`).
+   (c) `α(x)(u) = U_u(x)`, homomorphism in `x` (from `U(Φ) = U·U`) and in `u`, Galois-equivariant;
+   left square of [Hong, Prop. 3.4.9] (on torsion: the Cartier pairing `tatePairing`); right square
+   via `LogNat`-type argument for `log(U(x))` (`dα`).
+   (d) injectivity of `α` on `G(O_K)` ([Hong, Lemma 3.4.2, 3.4.3], `Invariants.lean`).
+2. **`d + d^∨ = h`** ([Hong, Thm. 2.2.19]): needs [Hong, Prop. 2.2.13] (structure of
+   `lim(A_v ⊗ k)` via Frobenius kernels), Cor. 2.2.18 (`ker φ_G` has order `p^d`), Frobenius and
+   Verschiebung of finite flat group schemes in characteristic `p` (Prop. 2.1.12) and their Cartier
+   duality, and the dual `p`-divisible group over `R` (not only over `ℚ_p`). For `G = F[p^∞]`
+   connected: `ker φ` on `A_1 ⊗ k = k[[T]]/[p](T)` is `k[T]/(T^p)`. A separate project; without
+   it Tate's argument only gives `d + d^∨ ≤ h`.
+3. Then Tate's theorem [Hong, Thm. 3.4.10] / Cor. 3.4.11 (`ℚ_p`-linearity of `dα` suffices for
+   the dimension count over `K = ℚ_p`), Hodge–Tate [Hong, Thm. 3.4.12] via the existing
+   `sum_finrank_DHT_le`, `isHodgeTate_of_exact_of_disjoint`; the connected–étale sequence for
+   `G(O_{ℂ_p})` ([Hong, Prop. 3.2.5]) for non-connected `G` (connected part as `F[p^∞]` needs
+   Serre–Tate *essential surjectivity*, [Hong, Thm. 2.2.16, second half], which again needs
+   [Hong, Prop. 2.2.13]).
+4. **Full faithfulness, existence half** [Hong, Thm. 3.5.4]: [Hong, Prop. 3.5.3] (scheme-theoretic
+   closure of a Galois-stable summand), Lemma 3.5.2 (needs Cor. 3.4.11 and Prop. 3.5.1; see above).
+5. Base `O_K` instead of `ℤ_p`: the Galois/Tate-module wiring (`tateRep`, `dualPDiv`,
+   `tatePairingZp`) is over `ℚ_p`; [LocAn] needs finite `K'/ℚ_p`.
+
+## Hand-off (2026-10-18, eighth session; superseded)
 
 Scope reminder (`~/iut-scratch/multiradial/MR6-scoping.md`, item A2): [LocAn] needs only
 Tate's Theorem 4 (full faithfulness of `G ↦ T_p G` over `O_{K'}`), whose proof in [Hong, Thm.

@@ -53,6 +53,7 @@ import PadicHodge.FormalGroup.LogProps
 import PadicHodge.FormalGroup.Mult
 import PadicHodge.FormalGroup.Neg
 import PadicHodge.FormalGroup.OC
+import PadicHodge.FormalGroup.OCAdic
 import PadicHodge.FormalGroup.Points
 import PadicHodge.FormalGroup.SerreTateHom
 import PadicHodge.FormalGroup.TateModule
