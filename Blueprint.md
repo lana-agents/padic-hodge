@@ -405,6 +405,9 @@ in place of Kähler differentials (all rings of integers here are monogenic), ev
 * **done** `FormalGroup/Invariants.lean`: `F(m_{ℂ_p})^{G_L} = F(m_L)` (`galPt_fixed_iff`, [Hong,
   Lemma 3.4.2]), `log_F` of fixed points in `L`; `⋂_n p^n F(p ℤ_p) = 0`
   (`eq_zero_of_forall_pow_nsmul_Qp`, [Hong, Lemma 3.4.3]; uniform version for any `L`).
+* **done** `FormalGroup/TateModule.lean`: `T_p F = lim F(m)[p^v]` (`tate`), Galois-stable, terms
+  in `ker log_F`; surjective onto `F(m)[p^v]` if `F(m)` is `p`-divisible
+  (`exists_tate_of_divisible`); `T_p Ĝ_m` = compatible `p`-power roots of unity (`gm_tate_iff`).
 * **done** `FormalGroup/Layers.lean`, `LayerPoints.lean` (start of [Hong, Prop. 2.2.10]):
   `mem_span_X` (`ker ε = I`), `layerIdeal` `J_v`, `J_{v+1} ⊆ J_v`, `Layer` `A_v`, `layerIncl`,
   `layerP`; `layerPt : F(m)[p^v] → Hom_R(A_v, O_{ℂ_p})`, injective, compatible with `layerIncl`

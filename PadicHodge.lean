@@ -34,6 +34,7 @@ import PadicHodge.FormalGroup.Mult
 import PadicHodge.FormalGroup.Neg
 import PadicHodge.FormalGroup.OC
 import PadicHodge.FormalGroup.Points
+import PadicHodge.FormalGroup.TateModule
 import PadicHodge.FormalGroup.Torsion
 import PadicHodge.Galois.Basic
 import PadicHodge.Galois.Continuity
