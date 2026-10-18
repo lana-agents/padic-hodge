@@ -27,7 +27,9 @@ import PadicHodge.FormalGroup.Formal
 import PadicHodge.FormalGroup.FormalInv
 import PadicHodge.FormalGroup.GaloisAction
 import PadicHodge.FormalGroup.Gm
+import PadicHodge.FormalGroup.GmHeight
 import PadicHodge.FormalGroup.GmLog
+import PadicHodge.FormalGroup.GmMu
 import PadicHodge.FormalGroup.Invariants
 import PadicHodge.FormalGroup.Law
 import PadicHodge.FormalGroup.LayerFree
@@ -46,6 +48,7 @@ import PadicHodge.FormalGroup.OC
 import PadicHodge.FormalGroup.Points
 import PadicHodge.FormalGroup.TateModule
 import PadicHodge.FormalGroup.Torsion
+import PadicHodge.FormalGroup.WeierstrassFree
 import PadicHodge.Galois.Basic
 import PadicHodge.Galois.Continuity
 import PadicHodge.GroupScheme.BaseChange

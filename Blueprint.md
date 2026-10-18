@@ -446,6 +446,17 @@ in place of Kähler differentials (all rings of integers here are monogenic), ev
 * **done** `FormalGroup/Divisible.lean` ([Hong, Prop. 3.2.7], connected case): **`F(m_{ℂ_p})` is
   `p`-divisible** for `p`-divisible `F` (`PDivFGL.exists_p_nsmul_eq`), hence `log_F` is surjective
   (`PDivFGL.logF_surjective`, [Hong, Prop. 3.4.7] for `G = F[p^∞]`).
+* **done** `FormalGroup/WeierstrassFree.lean`: for `A` complete local and `g ∈ A[[X]]` without
+  constant term whose reduction has order `n`, `A[[X]]` is free of rank `n` over itself via
+  `f ↦ f(g)`, basis `1, …, X^{n−1}` (`WeierstrassFree.freeVia_psi`; iterated Weierstrass division,
+  Mathlib `PowerSeries.eq_mul_weierstrassDiv_add_weierstrassMod`, uniqueness from
+  `IsWeierstrassDivision.eq_zero`).
+* **done** `FormalGroup/GmHeight.lean` ([Hong, Ex. 2.2.4, Def. 2.2.9]): `[n]_{Ĝ_m} = (1+t)^n − 1`
+  (`gm_mulPS`); over a complete local ring with `p ∈ 𝔪`, **`Ĝ_m` is `p`-divisible of height 1**
+  (`gm_isPDivisible`, `gmPDiv`).
+* **done** `FormalGroup/GmMu.lean`: **`Ĝ_m[p^∞] ≅ μ_{p^∞}`** as `p`-divisible groups
+  (`GmMu.gmToMu`, `muToGm`, both composites the identity; `[k] ↦ (1+t)^k`, `t ↦ [1] − 1`),
+  `T_p(Ĝ_m[p^∞]) ≅ T_p μ_{p^∞}` (`GmMu.tateEquiv`).
 
 ## Hand-off (2026-10-18, seventh session)
 
