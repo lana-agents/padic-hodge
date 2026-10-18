@@ -44,6 +44,7 @@ import PadicHodge.FormalGroup.LayerTate
 import PadicHodge.FormalGroup.Layers
 import PadicHodge.FormalGroup.Lift
 import PadicHodge.FormalGroup.Log
+import PadicHodge.FormalGroup.LogNat
 import PadicHodge.FormalGroup.LogProps
 import PadicHodge.FormalGroup.Mult
 import PadicHodge.FormalGroup.Neg
