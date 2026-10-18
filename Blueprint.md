@@ -441,13 +441,19 @@ in place of Kähler differentials (all rings of integers here are monogenic), ev
   (`Φ_sub_mem`, from the unit axioms via `MvPowerSeries.coeff_subst`), `(T)`-adic continuity of
   substitution, **`formalInv`** as the `(T)`-adic limit of `y_{k+1} = y_k − Φ(T, y_k)`
   (deviation from [Hong]'s degree-by-degree construction).
+* **done** `FormalGroup/Lift.lean`: ring maps `A → K` (`K` algebraically closed) lift along a
+  finite free endomorphism of `A` (`FreeVia.exists_lift`: going up + `IsAlgClosed.lift`).
+* **done** `FormalGroup/Divisible.lean` ([Hong, Prop. 3.2.7], connected case): **`F(m_{ℂ_p})` is
+  `p`-divisible** for `p`-divisible `F` (`PDivFGL.exists_p_nsmul_eq`), hence `log_F` is surjective
+  (`PDivFGL.logF_surjective`, [Hong, Prop. 3.4.7] for `G = F[p^∞]`).
 
 ## Hand-off (2026-10-18, seventh session)
 
 Done this session (all pushed with green validation): `abc5a8d` (`AdicEval`, `LayerFree`:
 `A_v` free of rank `p^{hv}`), `1887dff` (`AdicPoints`, `LayerHopf`, `LayerPDiv`: Hopf algebras
 `A_v` and the `p`-divisible group `F[p^∞]`), `31b5da2` (`LayerSurj`), `8b69b45` (`FormalInv`),
-`0053520` (`LayerTate`), and the commit carrying this hand-off (`isConnected_groupScheme`). Step 1
+`0053520` (`LayerTate`), `fd662ee` (`isConnected_groupScheme`, this hand-off), and the commit
+adding `Lift`, `Divisible` ([Hong, Prop. 3.2.7] for `F[p^∞]`, step 2 below). Step 1
 of the sixth-session plan ([Hong, Prop. 2.2.10] (a)–(d)) is complete, with the deviations
 recorded above (height part of the datum; antipode `[p^v − 1]`; Weierstrass preparation not
 used, so no example of a `p`-divisible formal group law (e.g. `Ĝ_m` over `ℤ_p`, height 1) is
@@ -459,13 +465,10 @@ Next steps, in order:
    `t ↦ (1+t)^p − 1` with basis `1, …, t^{p−1}`; Mathlib has `PowerSeries` Weierstrass division,
    `Mathlib/RingTheory/PowerSeries/WeierstrassPreparation.lean`; iterate it and take
    `(t)`-adic limits as in `FormalInv.lean`); compare `PDivFGL.pdivGroup` with `μ_{p^∞}`.
-2. **[Hong, Prop. 3.2.7]** for `G = F[p^∞]`: `F(m_{ℂ_p})` is `p`-divisible. Plan: for
-   `y ∈ F(m)`, base change the finite free `A`-algebra `A` (via `[p]^*`, `FreeVia` basis) along
-   `ev_y : A → ℂ_p` to a nonzero finite `ℂ_p`-algebra, take a `ℂ_p`-point `χ` (ℂ_p algebraically
-   closed), `x_j = χ(t_j)`: integrality gives `|x_j| ≤ 1`, `t_j^N ∈ 𝔪A + [p]^*(I)A` gives
-   `< 1`, and `ev_x = χ` on `A` by `AdicEval.algHom_ext` with `isHausdorff_span`. Then
-   `logF_surjective_of_divisible` gives [Hong, Prop. 3.4.7] for `G = F[p^∞]` and
-   `exists_tate_of_divisible` the surjectivity `T_p F → F(m)[p^v]`.
+2. **done** ([Hong, Prop. 3.2.7] for `G = F[p^∞]`, `Divisible.lean`). Remaining from it:
+   `exists_tate_of_divisible` now gives `T_p F ↠ F(m)[p^v]`; the exact sequence
+   `0 → T_p F → … ` of [Hong, Prop. 3.4.7] in the form `0 → G(O_C)[p^∞] → G(O_C) → t_G(C) → 0`
+   for connected `G = F[p^∞]` (`ker_logHom`, `PDivFGL.logF_surjective`).
 3. **Tate's theorem** ([Stix, Thm. 91], [Hong, Thm. 3.4.10]) and the **Hodge–Tate
    decomposition** ([Hong, Thm. 3.4.12]): unchanged from the sixth-session plan (formal group of
    `G°` = Serre–Tate [Hong, Prop. 2.2.13, Thm. 2.2.16]; `G(O_C)` and the connected–étale

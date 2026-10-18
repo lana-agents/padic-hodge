@@ -22,6 +22,7 @@ import PadicHodge.Cyclotomic.Trace
 import PadicHodge.Cyclotomic.Vanishing
 import PadicHodge.FormalGroup.AdicEval
 import PadicHodge.FormalGroup.AdicPoints
+import PadicHodge.FormalGroup.Divisible
 import PadicHodge.FormalGroup.Formal
 import PadicHodge.FormalGroup.FormalInv
 import PadicHodge.FormalGroup.GaloisAction
@@ -36,6 +37,7 @@ import PadicHodge.FormalGroup.LayerPoints
 import PadicHodge.FormalGroup.LayerSurj
 import PadicHodge.FormalGroup.LayerTate
 import PadicHodge.FormalGroup.Layers
+import PadicHodge.FormalGroup.Lift
 import PadicHodge.FormalGroup.Log
 import PadicHodge.FormalGroup.LogProps
 import PadicHodge.FormalGroup.Mult

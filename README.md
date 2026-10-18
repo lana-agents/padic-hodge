@@ -100,7 +100,8 @@ Phase PH0 (skeleton), PH1 (Tate's `H⁰` and `H¹` of `ℂ_p(j)`, including almo
   algebra (`LayerHopf.lean`, via evaluation of power series in adically complete algebras,
   `AdicEval.lean`, `AdicPoints.lean`), and `F[p^∞]` is a connected `p`-divisible group
   (`LayerPDiv.lean`, `PDivFGL.pdivGroup`); `F[p^v](O_{ℂ_p}) = F(m)[p^v]` (`LayerSurj.lean`) and
-  `T_p F ≅ T_p F[p^∞](O_{ℂ_p})` (`LayerTate.lean`); the formal inverse `ι(T)` (`FormalInv.lean`).
+  `T_p F ≅ T_p F[p^∞](O_{ℂ_p})` (`LayerTate.lean`); the formal inverse `ι(T)` (`FormalInv.lean`);
+  `F(m_{ℂ_p})` is `p`-divisible and `log_F` surjective ([Hong, Prop. 3.2.7], `Divisible.lean`).
 
 No `sorry`, no `axiom`. All builds use `lake build --wfail`.
 
