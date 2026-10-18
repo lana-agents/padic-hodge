@@ -373,6 +373,12 @@ in place of Kähler differentials (all rings of integers here are monogenic), ev
   **`V_p(G^∨) ≅ V_p(G)^∨ ⊗ ℚ_p(1)`** (`tateRepDualEquiv`, `tateRepDualEquiv_gal`, base change of
   `tateDualHom` via `IsBaseChange.toDualBaseChange`) ([Hong, Prop. 3.4.6], [Stix, Cor. 85]);
   `isHodgeTate_tateRep_dualPDiv`.
+* **done** `GroupScheme/Faithful.lean`: for `R → Ω` injective, `Ω` separably closed, `p ≠ 0` in
+  `Ω`: `#G_v(Ω) = p^{hv}` (`card_points_sepClosed`), `T_p G(Ω) ↠ G_v(Ω)`; finite étale algebras
+  over `Ω` are separated by points (`eq_of_forall_algHom_eq`); **`Hom.ext_of_mapTate`** (a
+  homomorphism `G → H` over `R` is determined by `T_p G(Ω) → T_p H(Ω)`) and
+  **`Hom.ext_of_baseChange`** (faithfulness of the generic fibre functor: uniqueness part of
+  [Hong, Thm. 3.5.4, proof], faithfulness part of [Hong, Prop. 2.1.14]).
 * **planned** rest of the connected–étale sequence over `O_K`, formal Lie groups;
   Tate's Hodge–Tate decomposition of `T_p G ⊗ ℂ_p` and full faithfulness ([Tate] §4, Thm. 4;
   [Tate] not available locally, statements as quoted in [LocAn] and [BC]); see the hand-off.
