@@ -27,6 +27,10 @@ the Galois representation `V_p(G^∨)` and the Cartier pairing with values in `�
   `T_p(G^∨)(ℂ_p) ≃ T_p(G^∨)(ℚ̄_p)`, `T_p(G^∨)(ℚ̄_p) ≃ T_p((G_{ℚ_p})^∨)(ℚ̄_p)` (Cartier duality
   commutes with base change, `dualTateBaseChangeEquiv`) and `T_p(G_{ℚ_p}^∨) = DualTate`
   (`tateModule_dualPDiv`); it is Galois-equivariant (`dualTateZpEquiv_gal`).
+
+The construction is done for any coefficient ring `R → O_{ℂ_p}` and field `F ⊆ ℚ̄_p` with
+`R → F → ℚ̄_p → ℂ_p` equal to `R → O_{ℂ_p} ⊆ ℂ_p` (`qbarToCpOf`, `dualTateGenEquiv`:
+`T_p(G^∨)(O_{ℂ_p}) ≃* T_p(G_F^∨)(ℚ̄_p)`), e.g. `R = O_{K'}`, `F = K'`.
 -/
 
 noncomputable section
@@ -88,21 +92,49 @@ namespace PDivGroup
 
 open FFGroupScheme
 
-variable {p : ℕ} [hp : Fact p.Prime] (G : PDivGroup (ZpD p) p)
-
-theorem isUnit_p_pow_Qbar (v : ℕ) : IsUnit ((p ^ v : ℕ) : PadicAlgCl p) :=
+theorem isUnit_p_pow_Qbar {p : ℕ} [hp : Fact p.Prime] (v : ℕ) :
+    IsUnit ((p ^ v : ℕ) : PadicAlgCl p) :=
   isUnit_iff_ne_zero.mpr (Nat.cast_ne_zero.mpr (pow_ne_zero v hp.out.ne_zero))
 
+theorem postComp_mapPoints {R : Type} [CommRing R] {H H' : FFGroupScheme R}
+    (f : FFGroupScheme.Hom H H') {T T' : Type} [CommRing T] [Algebra R T] [CommRing T']
+    [Algebra R T'] (ι : T →ₐ[R] T') (x : H.points T) :
+    H'.postComp ι (f.mapPoints T x) = f.mapPoints T' (H.postComp ι x) := rfl
+
+/-! ### General coefficient ring `R ⊆ O_{ℂ_p}` with generic fibre over a field `F ⊆ ℚ̄_p` -/
+
+section General
+
+variable {p : ℕ} [hp : Fact p.Prime] {R : Type} [CommRing R] [Nontrivial R] [Algebra R (OC p)]
+  {F : Type} [Field F] [CharZero F] [Algebra R F] [Algebra F (PadicAlgCl p)]
+  [Algebra R (PadicAlgCl p)] [IsScalarTower R F (PadicAlgCl p)]
+  (hRF : ∀ r : R, ((algebraMap R (PadicAlgCl p) r : PadicAlgCl p) : ℂ_[p]) =
+    ((algebraMap R (OC p) r : OC p) : ℂ_[p]))
+  (G : PDivGroup R p)
+
+omit [Nontrivial R] [CharZero F] [IsScalarTower R F (PadicAlgCl p)] in
+/-- `ℚ̄_p → ℂ_p` as an `R`-algebra map, given that `R → ℚ̄_p → ℂ_p` is `R → O_{ℂ_p} ⊆ ℂ_p`. -/
+def qbarToCpOf :
+    letI := algebraCpOfOC (p := p) R
+    PadicAlgCl p →ₐ[R] ℂ_[p] := by
+  letI := algebraCpOfOC (p := p) R
+  exact { algebraMap (PadicAlgCl p) ℂ_[p] with commutes' := fun r => hRF r }
+
+omit [Nontrivial R] [CharZero F] [IsScalarTower R F (PadicAlgCl p)] in
+theorem qbarToCpOf_injective : Function.Injective (qbarToCpOf (p := p) hRF) :=
+  (algebraMap (PadicAlgCl p) ℂ_[p]).injective
+
+omit [CharZero F] [IsScalarTower R F (PadicAlgCl p)] in
 /-- `G_v^∨(ℚ̄_p) → G_v^∨(ℂ_p)` is bijective. -/
-theorem dualPointsQbarCp_bijective (v : ℕ) :
-    letI := algebraCpOfOC (p := p) (ZpD p)
-    Function.Bijective ((G.G v).dual.postComp (ZpD.qbarToCp (p := p))) := by
-  letI := algebraCpOfOC (p := p) (ZpD p)
-  have hinj : Function.Injective ((G.G v).dual.postComp (ZpD.qbarToCp (p := p))) := by
+theorem dualPointsQbarCpOf_bijective (v : ℕ) :
+    letI := algebraCpOfOC (p := p) R
+    Function.Bijective ((G.G v).dual.postComp (qbarToCpOf (p := p) hRF)) := by
+  letI := algebraCpOfOC (p := p) R
+  have hinj : Function.Injective ((G.G v).dual.postComp (qbarToCpOf (p := p) hRF)) := by
     intro x y h
     apply WithConv.ofConv_injective
     ext a
-    exact ZpD.qbarToCp_injective
+    exact qbarToCpOf_injective hRF
       (congrArg (fun z : (G.G v).dual.points ℂ_[p] => ofConv z a) h)
   have h1 := (G.G v).card_dual_points_sepClosed (PadicAlgCl p)
     (PDivGroup.isUnit_p_pow_Qbar (p := p) v)
@@ -112,49 +144,72 @@ theorem dualPointsQbarCp_bijective (v : ℕ) :
     (G.G v).dual.finite_points_of_free (S := ℂ_[p]) (Module.Free.chooseBasis _ _)
   exact hinj.bijective_of_nat_card_le (by rw [h1, h2])
 
+omit [CharZero F] [IsScalarTower R F (PadicAlgCl p)] in
 /-- `G_v^∨(ℚ̄_p) ≃* G_v^∨(ℂ_p)`. -/
-def dualPointsQbarCp (v : ℕ) :
-    letI := algebraCpOfOC (p := p) (ZpD p)
+def dualPointsQbarCpOf (v : ℕ) :
+    letI := algebraCpOfOC (p := p) R
     (G.G v).dual.points (PadicAlgCl p) ≃* (G.G v).dual.points ℂ_[p] := by
-  letI := algebraCpOfOC (p := p) (ZpD p)
-  exact MulEquiv.ofBijective _ (G.dualPointsQbarCp_bijective v)
+  letI := algebraCpOfOC (p := p) R
+  exact MulEquiv.ofBijective _ (G.dualPointsQbarCpOf_bijective hRF v)
 
-omit hp in
-theorem postComp_mapPoints {R : Type} [CommRing R] {H H' : FFGroupScheme R}
-    (f : FFGroupScheme.Hom H H') {T T' : Type} [CommRing T] [Algebra R T] [CommRing T']
-    [Algebra R T'] (ι : T →ₐ[R] T') (x : H.points T) :
-    H'.postComp ι (f.mapPoints T x) = f.mapPoints T' (H.postComp ι x) := rfl
-
+omit [CharZero F] [IsScalarTower R F (PadicAlgCl p)] in
 /-- **`T_p(G^∨)(ℚ̄_p) ≃* T_p(G^∨)(ℂ_p)`.** -/
-def dualTateQbarCp :
-    letI := algebraCpOfOC (p := p) (ZpD p)
+def dualTateQbarCpOf :
+    letI := algebraCpOfOC (p := p) R
     G.DualTate (PadicAlgCl p) ≃* G.DualTate ℂ_[p] := by
-  letI := algebraCpOfOC (p := p) (ZpD p)
+  letI := algebraCpOfOC (p := p) R
   exact
-    { toFun := fun y => ⟨fun v => G.dualPointsQbarCp v (y.1 v), fun v => by
+    { toFun := fun y => ⟨fun v => G.dualPointsQbarCpOf hRF v (y.1 v), fun v => by
         change (G.G v).dual.postComp _ (y.1 v) = _
         rw [y.2 v]
         rfl⟩
-      invFun := fun z => ⟨fun v => (G.dualPointsQbarCp v).symm (z.1 v), fun v => by
-        apply (G.dualPointsQbarCp v).injective
+      invFun := fun z => ⟨fun v => (G.dualPointsQbarCpOf hRF v).symm (z.1 v), fun v => by
+        apply (G.dualPointsQbarCpOf hRF v).injective
         rw [MulEquiv.apply_symm_apply]
         change z.1 v = (G.G v).dual.postComp _ ((G.incl v).dual.mapPoints _ _)
         rw [postComp_mapPoints]
-        change z.1 v = (G.incl v).dual.mapPoints _ ((G.dualPointsQbarCp (v + 1))
-          ((G.dualPointsQbarCp (v + 1)).symm (z.1 (v + 1))))
+        change z.1 v = (G.incl v).dual.mapPoints _ ((G.dualPointsQbarCpOf hRF (v + 1))
+          ((G.dualPointsQbarCpOf hRF (v + 1)).symm (z.1 (v + 1))))
         rw [MulEquiv.apply_symm_apply]
         exact z.2 v⟩
       left_inv := fun y => Subtype.ext (funext fun v => MulEquiv.symm_apply_apply _ _)
       right_inv := fun z => Subtype.ext (funext fun v => MulEquiv.apply_symm_apply _ _)
       map_mul' := fun y y' => Subtype.ext (funext fun v => map_mul _ _ _) }
 
+/-- **`T_p(G^∨)(O_{ℂ_p}) ≃* T_p(G_F^∨)(ℚ̄_p)`** for `G` over `R`, `G_F` its generic fibre. -/
+def dualTateGenEquiv :
+    G.DualTate (OCd p) ≃* (G.baseChange F).dualPDiv.TateModule (PadicAlgCl p) := by
+  letI := algebraCpOfOC (p := p) R
+  exact (G.dualTateOCEquiv.trans (G.dualTateQbarCpOf hRF).symm).trans
+    ((G.dualTateBaseChangeEquiv (S := F) (PadicAlgCl p)).symm.trans
+      (MulEquiv.subgroupCongr ((G.baseChange F).tateModule_dualPDiv (PadicAlgCl p)).symm))
+
+end General
+
+/-! ### `R = ℤ_p`, `F = ℚ_p` -/
+
+section Zp
+
+variable {p : ℕ} [hp : Fact p.Prime] (G : PDivGroup (ZpD p) p)
+
+theorem ZpD.algebraMap_qbar_cp (r : ZpD p) :
+    ((algebraMap (ZpD p) (PadicAlgCl p) r : PadicAlgCl p) : ℂ_[p]) =
+      ((algebraMap (ZpD p) (OC p) r : OC p) : ℂ_[p]) := by
+  letI := algebraCpOfOC (p := p) (ZpD p)
+  exact (ZpD.qbarToCp (p := p)).commutes r
+
+/-- `G_v^∨(ℚ̄_p) ≃* G_v^∨(ℂ_p)`. -/
+def dualPointsQbarCp (v : ℕ) :
+    letI := algebraCpOfOC (p := p) (ZpD p)
+    (G.G v).dual.points (PadicAlgCl p) ≃* (G.G v).dual.points ℂ_[p] :=
+  G.dualPointsQbarCpOf ZpD.algebraMap_qbar_cp v
+
 /-- **`T_p(G^∨)(O_{ℂ_p}) ≃* T_p(G_{ℚ_p}^∨)(ℚ̄_p)`** for `G` over `ℤ_p`. -/
 def dualTateZpEquiv :
-    G.DualTate (OCd p) ≃* (G.baseChange ℚ_[p]).dualPDiv.TateModule (PadicAlgCl p) := by
-  letI := algebraCpOfOC (p := p) (ZpD p)
-  exact (G.dualTateOCEquiv.trans G.dualTateQbarCp.symm).trans
-    ((G.dualTateBaseChangeEquiv (S := ℚ_[p]) (PadicAlgCl p)).symm.trans
-      (MulEquiv.subgroupCongr ((G.baseChange ℚ_[p]).tateModule_dualPDiv (PadicAlgCl p)).symm))
+    G.DualTate (OCd p) ≃* (G.baseChange ℚ_[p]).dualPDiv.TateModule (PadicAlgCl p) :=
+  G.dualTateGenEquiv ZpD.algebraMap_qbar_cp
+
+end Zp
 
 end PDivGroup
 

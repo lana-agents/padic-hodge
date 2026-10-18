@@ -14,23 +14,23 @@ In the proof of [Hong, Thm. 3.4.10] the target `W = Hom_{ℤ_p}(T_p(G^∨), ℂ_
 `T_p(G_{ℚ_p}^∨)(ℚ̄_p)`, where the Cartier pairing with values in `ℤ_p(1)` lives
 (`tatePairingZp`). This file provides, for a `p`-divisible group `G` over `ℤ_p` (`ZpD p`):
 
-* `PDivGroup.galDualZp`: the action of `σ ∈ Gal(ℚ̄_p/ℚ_p)` on `T_p(G^∨)(O_{ℂ_p})` through its
-  extension to `O_{ℂ_p}` (`PDivFGL.galS`), for any `G` over `ℤ_p`; for `G = F[p^∞]` it is
-  `PDivFGL.galDual` (`PDivFGL.galDual_eq_galDualZp`);
-* `dualTateZpEquiv_spec`: `T_p(G^∨)(O_{ℂ_p}) ≃ T_p(G_{ℚ_p}^∨)(ℚ̄_p)` (`dualTateZpEquiv`) is
-  characterised levelwise by `z_v((f)_{ℚ_p}) = y_v(f)` in `ℂ_p`, `f ∈ A_v^∨`;
-* **`dualTateZpEquiv_gal`**, **`dualTateZpEquiv'_gal`**: it is Galois-equivariant, both for the
-  action `galTate` on `T_p(G_{ℚ_p}^∨) = (G_{ℚ_p})^∨`'s Tate module and for `galDualTate` on the
-  second argument of the Cartier pairing (`dualTateZpEquiv'`);
+* `PDivGroup.galDualGen`: the action of `σ ∈ Gal(ℚ̄_p/ℚ_p)` fixing `R` on `T_p(G^∨)(O_{ℂ_p})`
+  through its extension to `O_{ℂ_p}` (`PDivFGL.galS`), for any `G` over `R ⊆ O_{ℂ_p}`; for
+  `G = F[p^∞]` it is `PDivFGL.galDual` (`PDivFGL.galDual_eq_galDualGen`); `galDualZp` for `ℤ_p`;
+* `dualTateGenEquiv_spec`: `T_p(G^∨)(O_{ℂ_p}) ≃ T_p(G_F^∨)(ℚ̄_p)` (`dualTateGenEquiv`, generic
+  fibre over a field `F ⊆ ℚ̄_p`, e.g. `ℚ_p` or `K'`) is characterised levelwise by
+  `z_v(f_F) = y_v(f)` in `ℂ_p`, `f ∈ A_v^∨`;
+* **`dualTateGenEquiv_gal`**, `dualTateZpEquiv_gal`: it is equivariant for `σ ∈ Gal(ℚ̄_p/F)`
+  fixing `R`, for the action `galTate` on `T_p(G_F^∨)`;
 * `instModuleZpDual`: the `ℤ_p`-module structure on `T_p(G^∨)(S)` for any `G`, `S`
   (`a · y = (y_v^{a mod p^v})_v`, as `instModuleZp` for Tate modules), and
-  **`dualTateZpLinearEquiv`**, `dualTateZpLinearEquiv'`: `dualTateZpEquiv` is `ℤ_p`-linear;
+  **`dualTateGenLinearEquiv`**, `dualTateZpLinearEquiv`: the comparison is `ℤ_p`-linear;
 * `DualTate.exists_pow_eq_of_val_eq_one_OC`: `y ∈ T_p(G^∨)(O_{ℂ_p})` with `y_v = 1` is a
   `p^v`-th power;
 * **`PDivFGL.dalpha_zpSmul`**: `dα(z)(a · y) = a · dα(z)(y)` for `a ∈ ℤ_p` ([Hong, Prop. 3.4.9]:
-  `dα` lands in `Hom_{ℤ_p}(T_p(G^∨), ℂ_p)`). Proof: for `n ≡ a mod p^v`, `(a·y) y^{-n}` is a
-  `p^v`-th power, so by additivity `∂U_{a·y}(0) − a ∂U_y(0) ∈ p^v O_{ℂ_p}` for all `v`, and
-  `O_{ℂ_p}` is `p`-adically separated.
+  `dα` lands in `Hom_{ℤ_p}(T_p(G^∨), ℂ_p)`), over any `R`. Proof: for `n ≡ a mod p^v`,
+  `(a·y) y^{-n}` is a `p^v`-th power, so by additivity `|∂U_{a·y}(0) − a ∂U_y(0)| ≤ 2|p|^v`
+  for all `v`.
 -/
 
 noncomputable section
@@ -152,15 +152,17 @@ end PowOC
 
 /-! ### Galois equivariance of `T_p(G^∨)(O_{ℂ_p}) ≃ T_p(G_{ℚ_p}^∨)(ℚ̄_p)` -/
 
-section Gal
+section GalGen
 
-variable {p : ℕ} [hp : Fact p.Prime] (G : PDivGroup (ZpD p) p)
+variable {p : ℕ} [hp : Fact p.Prime] {R : Type} [CommRing R] [Algebra R (OC p)]
+  (G : PDivGroup R p)
 
-/-- **The Galois action on `T_p(G^∨)(O_{ℂ_p})`** for `G` over `ℤ_p`: `σ` acts on `O_{ℂ_p}` by
-`ℤ_p`-algebra automorphisms (`PDivFGL.galS`; `ℤ_p` is fixed, `ZpD.galFixed`). -/
-def galDualZp (σ : PadicAlgCl p ≃ₐ[ℚ_[p]] PadicAlgCl p) :
+/-- **The Galois action on `T_p(G^∨)(O_{ℂ_p})`** for `G` over `R ⊆ O_{ℂ_p}`: `σ` acts on
+`O_{ℂ_p}` by `R`-algebra automorphisms if it fixes `R` (`PDivFGL.galS`). -/
+def galDualGen (σ : PadicAlgCl p ≃ₐ[ℚ_[p]] PadicAlgCl p)
+    (hR : ∀ r : R, autCp σ ((algebraMap R (OC p) r : OC p) : ℂ_[p]) = algebraMap R (OC p) r) :
     G.DualTate (OCd p) →* G.DualTate (OCd p) where
-  toFun y := ⟨fun v => (G.G v).dual.postComp (PDivFGL.galS σ (ZpD.galFixed σ)) (y.1 v),
+  toFun y := ⟨fun v => (G.G v).dual.postComp (PDivFGL.galS σ hR) (y.1 v),
     fun v => by
       beta_reduce
       rw [y.2 v]
@@ -168,115 +170,128 @@ def galDualZp (σ : PadicAlgCl p ≃ₐ[ℚ_[p]] PadicAlgCl p) :
   map_one' := by ext1; funext v; exact map_one _
   map_mul' x y := by ext1; funext v; exact map_mul _ _ _
 
-theorem galDualZp_apply (σ : PadicAlgCl p ≃ₐ[ℚ_[p]] PadicAlgCl p) (y : G.DualTate (OCd p))
-    (v : ℕ) (f : Cartier.Dual (ZpD p) (G.G v).A) :
-    ((OCd.toOC (ofConv ((G.galDualZp σ y).1 v) f) : OC p) : ℂ_[p]) =
+theorem galDualGen_apply (σ : PadicAlgCl p ≃ₐ[ℚ_[p]] PadicAlgCl p)
+    (hR : ∀ r : R, autCp σ ((algebraMap R (OC p) r : OC p) : ℂ_[p]) = algebraMap R (OC p) r)
+    (y : G.DualTate (OCd p)) (v : ℕ) (f : Cartier.Dual R (G.G v).A) :
+    ((OCd.toOC (ofConv ((G.galDualGen σ hR y).1 v) f) : OC p) : ℂ_[p]) =
       autCp σ ((OCd.toOC (ofConv (y.1 v) f) : OC p) : ℂ_[p]) :=
-  PDivFGL.galS_apply σ (ZpD.galFixed σ) _
+  PDivFGL.galS_apply σ hR _
 
-theorem dualTateZpEquiv_val (y : G.DualTate (OCd p)) (v : ℕ) :
-    letI := algebraCpOfOC (p := p) (ZpD p)
-    (G.dualTateZpEquiv y).1 v = ((G.G v).dualBaseChangePointsEquiv (S := ℚ_[p])).symm
-      ((G.dualPointsQbarCp v).symm ((G.G v).dual.pointsOCEquiv (p := p) (y.1 v))) :=
-  rfl
+variable [Nontrivial R] {F : Type} [Field F] [CharZero F] [Algebra R F] [Algebra F (PadicAlgCl p)]
+  [Algebra R (PadicAlgCl p)] [IsScalarTower R F (PadicAlgCl p)]
+  (hRF : ∀ r : R, ((algebraMap R (PadicAlgCl p) r : PadicAlgCl p) : ℂ_[p]) =
+    ((algebraMap R (OC p) r : OC p) : ℂ_[p]))
 
-/-- **Levelwise description of `dualTateZpEquiv`**: `z_v(f_{ℚ_p}) = y_v(f)` in `ℂ_p`. -/
-theorem dualTateZpEquiv_spec (y : G.DualTate (OCd p)) (v : ℕ)
-    (f : Cartier.Dual (ZpD p) (G.G v).A) :
-    ((ofConv ((G.dualTateZpEquiv y).1 v) ((G.G v).dualBC (S := ℚ_[p]) f) : PadicAlgCl p) :
-      ℂ_[p]) = ((OCd.toOC (ofConv (y.1 v) f) : OC p) : ℂ_[p]) := by
-  letI := algebraCpOfOC (p := p) (ZpD p)
-  have h1 : (G.G v).dualBaseChangePointsEquiv (S := ℚ_[p]) ((G.dualTateZpEquiv y).1 v) =
-      (G.dualPointsQbarCp v).symm ((G.G v).dual.pointsOCEquiv (p := p) (y.1 v)) := by
-    rw [dualTateZpEquiv_val, MulEquiv.apply_symm_apply]
+include hRF
+
+/-- **Levelwise description of `dualTateGenEquiv`**: `z_v(f_F) = y_v(f)` in `ℂ_p`. -/
+theorem dualTateGenEquiv_spec (y : G.DualTate (OCd p)) (v : ℕ)
+    (f : Cartier.Dual R (G.G v).A) :
+    ((ofConv ((G.dualTateGenEquiv (F := F) hRF y).1 v) ((G.G v).dualBC (S := F) f) :
+      PadicAlgCl p) : ℂ_[p]) = ((OCd.toOC (ofConv (y.1 v) f) : OC p) : ℂ_[p]) := by
+  letI := algebraCpOfOC (p := p) R
+  have h1 : (G.G v).dualBaseChangePointsEquiv (S := F) ((G.dualTateGenEquiv hRF y).1 v) =
+      (G.dualPointsQbarCpOf hRF v).symm ((G.G v).dual.pointsOCEquiv (p := p) (y.1 v)) := by
+    change (G.G v).dualBaseChangePointsEquiv (S := F)
+      (((G.G v).dualBaseChangePointsEquiv (S := F)).symm _) = _
+    rw [MulEquiv.apply_symm_apply]
+    rfl
   have h2 := congrArg (fun χ : (G.G v).dual.points ℂ_[p] => ofConv χ f)
-    (MulEquiv.apply_symm_apply (G.dualPointsQbarCp v)
+    (MulEquiv.apply_symm_apply (G.dualPointsQbarCpOf hRF v)
       ((G.G v).dual.pointsOCEquiv (p := p) (y.1 v)))
-  change ZpD.qbarToCp (ofConv ((G.G v).dualBaseChangePointsEquiv (S := ℚ_[p])
-    ((G.dualTateZpEquiv y).1 v)) f) = _
+  change qbarToCpOf hRF (ofConv ((G.G v).dualBaseChangePointsEquiv (S := F)
+    ((G.dualTateGenEquiv hRF y).1 v)) f) = _
   rw [h1]
   exact h2
 
-/-- `dualTateZpEquiv` is determined levelwise by `dualTateZpEquiv_spec`. -/
-theorem dualTateZpEquiv_val_eq (y : G.DualTate (OCd p)) (v : ℕ)
-    (z : ((G.G v).baseChange ℚ_[p]).dual.points (PadicAlgCl p))
-    (h : ∀ f : Cartier.Dual (ZpD p) (G.G v).A,
-      ((ofConv z ((G.G v).dualBC (S := ℚ_[p]) f) : PadicAlgCl p) : ℂ_[p]) =
+/-- `dualTateGenEquiv` is determined levelwise by `dualTateGenEquiv_spec`. -/
+theorem dualTateGenEquiv_val_eq (y : G.DualTate (OCd p)) (v : ℕ)
+    (z : ((G.G v).baseChange F).dual.points (PadicAlgCl p))
+    (h : ∀ f : Cartier.Dual R (G.G v).A,
+      ((ofConv z ((G.G v).dualBC (S := F) f) : PadicAlgCl p) : ℂ_[p]) =
         ((OCd.toOC (ofConv (y.1 v) f) : OC p) : ℂ_[p])) :
-    (G.dualTateZpEquiv y).1 v = z := by
-  apply ((G.G v).dualBaseChangePointsEquiv (S := ℚ_[p]) (T := PadicAlgCl p)).injective
+    (G.dualTateGenEquiv hRF y).1 v = z := by
+  apply ((G.G v).dualBaseChangePointsEquiv (S := F) (T := PadicAlgCl p)).injective
   apply WithConv.ofConv_injective
   refine AlgHom.ext fun f => (algebraMap (PadicAlgCl p) ℂ_[p]).injective ?_
-  exact (G.dualTateZpEquiv_spec y v f).trans (h f).symm
+  exact (G.dualTateGenEquiv_spec hRF y v f).trans (h f).symm
 
-/-- The level-`v` component of `dualTateZpEquiv y` only depends on `y_v`. -/
-theorem dualTateZpEquiv_val_congr {y y' : G.DualTate (OCd p)} {v : ℕ} (h : y.1 v = y'.1 v) :
-    (G.dualTateZpEquiv y).1 v = (G.dualTateZpEquiv y').1 v :=
-  G.dualTateZpEquiv_val_eq y v _ fun f => (G.dualTateZpEquiv_spec y' v f).trans (by rw [h])
+/-- The level-`v` component of `dualTateGenEquiv y` only depends on `y_v`. -/
+theorem dualTateGenEquiv_val_congr {y y' : G.DualTate (OCd p)} {v : ℕ} (h : y.1 v = y'.1 v) :
+    (G.dualTateGenEquiv (F := F) hRF y).1 v = (G.dualTateGenEquiv hRF y').1 v :=
+  G.dualTateGenEquiv_val_eq hRF y v _ fun f =>
+    (G.dualTateGenEquiv_spec hRF y' v f).trans (by rw [h])
 
-theorem dualTateZpEquiv_gal_val (σ : PadicAlgCl p ≃ₐ[ℚ_[p]] PadicAlgCl p)
+variable [Algebra ℚ_[p] F] [IsScalarTower ℚ_[p] F (PadicAlgCl p)]
+
+theorem dualTateGenEquiv_gal_val (σ : PadicAlgCl p ≃ₐ[F] PadicAlgCl p)
+    (hR : ∀ r : R, autCp (σ.restrictScalars ℚ_[p]) ((algebraMap R (OC p) r : OC p) : ℂ_[p]) =
+      algebraMap R (OC p) r)
     (y : G.DualTate (OCd p)) (v : ℕ) :
-    (G.dualTateZpEquiv (G.galDualZp σ y)).1 v =
-      galPoints ((G.G v).baseChange ℚ_[p]).dual σ ((G.dualTateZpEquiv y).1 v) := by
-  refine G.dualTateZpEquiv_val_eq _ v _ fun f => ?_
-  exact ((autCp_coe σ _).symm.trans (congrArg (autCp σ) (G.dualTateZpEquiv_spec y v f))).trans
-    (G.galDualZp_apply σ y v f).symm
+    (G.dualTateGenEquiv hRF (G.galDualGen (σ.restrictScalars ℚ_[p]) hR y)).1 v =
+      galPoints ((G.G v).baseChange F).dual σ ((G.dualTateGenEquiv hRF y).1 v) := by
+  refine G.dualTateGenEquiv_val_eq hRF _ v _ fun f => ?_
+  exact ((autCp_coe (σ.restrictScalars ℚ_[p]) _).symm.trans
+    (congrArg (autCp (σ.restrictScalars ℚ_[p])) (G.dualTateGenEquiv_spec hRF y v f))).trans
+    (G.galDualGen_apply (σ.restrictScalars ℚ_[p]) hR y v f).symm
+
+/-- **Galois equivariance of `T_p(G^∨)(O_{ℂ_p}) ≃ T_p(G_F^∨)(ℚ̄_p)`** for `σ ∈ Gal(ℚ̄_p/F)`
+fixing `R`. -/
+theorem dualTateGenEquiv_gal (σ : PadicAlgCl p ≃ₐ[F] PadicAlgCl p)
+    (hR : ∀ r : R, autCp (σ.restrictScalars ℚ_[p]) ((algebraMap R (OC p) r : OC p) : ℂ_[p]) =
+      algebraMap R (OC p) r)
+    (y : G.DualTate (OCd p)) :
+    G.dualTateGenEquiv hRF (G.galDualGen (σ.restrictScalars ℚ_[p]) hR y) =
+      (G.baseChange F).dualPDiv.galTate σ (G.dualTateGenEquiv hRF y) :=
+  Subtype.ext (funext fun v => G.dualTateGenEquiv_gal_val hRF σ hR y v)
+
+omit [Algebra ℚ_[p] F] [IsScalarTower ℚ_[p] F (PadicAlgCl p)]
+
+local instance : NeZero p := ⟨hp.out.ne_zero⟩
+
+/-- **`T_p(G^∨)(O_{ℂ_p}) ≃ T_p(G_F^∨)(ℚ̄_p)` is `ℤ_p`-linear.** -/
+def dualTateGenLinearEquiv : Additive (G.DualTate (OCd p)) ≃ₗ[ℤ_[p]]
+    Additive ((G.baseChange F).dualPDiv.TateModule (PadicAlgCl p)) :=
+  AddEquiv.toLinearEquiv (MulEquiv.toAdditive (G.dualTateGenEquiv hRF)) fun a y =>
+    (G.baseChange F).dualPDiv.addTate_ext _ fun v => by
+      rw [smul_val]
+      change (G.dualTateGenEquiv hRF (Additive.toMul (a • y))).1 v =
+        (G.dualTateGenEquiv hRF (Additive.toMul y)).1 v ^ expo a v
+      rw [G.dualTateGenEquiv_val_congr hRF (y' := Additive.toMul y ^ expo a v) (v := v)
+        (by rw [pi_subgroup_pow_val]; rfl), map_pow, pi_subgroup_pow_val]
+
+theorem dualTateGenLinearEquiv_apply (y : Additive (G.DualTate (OCd p))) :
+    Additive.toMul (G.dualTateGenLinearEquiv (F := F) hRF y) =
+      G.dualTateGenEquiv hRF (Additive.toMul y) := rfl
+
+end GalGen
+
+/-! ### `R = ℤ_p`, `F = ℚ_p` -/
+
+section Gal
+
+variable {p : ℕ} [hp : Fact p.Prime] (G : PDivGroup (ZpD p) p)
+
+/-- **The Galois action on `T_p(G^∨)(O_{ℂ_p})`** for `G` over `ℤ_p`: `σ` acts on `O_{ℂ_p}` by
+`ℤ_p`-algebra automorphisms (`PDivFGL.galS`; `ℤ_p` is fixed, `ZpD.galFixed`). -/
+def galDualZp (σ : PadicAlgCl p ≃ₐ[ℚ_[p]] PadicAlgCl p) :
+    G.DualTate (OCd p) →* G.DualTate (OCd p) :=
+  G.galDualGen σ (ZpD.galFixed σ)
 
 /-- **Galois equivariance of `T_p(G^∨)(O_{ℂ_p}) ≃ T_p(G_{ℚ_p}^∨)(ℚ̄_p)`.** -/
 theorem dualTateZpEquiv_gal (σ : PadicAlgCl p ≃ₐ[ℚ_[p]] PadicAlgCl p)
     (y : G.DualTate (OCd p)) :
     G.dualTateZpEquiv (G.galDualZp σ y) =
       (G.baseChange ℚ_[p]).dualPDiv.galTate σ (G.dualTateZpEquiv y) :=
-  Subtype.ext (funext fun v => G.dualTateZpEquiv_gal_val σ y v)
-
-/-- `dualTateZpEquiv` with target the second argument `DualTate` of the Cartier pairing
-`tatePairingZp` of `G_{ℚ_p}`. -/
-def dualTateZpEquiv' :
-    G.DualTate (OCd p) ≃* (G.baseChange ℚ_[p]).DualTate (PadicAlgCl p) :=
-  G.dualTateZpEquiv.trans
-    (MulEquiv.subgroupCongr ((G.baseChange ℚ_[p]).tateModule_dualPDiv (PadicAlgCl p)))
-
-theorem dualTateZpEquiv'_val (y : G.DualTate (OCd p)) (v : ℕ) :
-    (G.dualTateZpEquiv' y).1 v = (G.dualTateZpEquiv y).1 v := rfl
-
-/-- **Galois equivariance**, with `galDualTate` on the target. -/
-theorem dualTateZpEquiv'_gal (σ : PadicAlgCl p ≃ₐ[ℚ_[p]] PadicAlgCl p)
-    (y : G.DualTate (OCd p)) :
-    G.dualTateZpEquiv' (G.galDualZp σ y) =
-      (G.baseChange ℚ_[p]).galDualTate σ (G.dualTateZpEquiv' y) :=
-  Subtype.ext (funext fun v => G.dualTateZpEquiv_gal_val σ y v)
-
-/-! ### `ℤ_p`-linearity -/
-
-local instance : NeZero p := ⟨hp.out.ne_zero⟩
+  G.dualTateGenEquiv_gal ZpD.algebraMap_qbar_cp σ (ZpD.galFixed σ) y
 
 /-- **`T_p(G^∨)(O_{ℂ_p}) ≃ T_p(G_{ℚ_p}^∨)(ℚ̄_p)` is `ℤ_p`-linear.** -/
 def dualTateZpLinearEquiv : Additive (G.DualTate (OCd p)) ≃ₗ[ℤ_[p]]
     Additive ((G.baseChange ℚ_[p]).dualPDiv.TateModule (PadicAlgCl p)) :=
-  AddEquiv.toLinearEquiv (MulEquiv.toAdditive G.dualTateZpEquiv) fun a y =>
-    (G.baseChange ℚ_[p]).dualPDiv.addTate_ext _ fun v => by
-      rw [smul_val]
-      change (G.dualTateZpEquiv (Additive.toMul (a • y))).1 v =
-        (G.dualTateZpEquiv (Additive.toMul y)).1 v ^ expo a v
-      rw [G.dualTateZpEquiv_val_congr (y' := Additive.toMul y ^ expo a v) (v := v)
-        (by rw [pi_subgroup_pow_val]; rfl), map_pow, pi_subgroup_pow_val]
+  G.dualTateGenLinearEquiv ZpD.algebraMap_qbar_cp
 
 theorem dualTateZpLinearEquiv_apply (y : Additive (G.DualTate (OCd p))) :
     Additive.toMul (G.dualTateZpLinearEquiv y) = G.dualTateZpEquiv (Additive.toMul y) := rfl
-
-/-- **`dualTateZpEquiv'` is `ℤ_p`-linear.** -/
-def dualTateZpLinearEquiv' : Additive (G.DualTate (OCd p)) ≃ₗ[ℤ_[p]]
-    Additive ((G.baseChange ℚ_[p]).DualTate (PadicAlgCl p)) :=
-  AddEquiv.toLinearEquiv (MulEquiv.toAdditive G.dualTateZpEquiv') fun a y =>
-    (G.baseChange ℚ_[p]).addDualTate_ext _ fun v => by
-      rw [dualSmul_val]
-      change (G.dualTateZpEquiv (Additive.toMul (a • y))).1 v =
-        (G.dualTateZpEquiv (Additive.toMul y)).1 v ^ expo a v
-      rw [G.dualTateZpEquiv_val_congr (y' := Additive.toMul y ^ expo a v) (v := v)
-        (by rw [pi_subgroup_pow_val]; rfl), map_pow, pi_subgroup_pow_val]
-
-theorem dualTateZpLinearEquiv'_apply (y : Additive (G.DualTate (OCd p))) :
-    Additive.toMul (G.dualTateZpLinearEquiv' y) = G.dualTateZpEquiv' (Additive.toMul y) := rfl
 
 end Gal
 
@@ -288,87 +303,108 @@ namespace PDivFGL
 
 open PDivGroup
 
-variable {p : ℕ} [hp : Fact p.Prime] {d : ℕ} (P : PDivFGL (ZpD p) d p)
+section General
+
+variable {p : ℕ} [hp : Fact p.Prime] {R : Type} [CommRing R] [IsLocalRing R]
+  [IsAdicComplete (maximalIdeal R) R] [UniformSpace R] [DiscreteUniformity R] [Algebra R (OC p)]
+  [IsAdicComplete ((maximalIdeal R).map (algebraMap R (OC p))) (OC p)]
+  (hpm : (p : R) ∈ maximalIdeal R) {d : ℕ} (P : PDivFGL R d p)
 
 local instance : NeZero p := ⟨hp.out.ne_zero⟩
 
-/-- For `G = F[p^∞]`, the Galois action `galDual` of `AlphaGal.lean` is `galDualZp`. -/
-theorem galDual_eq_galDualZp (σ : PadicAlgCl p ≃ₐ[ℚ_[p]] PadicAlgCl p)
-    (hR : ∀ r : ZpD p, autCp σ ((algebraMap (ZpD p) (OC p) r : OC p) : ℂ_[p]) =
-      algebraMap (ZpD p) (OC p) r) (y : P.pdivGroup.DualTate (OCd p)) :
-    P.galDual σ hR y = P.pdivGroup.galDualZp σ y := rfl
-
-/-- **Galois equivariance of `dualTateZpEquiv` for `G = F[p^∞]`**, with the action `galDual` used
-in `alphaZp_gal`. -/
-theorem dualTateZpEquiv_galDual (σ : PadicAlgCl p ≃ₐ[ℚ_[p]] PadicAlgCl p)
+omit [UniformSpace R] [DiscreteUniformity R]
+  [IsAdicComplete ((maximalIdeal R).map (algebraMap R (OC p))) (OC p)] in
+/-- For `G = F[p^∞]`, the Galois action `galDual` of `AlphaGal.lean` is `galDualGen`. -/
+theorem galDual_eq_galDualGen (σ : PadicAlgCl p ≃ₐ[ℚ_[p]] PadicAlgCl p)
+    (hR : ∀ r : R, autCp σ ((algebraMap R (OC p) r : OC p) : ℂ_[p]) = algebraMap R (OC p) r)
     (y : P.pdivGroup.DualTate (OCd p)) :
-    P.pdivGroup.dualTateZpEquiv' (P.galDual σ (ZpD.galFixed σ) y) =
-      (P.pdivGroup.baseChange ℚ_[p]).galDualTate σ (P.pdivGroup.dualTateZpEquiv' y) :=
-  P.pdivGroup.dualTateZpEquiv'_gal σ y
+    P.galDual σ hR y = P.pdivGroup.galDualGen σ hR y := rfl
 
-theorem dU_one (j : Fin d) : P.dU ZpD.p_mem 1 j = 0 := by
-  have h := P.dU_mul ZpD.p_mem 1 1 j
+theorem dU_one (j : Fin d) : P.dU hpm 1 j = 0 := by
+  have h := P.dU_mul hpm 1 1 j
   rw [mul_one] at h
   exact left_eq_add.mp h
 
 theorem dU_pow (y : P.pdivGroup.DualTate (OCd p)) (n : ℕ) (j : Fin d) :
-    P.dU ZpD.p_mem (y ^ n) j = n • P.dU ZpD.p_mem y j := by
+    P.dU hpm (y ^ n) j = n • P.dU hpm y j := by
   induction n with
   | zero => rw [pow_zero, dU_one, zero_smul]
   | succ n ih => rw [pow_succ, dU_mul, ih, succ_nsmul]
 
-/-- **`∂U_{a·y}/∂T_j(0) = a ∂U_y/∂T_j(0)`** for `a ∈ ℤ_p`. -/
+/-- **`∂U_{a·y}/∂T_j(0) = a ∂U_y/∂T_j(0)`** for `a ∈ ℤ_p` (in `ℂ_p`). -/
 theorem dU_smul (a : ℤ_[p]) (y : P.pdivGroup.DualTate (OCd p)) (j : Fin d) :
-    P.dU ZpD.p_mem (Additive.toMul (a • Additive.ofMul y)) j =
-      algebraMap (ZpD p) (OCd p) a * P.dU ZpD.p_mem y j := by
-  set 𝔞 := (maximalIdeal (ZpD p)).map (algebraMap (ZpD p) (OCd p))
-  have hp𝔞 : (p : OCd p) ∈ 𝔞 := by
-    rw [← map_natCast (algebraMap (ZpD p) (OCd p))]
-    exact Ideal.mem_map_of_mem _ ZpD.p_mem
-  refine (IsHausdorff.eq_iff_smodEq (I := 𝔞)).mpr fun v => ?_
-  simp only [smul_eq_mul, Ideal.mul_top]
-  rw [SModEq.sub_mem]
-  set n := expo a v
-  set y' := Additive.toMul (a • Additive.ofMul y)
-  -- `a = n + p^v b`
-  obtain ⟨b, hb⟩ : ∃ b : ZpD p, b * (p : ZpD p) ^ v = (show ZpD p from a) - (n : ZpD p) := by
-    have hk : a - (n : ℤ_[p]) ∈ RingHom.ker (PadicInt.toZModPow (p := p) v) := by
-      rw [RingHom.mem_ker, map_sub, map_natCast, ZMod.natCast_zmod_val, sub_self]
-    rw [PadicInt.ker_toZModPow] at hk
-    exact Ideal.mem_span_singleton'.mp hk
-  have hA : algebraMap (ZpD p) (OCd p) a =
-      (n : OCd p) + (p : OCd p) ^ v * algebraMap (ZpD p) (OCd p) b := by
-    have := congrArg (algebraMap (ZpD p) (OCd p)) hb
-    rw [map_mul, map_pow, map_natCast, map_sub, map_natCast] at this
-    linear_combination -this
-  -- `y' y^{-n}` is a `p^v`-th power
-  set z := y' * (y ^ n)⁻¹
-  have hz : z.1 v = 1 := by
-    change y.1 v ^ n * ((y ^ n)⁻¹ : P.pdivGroup.DualTate (OCd p)).1 v = 1
-    rw [InvMemClass.coe_inv, Pi.inv_apply, pi_subgroup_pow_val, mul_inv_cancel]
-  obtain ⟨w, hw⟩ : ∃ w : P.pdivGroup.DualTate (OCd p), w ^ (p ^ v) = z :=
-    DualTate.exists_pow_eq_of_val_eq_one_OC P.pdivGroup v z hz
-  have hy' : y' = y ^ n * z := by rw [mul_comm, inv_mul_cancel_right]
-  have hdU : P.dU ZpD.p_mem y' j =
-      (n : OCd p) * P.dU ZpD.p_mem y j + (p : OCd p) ^ v * P.dU ZpD.p_mem w j := by
-    rw [hy', dU_mul, dU_pow, ← hw, dU_pow, nsmul_eq_mul, nsmul_eq_mul, Nat.cast_pow]
-  have key : P.dU ZpD.p_mem y' j - algebraMap (ZpD p) (OCd p) a * P.dU ZpD.p_mem y j =
-      (p : OCd p) ^ v *
-        (P.dU ZpD.p_mem w j - algebraMap (ZpD p) (OCd p) b * P.dU ZpD.p_mem y j) := by
-    rw [hdU, hA]
-    ring
-  rw [key]
-  exact Ideal.mul_mem_right _ _ (Ideal.pow_mem_pow hp𝔞 v)
+    ((OCd.toOC (P.dU hpm (Additive.toMul (a • Additive.ofMul y)) j) : OC p) : ℂ_[p]) =
+      algebraMap ℚ_[p] ℂ_[p] a * ((OCd.toOC (P.dU hpm y j) : OC p) : ℂ_[p]) := by
+  set D := ((OCd.toOC (P.dU hpm (Additive.toMul (a • Additive.ofMul y)) j) : OC p) : ℂ_[p]) -
+    algebraMap ℚ_[p] ℂ_[p] a * ((OCd.toOC (P.dU hpm y j) : OC p) : ℂ_[p])
+  -- `‖D‖ ≤ |p|^v` for all `v`
+  have hD : ∀ v : ℕ, ‖D‖ ≤ 2 * FGL.np p ^ v := by
+    intro v
+    set n := expo a v
+    set y' := Additive.toMul (a • Additive.ofMul y)
+    obtain ⟨b, hb⟩ : ∃ b : ℤ_[p], b * (p : ℤ_[p]) ^ v = a - (n : ℤ_[p]) := by
+      have hk : a - (n : ℤ_[p]) ∈ RingHom.ker (PadicInt.toZModPow (p := p) v) := by
+        rw [RingHom.mem_ker, map_sub, map_natCast, ZMod.natCast_zmod_val, sub_self]
+      rw [PadicInt.ker_toZModPow] at hk
+      exact Ideal.mem_span_singleton'.mp hk
+    have hA : algebraMap ℚ_[p] ℂ_[p] a =
+        (n : ℂ_[p]) + (p : ℂ_[p]) ^ v * algebraMap ℚ_[p] ℂ_[p] b := by
+      have h1 : (a : ℚ_[p]) = (n : ℚ_[p]) + (p : ℚ_[p]) ^ v * (b : ℚ_[p]) := by
+        have := congrArg (fun x : ℤ_[p] => (x : ℚ_[p])) hb
+        simp only [PadicInt.coe_mul, PadicInt.coe_pow, PadicInt.coe_natCast,
+          PadicInt.coe_sub] at this
+        linear_combination -this
+      rw [h1, map_add, map_mul, map_pow, map_natCast, map_natCast]
+    set z := y' * (y ^ n)⁻¹
+    have hz : z.1 v = 1 := by
+      change y.1 v ^ n * ((y ^ n)⁻¹ : P.pdivGroup.DualTate (OCd p)).1 v = 1
+      rw [InvMemClass.coe_inv, Pi.inv_apply, pi_subgroup_pow_val, mul_inv_cancel]
+    obtain ⟨w, hw⟩ : ∃ w : P.pdivGroup.DualTate (OCd p), w ^ (p ^ v) = z :=
+      DualTate.exists_pow_eq_of_val_eq_one_OC P.pdivGroup v z hz
+    have hy' : y' = y ^ n * z := by rw [mul_comm, inv_mul_cancel_right]
+    have hdU : P.dU hpm y' j = (n : OCd p) * P.dU hpm y j + (p : OCd p) ^ v * P.dU hpm w j := by
+      rw [hy', dU_mul, dU_pow, ← hw, dU_pow, nsmul_eq_mul, nsmul_eq_mul, Nat.cast_pow]
+    have key : D = (p : ℂ_[p]) ^ v * (((OCd.toOC (P.dU hpm w j) : OC p) : ℂ_[p]) -
+        algebraMap ℚ_[p] ℂ_[p] b * ((OCd.toOC (P.dU hpm y j) : OC p) : ℂ_[p])) := by
+      have e : ((OCd.toOC (P.dU hpm y' j) : OC p) : ℂ_[p]) =
+          (n : ℂ_[p]) * ((OCd.toOC (P.dU hpm y j) : OC p) : ℂ_[p]) +
+            (p : ℂ_[p]) ^ v * ((OCd.toOC (P.dU hpm w j) : OC p) : ℂ_[p]) := by
+        rw [hdU]
+        push_cast [OCd.toOC]
+        rfl
+      change ((OCd.toOC (P.dU hpm y' j) : OC p) : ℂ_[p]) - _ = _
+      rw [e, hA]
+      ring
+    have hb1 : ‖algebraMap ℚ_[p] ℂ_[p] b‖ ≤ 1 := by
+      rw [IsScalarTower.algebraMap_apply ℚ_[p] (PadicAlgCl p) ℂ_[p], ← PadicComplex.coe_eq,
+        PadicComplex.norm_extends' p]
+      exact PadicInt.norm_le_one b
+    rw [key, norm_mul, norm_pow, mul_comm]
+    refine mul_le_mul_of_nonneg_right ?_ (pow_nonneg (norm_nonneg _) v)
+    refine (norm_sub_le _ _).trans ?_
+    rw [norm_mul]
+    have h1 := norm_OC_le (OCd.toOC (P.dU hpm w j))
+    have h2 := norm_OC_le (OCd.toOC (P.dU hpm y j))
+    nlinarith [norm_nonneg (algebraMap ℚ_[p] ℂ_[p] b),
+      norm_nonneg ((OCd.toOC (P.dU hpm y j) : OC p) : ℂ_[p])]
+  have hD0 : D = 0 := by
+    by_contra hne
+    have hpos : 0 < ‖D‖ / 2 := by have := norm_pos_iff.mpr hne; positivity
+    obtain ⟨v, hv⟩ := exists_pow_lt_of_lt_one hpos (FGL.np_lt_one (p := p))
+    have := hD v
+    linarith
+  exact sub_eq_zero.mp hD0
 
 /-- **`dα` is `ℤ_p`-linear in `y`**: `dα(z)(a · y) = a · dα(z)(y)` ([Hong, Prop. 3.4.9]:
 `dα(z) ∈ Hom_{ℤ_p}(T_p(G^∨), ℂ_p)`). -/
 theorem dalpha_zpSmul (z : Fin d → ℂ_[p]) (a : ℤ_[p]) (y : P.pdivGroup.DualTate (OCd p)) :
-    P.dalpha ZpD.p_mem z (Additive.toMul (a • Additive.ofMul y)) =
-      (a : ℚ_[p]) • P.dalpha ZpD.p_mem z y := by
+    P.dalpha hpm z (Additive.toMul (a • Additive.ofMul y)) =
+      (a : ℚ_[p]) • P.dalpha hpm z y := by
   rw [dalpha, dalpha, Finset.smul_sum]
   refine Finset.sum_congr rfl fun j _ => ?_
-  rw [dU_smul, Algebra.smul_def, map_mul, Subring.coe_mul, mul_assoc]
-  rfl
+  rw [dU_smul, Algebra.smul_def, mul_assoc]
+
+end General
 
 end PDivFGL
 

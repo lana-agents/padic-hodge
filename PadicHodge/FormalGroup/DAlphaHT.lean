@@ -261,7 +261,7 @@ theorem dU_galDualZp (σ : PadicAlgCl p ≃ₐ[ℚ_[p]] PadicAlgCl p)
     (y : P.pdivGroup.DualTate (OCd p)) (j : Fin d) :
     ((OCd.toOC (P.dU ZpD.p_mem (P.pdivGroup.galDualZp σ y) j) : OC p) : ℂ_[p]) =
       autCp σ ((OCd.toOC (P.dU ZpD.p_mem y j) : OC p) : ℂ_[p]) := by
-  rw [← P.galDual_eq_galDualZp σ (ZpD.galFixed σ), dU, dU, charSeries_gal,
+  rw [galDualZp, ← P.galDual_eq_galDualGen σ (ZpD.galFixed σ), dU, dU, charSeries_gal,
     MvPowerSeries.coeff_map]
   exact galS_apply σ (ZpD.galFixed σ) _
 
@@ -281,7 +281,8 @@ def dalphaZpLin (z : Fin d → ℂ_[p]) : P.TateDualQp →ₗ[ℤ_[p]] ℂ_[p] w
   map_add' t t' := by simp only [map_add, toMul_add, dalpha_mul]
   map_smul' a t := by
     simp only [RingHom.id_apply]
-    have h := P.dalpha_zpSmul z a (Additive.toMul (P.pdivGroup.dualTateZpLinearEquiv.symm t))
+    have h := P.dalpha_zpSmul ZpD.p_mem z a
+      (Additive.toMul (P.pdivGroup.dualTateZpLinearEquiv.symm t))
     rw [ofMul_toMul] at h
     rw [map_smul, h]
     exact algebraMap_smul ℚ_[p] a _
