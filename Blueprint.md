@@ -612,6 +612,11 @@ in place of Kähler differentials (all rings of integers here are monogenic), ev
   killed by `p`** (`order_le_frobKer_mul`, `frobKerIdeal`): the inequality `h ≤ d + d^∨` of
   [Hong, Thm. 2.2.19] (the only direction used in [Hong, proof of Thm. 3.4.10]), proved without
   exact sequences: `Frob(A)` is annihilated by the ideal `(f^p : f(1) = 0)` of `A^∨`.
+  **Perfect fields** (fourteenth session; e.g. the residue field `𝔽_q` of `O_{K'}`):
+  `univPt_pow_apply` needs only characteristic `p`; `perfT f = σ⁻¹ ∘ f ∘ Frob` is `k`-linear and
+  multiplicative for convolution (`perfT_mul`, `Δ(a^p) = Δ(a)^p`), and
+  `f([p]^* d) = (perfT f)^p(d) = σ⁻¹(f^p(d^p))` (`apply_univPt_pow_perfect`), so **`d^p = 0 ⇒
+  [p]^* d = 0` over any perfect field** (`univPt_pow_apply_eq_zero_of_perfect`).
 * **done** `FormalGroup/DualTateGal.lean`: the Galois action `galDualZp` on `T_p(G^∨)(O_{ℂ_p})`
   for any `G` over `ℤ_p`; **`dualTateZpEquiv` is Galois-equivariant** (`dualTateZpEquiv_gal`,
   `dualTateZpEquiv'_gal` into `DualTate` of the generic fibre, where `tatePairingZp` lives);
@@ -619,8 +624,8 @@ in place of Kähler differentials (all rings of integers here are monogenic), ev
   **`dα` is `ℤ_p`-linear in `y`** (`dalpha_zpSmul`, via `y_v = 1 ⇒ y` is a `p^v`-th power over
   `O_C` and `p`-adic separatedness) — [Hong, Prop. 3.4.9] (“evidently `ℤ_p`-linear and
   `Γ_K`-equivariant”).
-* **done** `FormalGroup/DerivStable.lean` (generic, `MvPowerSeries` over `k` of char. `p` with
-  `x^p = x`; towards [Hong, Prop. 2.2.13] by a derivation argument instead of order counting):
+* **done** `FormalGroup/DerivStable.lean` (generic, `MvPowerSeries` over a perfect field `k` of
+  char. `p` (since the fourteenth session; `γ_m` carries `σ⁻¹ = frobInv` on coefficients); towards [Hong, Prop. 2.2.13] by a derivation argument instead of order counting):
   Frobenius decomposition `f = Σ_{m < p} γ_m^p X^m` (`frob_decomp`); for `∂`-stable ideals the
   `γ_m^p` lie in the ideal (`pow_mem_of_sum_mem`); **if ideals `𝔞_v ⊆ (X)` are `∂`-stable and
   `h^p ∈ 𝔞_{v+1} ⇒ h ∈ 𝔞_v`, then `𝔞_v ⊆ (X_i^{p^w})` for `w ≤ v`** (`le_spanXPow_of_derivStable`,
@@ -641,10 +646,11 @@ in place of Kähler differentials (all rings of integers here are monogenic), ev
   **`eq_zero_of_alphaK_eq_one`**, **`dalpha_injective_OL`** ([Hong, Prop. 3.4.9] over `O_{K'}`).
   Missing: Tate-module / Hodge–Tate wiring (`tateRep`, `dualPDiv`, `tatePairingZp`) over `K'`.
 * **done** `GroupScheme/SpecialFibre.lean`, `GroupScheme/SerreTateSpecial.lean` (**[Hong,
-  Prop. 2.2.13]** for a connected `p`-divisible group `H` over a field `k` with `x^p = x`, by a
+  Prop. 2.2.13]** for a connected `p`-divisible group `H` over a perfect field `k` (e.g. `𝔽_q`;
+  `[PerfectRing k p]` since the fourteenth session, before `x^p = x`), by a
   derivation argument instead of [Hong]'s order counting): `quot_v^*` injective
   (`quot_injective_of_isConnected`: Nakayama `|G| ≤ |ker f|·|im f|` and `ker quot_v = G_1`), `a^p = 0 ⇒
-  i_v^*(a) = 0` (`incl_eq_zero_of_pow_eq_zero`, from `f^p(d^p) = f([p]^*d)`), `ker φ ⊆ G[p]`
+  i_v^*(a) = 0` (`incl_eq_zero_of_pow_eq_zero`, from `f([p]^*d) = σ⁻¹(f^p(d^p))`), `ker φ ⊆ G[p]`
   and cotangent stabilisation, compatible coordinates and surjections
   `ρ_v : k[[t_1..t_d]] ↠ A_v`, invariant derivations `(id ⊗ ℓ_j)∘Δ` making `ker ρ_v` `∂`-stable;
   **`exists_coords`**: `ker ρ_v ⊆ (t_i^{p^w})` for `w ≤ v`, `⋂ ker ρ_v = 0`

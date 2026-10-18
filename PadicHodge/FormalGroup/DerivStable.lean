@@ -5,17 +5,18 @@ Authors: Claude (Anthropic)
 -/
 import PadicHodge.FormalGroup.FrobKernel
 import Mathlib.RingTheory.MvPowerSeries.Expand
+import Mathlib.FieldTheory.Perfect
 
 /-!
 # `∂`-stable ideals of `k[[X_σ]]` in characteristic `p`
 
-Let `k` be a field of characteristic `p` with `x^p = x` for all `x` (e.g. `𝔽_p`) and
+Let `k` be a perfect field of characteristic `p` (e.g. `𝔽_q`) and
 `A = k[[X_σ]]`, `σ` finite. An ideal `𝔟 ⊆ A` is **`∂`-stable** (`DerivStable`) if it is stable
 under all partial derivatives `∂/∂X_i` (`MvPowerSeries.pderiv`).
 
 * **Frobenius decomposition** (`frob_decomp`): `f = ∑_{m ∈ box} (γ_m)^p X^m`, where
-  `box = {m | ∀ i, m_i < p}` and `γ_m = ∑_q a_{pq + m} X^q` (`frobCoeff`); this uses
-  `g^p = g(X^p)` (`pow_char_eq_expand`, from Mathlib's `MvPowerSeries.map_frobenius_expand`).
+  `box = {m | ∀ i, m_i < p}` and `γ_m = ∑_q σ⁻¹(a_{pq + m}) X^q` (`frobCoeff`, `frobInv`); this uses
+  `g^p = σ(g)(X^p)` (Mathlib's `MvPowerSeries.map_frobenius_expand`).
   Also `γ ∈ (X_j^N) → γ^p ∈ (X_j^{pN})` (`pow_mem_spanXPow_mul`).
 * **Extraction** (`pow_mem_of_sum_mem`): if `𝔟` is `∂`-stable and `∑_m (γ_m)^p X^m ∈ 𝔟`, then
   every `(γ_m)^p ∈ 𝔟`. Proof by induction on the total degree: `∂_i` kills `p`-th powers, so
@@ -97,20 +98,21 @@ section Frobenius
 
 variable {σ k : Type*} [CommRing k] (p : ℕ)
 
-/-- If `x^p = x` on `k` (characteristic `p`), then `g^p = g(X^p)`. -/
-theorem pow_char_eq_expand [CharP k p] [hp : Fact p.Prime] (hk : ∀ x : k, x ^ p = x)
-    (g : MvPowerSeries σ k) : g ^ p = expand p hp.out.ne_zero g := by
-  have h : frobenius k p = RingHom.id k :=
-    RingHom.ext fun x => (frobenius_def p x).trans (hk x)
-  rw [← map_frobenius_expand p hp.out.ne_zero, h, MvPowerSeries.map_id, RingHom.id_apply]
+/-- `σ⁻¹`, the inverse of the Frobenius of a perfect ring `k`. -/
+abbrev frobInv [CharP k p] [Fact p.Prime] [PerfectRing k p] : k →+* k :=
+  ((frobeniusEquiv k p).symm : k →+* k)
 
-theorem coeff_pow_char_smul [CharP k p] [Fact p.Prime] (hk : ∀ x : k, x ^ p = x)
-    (g : MvPowerSeries σ k) (q : σ →₀ ℕ) : coeff (p • q) (g ^ p) = coeff q g := by
-  rw [pow_char_eq_expand p hk, coeff_expand_smul]
+/-- `(σ⁻¹ g)^p = g(X^p)` for `k` perfect of characteristic `p`, on coefficients. -/
+theorem coeff_pow_char_smul [CharP k p] [hp : Fact p.Prime] [PerfectRing k p]
+    (g : MvPowerSeries σ k) (q : σ →₀ ℕ) :
+    coeff (p • q) (map (frobInv (k := k) p) g ^ p) = coeff q g := by
+  rw [← map_frobenius_expand p hp.out.ne_zero, coeff_map, coeff_expand_smul, coeff_map]
+  exact frobenius_apply_frobeniusEquiv_symm k p _
 
-theorem coeff_pow_char_of_not_dvd [CharP k p] [Fact p.Prime] (hk : ∀ x : k, x ^ p = x)
+theorem coeff_pow_char_of_not_dvd [CharP k p] [hp : Fact p.Prime]
     (g : MvPowerSeries σ k) {a : σ →₀ ℕ} {i : σ} (h : ¬ p ∣ a i) : coeff a (g ^ p) = 0 := by
-  rw [pow_char_eq_expand p hk, coeff_expand_of_not_dvd p _ _ h]
+  rw [← map_frobenius_expand p hp.out.ne_zero, coeff_map, coeff_expand_of_not_dvd p _ _ h,
+    map_zero]
 
 /-- The `m`-th Frobenius component `γ_m = ∑_q a_{pq + m} X^q` of `f = ∑_a a_a X^a`. -/
 def frobCoeff (f : MvPowerSeries σ k) (m : σ →₀ ℕ) : MvPowerSeries σ k :=
@@ -119,11 +121,12 @@ def frobCoeff (f : MvPowerSeries σ k) (m : σ →₀ ℕ) : MvPowerSeries σ k 
 theorem coeff_frobCoeff (f : MvPowerSeries σ k) (m q : σ →₀ ℕ) :
     coeff q (frobCoeff p f m) = coeff (p • q + m) f := rfl
 
-/-- **Frobenius decomposition**: `f = ∑_{m_i < p} (γ_m)^p X^m` with `γ_m = frobCoeff p f m`. -/
+/-- **Frobenius decomposition**: `f = ∑_{m_i < p} (γ_m)^p X^m` with
+`γ_m = σ⁻¹(frobCoeff p f m)` (`k` perfect). -/
 theorem frob_decomp [Fintype σ] [DecidableEq σ] [CharP k p] [hp : Fact p.Prime]
-    (hk : ∀ x : k, x ^ p = x)
-    (f : MvPowerSeries σ k) :
-    f = ∑ m : σ → Fin p, frobCoeff p f (boxExp m) ^ p * monomial (boxExp m) 1 := by
+    [PerfectRing k p] (f : MvPowerSeries σ k) :
+    f = ∑ m : σ → Fin p, map (frobInv (k := k) p) (frobCoeff p f (boxExp m)) ^ p *
+      monomial (boxExp m) 1 := by
   classical
   ext n
   rw [map_sum]
@@ -135,13 +138,13 @@ theorem frob_decomp [Fintype σ] [DecidableEq σ] [CharP k p] [hp : Fact p.Prime
     simp [q₀, m₀, Nat.div_add_mod]
   rw [Finset.sum_eq_single m₀]
   · have hle : boxExp m₀ ≤ n := hn ▸ le_add_self
-    rw [if_pos hle, ← hn, add_tsub_cancel_right, coeff_pow_char_smul p hk, coeff_frobCoeff]
+    rw [if_pos hle, ← hn, add_tsub_cancel_right, coeff_pow_char_smul p, coeff_frobCoeff]
   · intro m _ hm
     split_ifs with hle
     · obtain ⟨i, hi⟩ : ∃ i, m i ≠ m₀ i := by
         by_contra! h
         exact hm (funext h)
-      refine coeff_pow_char_of_not_dvd p hk _ (i := i) fun hdvd => hi ?_
+      refine coeff_pow_char_of_not_dvd p _ (i := i) fun hdvd => hi ?_
       have hmi : (m i : ℕ) ≤ n i := by simpa using Finsupp.le_def.1 hle i
       rw [Finsupp.tsub_apply, boxExp_apply] at hdvd
       obtain ⟨c, hc⟩ := hdvd
@@ -154,16 +157,21 @@ theorem frob_decomp [Fintype σ] [DecidableEq σ] [CharP k p] [hp : Fact p.Prime
     exact absurd (Finset.mem_univ _) h
 
 /-- `γ ∈ (X_j^N)_j → γ^p ∈ (X_j^{pN})_j`. -/
-theorem pow_mem_spanXPow_mul [CharP k p] [hp : Fact p.Prime] (hk : ∀ x : k, x ^ p = x)
+theorem pow_mem_spanXPow_mul [CharP k p] [hp : Fact p.Prime]
     {N : ℕ} {γ : MvPowerSeries σ k} (h : γ ∈ spanXPow σ k N) :
     γ ^ p ∈ spanXPow σ k (p * N) := by
-  rw [pow_char_eq_expand p hk]
+  rw [← map_frobenius_expand p hp.out.ne_zero]
   have hle : spanXPow σ k N ≤ (spanXPow σ k (p * N)).comap (expand p hp.out.ne_zero) := by
     rw [Ideal.span_le]
     rintro _ ⟨j, rfl⟩
     rw [SetLike.mem_coe, Ideal.mem_comap, map_pow, expand_X, ← pow_mul]
     exact Ideal.subset_span ⟨j, rfl⟩
-  exact hle h
+  have hle' : spanXPow σ k (p * N) ≤ (spanXPow σ k (p * N)).comap (map (frobenius k p)) := by
+    rw [Ideal.span_le]
+    rintro _ ⟨j, rfl⟩
+    rw [SetLike.mem_coe, Ideal.mem_comap, map_pow, map_X]
+    exact Ideal.subset_span ⟨j, rfl⟩
+  exact hle' (hle h)
 
 end Frobenius
 
@@ -270,11 +278,11 @@ end Extraction
 
 section Main
 
-variable {σ k : Type*} [Field k] [Finite σ] (p : ℕ) [CharP k p] [Fact p.Prime]
+variable {σ k : Type*} [Field k] [Finite σ] (p : ℕ) [CharP k p] [Fact p.Prime] [PerfectRing k p]
 
 /-- **Main theorem.** Let `𝔞_v` be `∂`-stable ideals of `k[[X_σ]]` contained in `(X_i)_i` such
 that `h^p ∈ 𝔞_{v+1} → h ∈ 𝔞_v`. Then `𝔞_v ⊆ (X_j^{p^w})_j` for all `w ≤ v`. -/
-theorem le_spanXPow_of_derivStable (hk : ∀ x : k, x ^ p = x)
+theorem le_spanXPow_of_derivStable
     (𝔞 : ℕ → Ideal (MvPowerSeries σ k)) (hstab : ∀ v, DerivStable (𝔞 v))
     (hX : ∀ v, 𝔞 v ≤ Ideal.span (Set.range X)) (hfrob : ∀ v h, h ^ p ∈ 𝔞 (v + 1) → h ∈ 𝔞 v) :
     ∀ w v, w ≤ v → 𝔞 v ≤ spanXPow σ k (p ^ w) := by
@@ -289,18 +297,19 @@ theorem le_spanXPow_of_derivStable (hk : ∀ x : k, x ^ p = x)
   | succ w ih =>
     intro v hv f hf
     obtain ⟨u, rfl⟩ : ∃ u, v = u + 1 := ⟨v - 1, by omega⟩
-    have hf' : ∑ m : σ → Fin p, frobCoeff p f (boxExp m) ^ p * monomial (boxExp m) 1 ∈
-        𝔞 (u + 1) := by
-      rw [← frob_decomp p hk f]
+    have hf' : ∑ m : σ → Fin p, map (frobInv (k := k) p) (frobCoeff p f (boxExp m)) ^ p *
+        monomial (boxExp m) 1 ∈ 𝔞 (u + 1) := by
+      rw [← frob_decomp p f]
       exact hf
-    rw [frob_decomp p hk f]
+    rw [frob_decomp p f]
     refine Ideal.sum_mem _ fun m _ => Ideal.mul_mem_right _ _ ?_
     rw [pow_succ']
-    exact pow_mem_spanXPow_mul p hk (ih u (by omega) (hfrob u _
-      (pow_mem_of_sum_mem p (hstab (u + 1)) (fun m => frobCoeff p f (boxExp m)) hf' m)))
+    exact pow_mem_spanXPow_mul p (ih u (by omega) (hfrob u _
+      (pow_mem_of_sum_mem p (hstab (u + 1))
+        (fun m => map (frobInv (k := k) p) (frobCoeff p f (boxExp m))) hf' m)))
 
 /-- Under the hypotheses of `le_spanXPow_of_derivStable`, `⋂_v 𝔞_v = 0`. -/
-theorem iInf_eq_bot_of_derivStable (hk : ∀ x : k, x ^ p = x)
+theorem iInf_eq_bot_of_derivStable
     (𝔞 : ℕ → Ideal (MvPowerSeries σ k)) (hstab : ∀ v, DerivStable (𝔞 v))
     (hX : ∀ v, 𝔞 v ≤ Ideal.span (Set.range X)) (hfrob : ∀ v h, h ^ p ∈ 𝔞 (v + 1) → h ∈ 𝔞 v) :
     ⨅ v, 𝔞 v = ⊥ := by
@@ -309,18 +318,18 @@ theorem iInf_eq_bot_of_derivStable (hk : ∀ x : k, x ^ p = x)
   rw [Ideal.mem_bot]
   ext n
   rw [map_zero]
-  have hmem := le_spanXPow_of_derivStable p hk 𝔞 hstab hX hfrob n.degree n.degree le_rfl
+  have hmem := le_spanXPow_of_derivStable p 𝔞 hstab hX hfrob n.degree n.degree le_rfl
     (Submodule.mem_iInf _ |>.mp hf n.degree)
   exact coeff_eq_zero_of_mem_spanXPow hmem fun j =>
     lt_of_le_of_lt (le_degree j n) (Nat.lt_pow_self (Fact.out : p.Prime).one_lt)
 
 /-- Under the hypotheses of `le_spanXPow_of_derivStable`, `𝔞_v ⊆ (X_i)_i^N` for `v ≥ N`. -/
-theorem le_pow_of_derivStable (hk : ∀ x : k, x ^ p = x)
+theorem le_pow_of_derivStable
     (𝔞 : ℕ → Ideal (MvPowerSeries σ k)) (hstab : ∀ v, DerivStable (𝔞 v))
     (hX : ∀ v, 𝔞 v ≤ Ideal.span (Set.range X)) (hfrob : ∀ v h, h ^ p ∈ 𝔞 (v + 1) → h ∈ 𝔞 v)
     (N : ℕ) : ∀ v, N ≤ v → 𝔞 v ≤ Ideal.span (Set.range X) ^ N := by
   intro v hv
-  refine (le_spanXPow_of_derivStable p hk 𝔞 hstab hX hfrob v v le_rfl).trans ?_
+  refine (le_spanXPow_of_derivStable p 𝔞 hstab hX hfrob v v le_rfl).trans ?_
   refine (spanXPow_le_pow (p ^ v)).trans (Ideal.pow_le_pow_right ?_)
   exact hv.trans (Nat.lt_pow_self (Fact.out : p.Prime).one_lt).le
 

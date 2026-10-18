@@ -67,7 +67,7 @@ theorem isConnected_baseChange {H : PDivGroup (ZpD p) p} (hconn : ∀ v, (H.G v)
 theorem exists_specialFibreData {H : PDivGroup (ZpD p) p} (hconn : ∀ v, (H.G v).IsConnected) :
     ∃ d, Nonempty (SpecialFibreData H (ZMod p) d) := by
   obtain ⟨d, ρ, hsurj, hcompat, hker, -⟩ :=
-    (H.baseChange (ZMod p)).exists_coords (isConnected_baseChange hconn) (ZMod.pow_card (p := p))
+    (H.baseChange (ZMod p)).exists_coords (isConnected_baseChange hconn)
   exact ⟨d, ⟨{
     ρ := ρ
     surj := hsurj

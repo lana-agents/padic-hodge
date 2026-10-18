@@ -10,11 +10,13 @@ import Mathlib.LinearAlgebra.Dual.Lemmas
 import Mathlib.RingTheory.Nakayama
 import Mathlib.RingTheory.Artinian.Ring
 import Mathlib.Algebra.CharP.Algebra
+import Mathlib.FieldTheory.Perfect
 
 /-!
 # The relative Frobenius of a finite flat group scheme in characteristic `p`, and `h ≤ d + d^∨`
 
-Let `k` be a field of characteristic `p` on which `x ↦ x^p` is the identity (e.g. `𝔽_p`; then
+Let `k` be a field of characteristic `p`; from `FFGroupScheme.frob` on, `x ↦ x^p` is assumed to be
+the identity on `k` (e.g. `𝔽_p`; then
 all Frobenius twists are trivial, `G^{(p)} = G`), and `G = Spec A` a finite flat commutative group
 scheme over `k`, with Cartier dual `G^∨ = Spec A^∨`.
 
@@ -31,6 +33,11 @@ scheme over `k`, with Cartier dual `G^∨ = Spec A^∨`.
   half `ψ_G ∘ φ_G = [p]_G` of [Hong, Prop. 1.5.8]. Equivalently `f^p(d^p) = f([p]^* d)`
   (`FFGroupScheme.pow_apply_pow`); so `d^p = 0` implies `[p]^* d = 0`
   (`FFGroupScheme.univPt_pow_apply_eq_zero`).
+* Over a **perfect** field (no assumption `x^p = x`): `FFGroupScheme.apply_univPt_pow_perfect`,
+  `f([p]^* d) = ((σ⁻¹ ∘ f ∘ Frob)^p)(d)` (`perfT`, multiplicative for convolution since
+  `Δ(a^p) = Δ(a)^p`), hence `d^p = 0 ⇒ [p]^* d = 0`
+  (`FFGroupScheme.univPt_pow_apply_eq_zero_of_perfect`); `univPt_pow_apply` needs only
+  characteristic `p`.
 * If `G` is killed by `p`, the transpose `f ↦ f ∘ Frob` of `φ_G` kills `frobKerIdeal k A^∨ p`
   (`FFGroupScheme.frobKerIdeal_dual_le_ker`), hence
   `rank(φ_G) ≤ dim_k A^∨/frobKerIdeal = |ker φ_{G^∨}|` (`FFGroupScheme.finrank_range_frob_le`).
@@ -92,6 +99,13 @@ theorem add_pow_of_algebra {S : Type*} [CommRing S] [Algebra k S] (x y : S) :
   · exact Subsingleton.elim _ _
   · haveI := charP_of_injective_algebraMap (algebraMap k S).injective p
     exact add_pow_char ..
+
+variable (k) in
+/-- The additive map `x ↦ x^p` of a commutative `k`-algebra (characteristic `p`). -/
+def powAdd (S : Type*) [CommRing S] [Algebra k S] : S →+ S where
+  toFun x := x ^ p
+  map_zero' := zero_pow hp.out.ne_zero
+  map_add' := add_pow_of_algebra k
 
 /-- The `p`-power map `x ↦ x^p` of a commutative `k`-algebra, a `k`-algebra map when `c^p = c`
 on `k` ([Hong, Lemma 1.5.2]). -/
@@ -255,14 +269,14 @@ def frob (hk : ∀ x : k, x ^ p = x) (G : FFGroupScheme k) : Hom G G := frobBial
 
 /-- `[p]^*(d) = ∑_i (e_i^*)^p(d) e_i^p`: the `p`-th power of the universal point
 `u = ∑ e_i^* ⊗ e_i ∈ A^∨ ⊗ A` is `∑ (e_i^*)^p ⊗ e_i^p` (characteristic `p`). -/
-theorem univPt_pow_apply (hk : ∀ x : k, x ^ p = x) (G : FFGroupScheme k) {ι : Type*}
+theorem univPt_pow_apply (G : FFGroupScheme k) {ι : Type*}
     [Fintype ι] (b : Basis ι k G.A) (d : G.A) :
     ofConv (G.univPt ^ p) d =
       ∑ i, (toConv (b.coord i) ^ p : Cartier.Dual k G.A) d • b i ^ p := by
   have h1 : G.hat G.A (G.univPt ^ p) =
       ∑ i, (toConv (b.coord i) ^ p : Cartier.Dual k G.A) ⊗ₜ[k] (b i ^ p) := by
     rw [hat_pow, hat_eq_sum G G.A b]
-    exact (map_sum (frobAlg hk (Cartier.Dual k G.A ⊗[k] G.A)) _ _).trans
+    exact (map_sum (powAdd (p := p) k (Cartier.Dual k G.A ⊗[k] G.A)) _ _).trans
       (Finset.sum_congr rfl fun i _ => Algebra.TensorProduct.tmul_pow _ _ _)
   have h2 := congrArg (fun x => Cartier.theta G.A G.A x d) h1
   simp only [theta_hat, map_sum, LinearMap.coe_sum, Finset.sum_apply,
@@ -286,7 +300,7 @@ theorem apply_univPt_pow (hk : ∀ x : k, x ^ p = x) (G : FFGroupScheme k)
     refine (map_sum (frobAlg hk (Cartier.Dual k G.A)) _ _).trans
       (Finset.sum_congr rfl fun i _ => ?_)
     rw [frobAlg_apply, smul_pow, hk]
-  rw [hTp, univPt_pow_apply hk G b d, map_sum]
+  rw [hTp, univPt_pow_apply G b d, map_sum]
   simp only [map_smul, smul_eq_mul, ofConv_sum, ofConv_smul, LinearMap.coe_sum,
     Finset.sum_apply, LinearMap.smul_apply]
   exact Finset.sum_congr rfl fun i _ => mul_comm _ _
@@ -386,6 +400,100 @@ theorem order_le_frobKer_mul (hk : ∀ x : k, x ^ p = x) (G : FFGroupScheme k)
       finrank k (G.dual.A ⧸ frobKerIdeal k G.dual.A p) :=
   (G.order_le_frobKer_mul_finrank_range hk hG).trans
     (Nat.mul_le_mul_left _ (G.finrank_range_frob_le hk hp1))
+
+/-! ### Perfect fields: `d^p = 0 ⇒ [p]^*(d) = 0` -/
+
+section Perfect
+
+variable [PerfectRing k p]
+
+/-- The `k`-linear map `σ⁻¹ ∘ f ∘ Frob` on `A^∨` (`k` perfect, `σ` the Frobenius of `k`); for
+`c^p = c` on `k` this is `frobT`. -/
+def perfT (A : Type u) [CommRing A] [HopfAlgebra k A] (f : Cartier.Dual k A) :
+    Cartier.Dual k A :=
+  toConv
+    { toFun := fun a => (frobeniusEquiv k p).symm (ofConv f (a ^ p))
+      map_add' := fun a b => by rw [add_pow_of_algebra k, map_add, map_add]
+      map_smul' := fun c a => by
+        have hc : (frobeniusEquiv k p).symm (c ^ p) = c :=
+          frobeniusEquiv_symm_apply_frobenius k p c
+        rw [smul_pow, map_smul, smul_eq_mul, map_mul, hc, RingHom.id_apply, smul_eq_mul] }
+
+theorem perfT_apply (A : Type u) [CommRing A] [HopfAlgebra k A] (f : Cartier.Dual k A) (a : A) :
+    perfT (p := p) A f a = (frobeniusEquiv k p).symm (f (a ^ p)) := rfl
+
+/-- `f ↦ σ⁻¹ ∘ f ∘ Frob` is multiplicative for the convolution product, since
+`Δ(a^p) = Δ(a)^p`. -/
+theorem perfT_mul (A : Type u) [CommRing A] [HopfAlgebra k A] (f g : Cartier.Dual k A) :
+    perfT (p := p) A (f * g) = perfT (p := p) A f * perfT (p := p) A g := by
+  apply WithConv.ofConv_injective
+  refine LinearMap.ext fun a => ?_
+  change (frobeniusEquiv k p).symm ((f * g) (a ^ p)) =
+    (perfT (p := p) A f * perfT (p := p) A g) a
+  have hc : comul (R := k) (a ^ p) = (comul (R := k) a) ^ p := by
+    rw [← Bialgebra.comulAlgHom_apply, map_pow]
+    rfl
+  rw [LinearMap.convMul_apply, LinearMap.convMul_apply, hc]
+  generalize comul (R := k) a = x
+  induction x using TensorProduct.induction_on with
+  | zero => simp [zero_pow hp.out.ne_zero]
+  | tmul x y =>
+    rw [Algebra.TensorProduct.tmul_pow, TensorProduct.map_tmul, TensorProduct.map_tmul,
+      LinearMap.mul'_apply, LinearMap.mul'_apply, map_mul]
+    rfl
+  | add x y hx hy => simp only [add_pow_of_algebra k, map_add, hx, hy]
+
+theorem perfT_pow_succ (A : Type u) [CommRing A] [HopfAlgebra k A] (f : Cartier.Dual k A)
+    (n : ℕ) : perfT (p := p) A (f ^ (n + 1)) = perfT (p := p) A f ^ (n + 1) := by
+  induction n with
+  | zero => rw [zero_add, pow_one, pow_one]
+  | succ n ih => rw [pow_succ, perfT_mul, ih, ← pow_succ]
+
+/-- **`f([p]^* d) = ((σ⁻¹ ∘ f ∘ Frob)^p)(d)`** over a perfect field ([Hong, Prop. 1.5.8],
+`ψ_G ∘ φ_G = [p]_G`, with the Frobenius twists made explicit). -/
+theorem apply_univPt_pow_perfect (G : FFGroupScheme k) (f : Cartier.Dual k G.A) (d : G.A) :
+    f (ofConv (G.univPt ^ p) d) = (perfT (p := p) G.A f ^ p) d := by
+  classical
+  let b := Module.Free.chooseBasis k G.A
+  have hT : perfT (p := p) G.A f =
+      ∑ i, (frobeniusEquiv k p).symm (f (b i ^ p)) • toConv (b.coord i) := by
+    apply WithConv.ofConv_injective
+    rw [ofConv_sum]
+    exact (b.sum_dual_apply_smul_coord (ofConv (perfT (p := p) G.A f))).symm
+  have hTp : perfT (p := p) G.A f ^ p =
+      ∑ i, f (b i ^ p) • (toConv (b.coord i) : Cartier.Dual k G.A) ^ p := by
+    rw [hT]
+    refine (map_sum (powAdd (p := p) k (Cartier.Dual k G.A)) _ _).trans
+      (Finset.sum_congr rfl fun i _ => ?_)
+    change ((frobeniusEquiv k p).symm (f (b i ^ p)) • (toConv (b.coord i) : Cartier.Dual k G.A))
+      ^ p = _
+    have hc : ((frobeniusEquiv k p).symm (f (b i ^ p))) ^ p = f (b i ^ p) :=
+      frobenius_apply_frobeniusEquiv_symm k p _
+    rw [smul_pow, hc]
+  rw [hTp, univPt_pow_apply G b d, map_sum]
+  simp only [map_smul, smul_eq_mul, ofConv_sum, ofConv_smul, LinearMap.coe_sum,
+    Finset.sum_apply, LinearMap.smul_apply]
+  exact Finset.sum_congr rfl fun i _ => mul_comm _ _
+
+/-- **If `d^p = 0` then `[p]^*(d) = 0`**, over a perfect field: `f([p]^* d) = σ⁻¹(f^p(d^p))`. -/
+theorem univPt_pow_apply_eq_zero_of_perfect (G : FFGroupScheme k) {d : G.A} (hd : d ^ p = 0) :
+    ofConv (G.univPt ^ p) d = 0 := by
+  let b := Module.Free.chooseBasis k G.A
+  refine b.forall_coord_eq_zero_iff.mp fun i => ?_
+  have h := apply_univPt_pow_perfect G (toConv (b.coord i)) d
+  obtain ⟨n, hn⟩ : ∃ n, p = n + 1 := ⟨p - 1, (Nat.succ_pred_eq_of_pos hp.out.pos).symm⟩
+  have h2 : perfT (p := p) G.A (toConv (b.coord i)) ^ p =
+      perfT (p := p) G.A (toConv (b.coord i) ^ p) := by
+    have := perfT_pow_succ (p := p) G.A (toConv (b.coord i) : Cartier.Dual k G.A) n
+    rw [← hn] at this
+    exact this.symm
+  rw [h2, perfT_apply, hd] at h
+  have h0 : ((toConv (b.coord i) : Cartier.Dual k G.A) ^ p) (0 : G.A) = 0 :=
+    LinearMap.map_zero _
+  rw [h0, map_zero] at h
+  exact h
+
+end Perfect
 
 end FFGroupScheme
 

@@ -8,7 +8,7 @@ import PadicHodge.GroupScheme.Frobenius
 /-!
 # Connected `p`-divisible groups over a field of characteristic `p`: the layers
 
-Let `k` be a field of characteristic `p` with `x^p = x` for all `x ∈ k`, and `H = (G_v, i_v)` a
+Let `k` be a field of characteristic `p` (perfect where needed), and `H = (G_v, i_v)` a
 `p`-divisible group over `k` all of whose layers `G_v = Spec A_v` are connected (`A_v` local).
 This file collects the facts about the layers needed for the structure theorem
 `lim_v A_v ≅ k[[t_1, …, t_d]]` ([Hong, Prop. 2.2.13] for the special fibre; our proof is
@@ -100,7 +100,7 @@ theorem counit_univPt_pow (G : FFGroupScheme k) (a : G.A) :
 
 /-- The Frobenius kernel `ker φ_G = Spec A/frobKerIdeal` is killed by `p`: its universal point
 `A ↠ A/frobKerIdeal` has `p`-th power `1`. -/
-theorem frobPoint_pow_eq_one (hk : ∀ x : k, x ^ p = x) (G : FFGroupScheme k) :
+theorem frobPoint_pow_eq_one (G : FFGroupScheme k) :
     (toConv (Ideal.Quotient.mkₐ k (frobKerIdeal k G.A p)) :
       G.points (G.A ⧸ frobKerIdeal k G.A p)) ^ p = 1 := by
   classical
@@ -124,7 +124,7 @@ theorem frobPoint_pow_eq_one (hk : ∀ x : k, x ^ p = x) (G : FFGroupScheme k) :
   change x (ofConv (G.univPt ^ p) a) = ofConv (1 : G.points (G.A ⧸ F)) a
   rw [AlgHom.convOne_apply, ← counit_univPt_pow (p := p) G a]
   let b := Module.Free.chooseBasis k G.A
-  rw [univPt_pow_apply hk G b a, map_sum, map_sum, map_sum]
+  rw [univPt_pow_apply G b a, map_sum, map_sum, map_sum]
   refine Finset.sum_congr rfl fun i _ => ?_
   rw [map_smul, map_smul, hfrob, smul_eq_mul, map_mul, Algebra.smul_def]
 
@@ -222,34 +222,34 @@ theorem quot_injective_of_isConnected [hp : Fact p.Prime] (v : ℕ) (hc : (H.G (
 
 /-- **If `a^p = 0` in `A_{v+1}`, then `i_v^*(a) = 0`**: `[p]^*(a) = quot_v^*(i_v^*(a))` vanishes
 ([Hong, Prop. 1.5.8]) and `quot_v^*` is injective. -/
-theorem incl_eq_zero_of_pow_eq_zero [hp : Fact p.Prime] [CharP k p] (hk : ∀ x : k, x ^ p = x)
+theorem incl_eq_zero_of_pow_eq_zero [hp : Fact p.Prime] [CharP k p] [PerfectRing k p]
     (v : ℕ) (hc : (H.G (v + 1)).IsConnected) {a : (H.G (v + 1)).A} (ha : a ^ p = 0) :
     H.incl v a = 0 := by
   apply H.quot_injective_of_isConnected v hc
   rw [map_zero]
-  have h := FFGroupScheme.univPt_pow_apply_eq_zero hk (H.G (v + 1)) ha
+  have h := FFGroupScheme.univPt_pow_apply_eq_zero_of_perfect (H.G (v + 1)) ha
   rw [← H.incl_quot v (H.G (v + 1)).univPt] at h
   exact h
 
 /-- **`ker(A_{w+1} ↠ A_1) ⊆ frobKerIdeal`**: the Frobenius kernel of `G_{w+1}` is killed by `p`,
 hence lies in `G_1`. -/
-theorem ker_inclOne_le_frobKerIdeal [Fact p.Prime] [CharP k p] (hk : ∀ x : k, x ^ p = x)
+theorem ker_inclOne_le_frobKerIdeal [Fact p.Prime] [CharP k p]
     (w : ℕ) : RingHom.ker (H.inclOne w) ≤ frobKerIdeal k (H.G (w + 1)).A p := by
   intro a ha
-  obtain ⟨x₁, hx₁⟩ := H.exists_eq_comp_inclOne w _ (frobPoint_pow_eq_one hk (H.G (w + 1)))
+  obtain ⟨x₁, hx₁⟩ := H.exists_eq_comp_inclOne w _ (frobPoint_pow_eq_one (H.G (w + 1)))
   rw [← Ideal.Quotient.eq_zero_iff_mem]
   have h := congrArg (fun φ : (H.G (w + 1)).A →ₐ[k] _ => φ a) hx₁
   simp only [AlgHom.comp_apply, RingHom.mem_ker.mp ha, map_zero] at h
   exact h
 
 /-- `ker(A_{w+1} ↠ A_1) ⊆ 𝔪_{w+1}²`. -/
-theorem ker_inclOne_le_sq [hp : Fact p.Prime] [CharP k p] (hk : ∀ x : k, x ^ p = x) (w : ℕ) :
+theorem ker_inclOne_le_sq [hp : Fact p.Prime] [CharP k p] (w : ℕ) :
     RingHom.ker (H.inclOne w) ≤ counitKer k (H.G (w + 1)).A ^ 2 :=
-  (H.ker_inclOne_le_frobKerIdeal hk w).trans (frobKerIdeal_le_sq hp.out.two_le)
+  (H.ker_inclOne_le_frobKerIdeal w).trans (frobKerIdeal_le_sq hp.out.two_le)
 
 /-- **Cotangent spaces**: if `s_i ∈ A_{w+1}` are such that their images in `A_1` generate
 `𝔪_1` modulo `𝔪_1²`, then the `s_i` generate `𝔪_{w+1}` modulo `𝔪_{w+1}²`. -/
-theorem counitKer_le_of_inclOne [Fact p.Prime] [CharP k p] (hk : ∀ x : k, x ^ p = x) (w : ℕ)
+theorem counitKer_le_of_inclOne [Fact p.Prime] [CharP k p] (w : ℕ)
     {ι : Type*} (s : ι → (H.G (w + 1)).A)
     (h1 : counitKer k (H.G 1).A ≤
       Ideal.span (Set.range (H.inclOne w ∘ s)) ⊔ counitKer k (H.G 1).A ^ 2) :
@@ -272,7 +272,7 @@ theorem counitKer_le_of_inclOne [Fact p.Prime] [CharP k p] (hk : ∀ x : k, x ^ 
   obtain ⟨m', hm', he⟩ := (Ideal.mem_map_iff_of_surjective π (H.inclOne_surjective w)).mp
     (hJ (h1 hπm))
   have hd : m - m' ∈ J := by
-    refine Ideal.mem_sup_right (H.ker_inclOne_le_sq hk w ?_)
+    refine Ideal.mem_sup_right (H.ker_inclOne_le_sq w ?_)
     rw [RingHom.mem_ker, map_sub, he, sub_self]
   have := J.add_mem hd hm'
   rwa [sub_add_cancel] at this

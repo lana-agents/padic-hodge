@@ -10,7 +10,7 @@ import PadicHodge.FormalGroup.AdicEval
 /-!
 # Coordinates on a connected `p`-divisible group over a field of characteristic `p`
 
-Let `k` be a field of characteristic `p` with `x^p = x` for all `x ∈ k`, and `H = (G_v, i_v)` a
+Let `k` be a perfect field of characteristic `p` (e.g. a finite field), and `H = (G_v, i_v)` a
 `p`-divisible group over `k` with all layers `G_v = Spec A_v` connected. We prove the special
 fibre case of [Hong, Prop. 2.2.13] (`lim_v A_v ≅ k[[t_1, …, t_d]]`) in the following concrete
 form, by our own argument (not Hong's order-counting induction via the Frobenius kernels
@@ -268,7 +268,7 @@ variable {σ k : Type*} [Field k] [Finite σ] (p : ℕ) [CharP k p] [Fact p.Prim
 
 /-- Variant of `MvPowerSeries.le_spanXPow_of_derivStable` needing `∂`-stability of `𝔞_v` only
 for `v ≥ 1` (the ideal `𝔞_0` is only used through `hfrob 0`). -/
-theorem le_spanXPow_of_derivStable_succ (hk : ∀ x : k, x ^ p = x)
+theorem le_spanXPow_of_derivStable_succ [PerfectRing k p]
     (𝔞 : ℕ → Ideal (MvPowerSeries σ k)) (hstab : ∀ v, DerivStable (𝔞 (v + 1)))
     (hX : ∀ v, 𝔞 v ≤ Ideal.span (Set.range X)) (hfrob : ∀ v h, h ^ p ∈ 𝔞 (v + 1) → h ∈ 𝔞 v) :
     ∀ w v, w ≤ v → 𝔞 v ≤ spanXPow σ k (p ^ w) := by
@@ -283,15 +283,16 @@ theorem le_spanXPow_of_derivStable_succ (hk : ∀ x : k, x ^ p = x)
   | succ w ih =>
     intro v hv f hf
     obtain ⟨u, rfl⟩ : ∃ u, v = u + 1 := ⟨v - 1, by omega⟩
-    have hf' : ∑ m : σ → Fin p, frobCoeff p f (boxExp m) ^ p * monomial (boxExp m) 1 ∈
-        𝔞 (u + 1) := by
-      rw [← frob_decomp p hk f]
+    have hf' : ∑ m : σ → Fin p, map (frobInv (k := k) p) (frobCoeff p f (boxExp m)) ^ p *
+        monomial (boxExp m) 1 ∈ 𝔞 (u + 1) := by
+      rw [← frob_decomp p f]
       exact hf
-    rw [frob_decomp p hk f]
+    rw [frob_decomp p f]
     refine Ideal.sum_mem _ fun m _ => Ideal.mul_mem_right _ _ ?_
     rw [pow_succ']
-    exact pow_mem_spanXPow_mul p hk (ih u (by omega) (hfrob u _
-      (pow_mem_of_sum_mem p (hstab u) (fun m => frobCoeff p f (boxExp m)) hf' m)))
+    exact pow_mem_spanXPow_mul p (ih u (by omega) (hfrob u _
+      (pow_mem_of_sum_mem p (hstab u)
+        (fun m => map (frobInv (k := k) p) (frobCoeff p f (boxExp m))) hf' m)))
 
 omit [Finite σ] [CharP k p] in
 theorem iInf_eq_bot_of_le_spanXPow (𝔞 : ℕ → Ideal (MvPowerSeries σ k))
@@ -431,7 +432,7 @@ theorem exists_pow_le_ker_rho (v : ℕ) :
   have := (Ideal.pow_right_mono h1 N).trans (Ideal.le_comap_pow _ N)
   rwa [hN] at this
 
-theorem rho_surjective_succ [Fact p.Prime] [CharP k p] (hk : ∀ x : k, x ^ p = x) (w : ℕ) :
+theorem rho_surjective_succ [Fact p.Prime] [CharP k p] [PerfectRing k p] (w : ℕ) :
     Function.Surjective (H.rho hconn (w + 1)) := by
   letI : IsLocalRing (H.G (w + 1)).A := hconn (w + 1)
   set A := (H.G (w + 1)).A
@@ -440,7 +441,7 @@ theorem rho_surjective_succ [Fact p.Prime] [CharP k p] (hk : ∀ x : k, x ^ p = 
     have : H.inclOne w ∘ H.coordAux w = cotLift k (H.G 1).A := funext (H.inclOne_coordAux w)
     rw [this]
     exact counitKer_le_span_cotLift
-  have h2 := H.counitKer_le_of_inclOne hk w (H.coordAux w) h1
+  have h2 := H.counitKer_le_of_inclOne w (H.coordAux w) h1
   have hspan : counitKer k A ≤ Ideal.span (Set.range (H.coordAux w)) := by
     haveI : IsNoetherianRing A := isNoetherian_of_tower k inferInstance
     refine Submodule.le_of_le_smul_of_le_jacobson_bot (I := maximalIdeal A)
@@ -468,20 +469,20 @@ theorem rho_surjective_succ [Fact p.Prime] [CharP k p] (hk : ∀ x : k, x ^ p = 
   exact LinearMap.range_eq_top.mp htop
 
 /-- **`ρ_v` is surjective.** -/
-theorem rho_surjective [Fact p.Prime] [CharP k p] (hk : ∀ x : k, x ^ p = x) (v : ℕ) :
+theorem rho_surjective [Fact p.Prime] [CharP k p] [PerfectRing k p] (v : ℕ) :
     Function.Surjective (H.rho hconn v) := by
   cases v with
   | zero =>
     rw [← H.incl_comp_rho hconn 0, AlgHom.coe_comp]
-    exact (H.incl_surjective 0).comp (H.rho_surjective_succ hconn hk 0)
-  | succ w => exact H.rho_surjective_succ hconn hk w
+    exact (H.incl_surjective 0).comp (H.rho_surjective_succ hconn 0)
+  | succ w => exact H.rho_surjective_succ hconn w
 
 /-- **`ker ρ_{w+1}` is `∂`-stable.** -/
-theorem derivStable_ker_rho [Fact p.Prime] [CharP k p] (hk : ∀ x : k, x ^ p = x) (w : ℕ) :
+theorem derivStable_ker_rho [Fact p.Prime] [CharP k p] [PerfectRing k p] (w : ℕ) :
     DerivStable (RingHom.ker (H.rho hconn (w + 1))) := by
   classical
   obtain ⟨N, hN⟩ := H.exists_pow_le_ker_rho hconn (w + 1)
-  have hs := H.rho_surjective hconn hk (w + 1)
+  have hs := H.rho_surjective hconn (w + 1)
   let c : Matrix (Fin (cotDim k (H.G 1).A)) (Fin (cotDim k (H.G 1).A))
       (MvPowerSeries (Fin (cotDim k (H.G 1).A)) k) := fun i j =>
     Function.surjInv hs (H.der w j (H.coord (w + 1) i))
@@ -501,37 +502,37 @@ theorem derivStable_ker_rho [Fact p.Prime] [CharP k p] (hk : ∀ x : k, x ^ p = 
   exact (Function.surjInv_eq hs _).symm
 
 /-- `h^p ∈ ker ρ_{v+1} ⇒ h ∈ ker ρ_v`. -/
-theorem rho_frob [Fact p.Prime] [CharP k p] (hk : ∀ x : k, x ^ p = x) (v : ℕ)
+theorem rho_frob [Fact p.Prime] [CharP k p] [PerfectRing k p] (v : ℕ)
     (h : MvPowerSeries (Fin (cotDim k (H.G 1).A)) k)
     (hh : h ^ p ∈ RingHom.ker (H.rho hconn (v + 1))) : h ∈ RingHom.ker (H.rho hconn v) := by
   rw [RingHom.mem_ker, map_pow] at hh
   rw [RingHom.mem_ker, ← H.incl_comp_rho hconn v, AlgHom.comp_apply]
-  exact H.incl_eq_zero_of_pow_eq_zero hk v (hconn (v + 1)) hh
+  exact H.incl_eq_zero_of_pow_eq_zero v (hconn (v + 1)) hh
 
 /-- **`ker ρ_v ⊆ (t_j^{p^w})_j` for `w ≤ v`.** -/
-theorem ker_rho_le_spanXPow [Fact p.Prime] [CharP k p] (hk : ∀ x : k, x ^ p = x) :
+theorem ker_rho_le_spanXPow [Fact p.Prime] [CharP k p] [PerfectRing k p] :
     ∀ w v, w ≤ v → RingHom.ker (H.rho hconn v) ≤
       spanXPow (Fin (cotDim k (H.G 1).A)) k (p ^ w) :=
-  le_spanXPow_of_derivStable_succ p hk (fun v => RingHom.ker (H.rho hconn v))
-    (H.derivStable_ker_rho hconn hk) (H.ker_rho_le_span_X hconn) (H.rho_frob hconn hk)
+  le_spanXPow_of_derivStable_succ p (fun v => RingHom.ker (H.rho hconn v))
+    (H.derivStable_ker_rho hconn) (H.ker_rho_le_span_X hconn) (H.rho_frob hconn)
 
 /-- **`⋂_v ker ρ_v = 0`**: `k[[t_1, …, t_d]] → lim_v A_v` is injective. -/
-theorem iInf_ker_rho [Fact p.Prime] [CharP k p] (hk : ∀ x : k, x ^ p = x) :
+theorem iInf_ker_rho [Fact p.Prime] [CharP k p] [PerfectRing k p] :
     ⨅ v, RingHom.ker (H.rho hconn v) = ⊥ :=
-  iInf_eq_bot_of_le_spanXPow p _ (H.ker_rho_le_spanXPow hconn hk)
+  iInf_eq_bot_of_le_spanXPow p _ (H.ker_rho_le_spanXPow hconn)
 
 /-- **Coordinates on a connected `p`-divisible group over `k`** ([Hong, Prop. 2.2.13] for the
 special fibre, in concrete form; our proof): there are `d` and surjective `k`-algebra maps
 `ρ_v : k[[t_1, …, t_d]] ↠ A_v`, compatible with the transition maps `i_v^* : A_{v+1} ↠ A_v`, with
 `ker ρ_v ⊆ (t_j^{p^w})_j` for `w ≤ v`; in particular `⋂_v ker ρ_v = 0`. -/
-theorem exists_coords [Fact p.Prime] [CharP k p] (hk : ∀ x : k, x ^ p = x) :
+theorem exists_coords [Fact p.Prime] [CharP k p] [PerfectRing k p] :
     ∃ (d : ℕ) (ρ : ∀ v, MvPowerSeries (Fin d) k →ₐ[k] (H.G v).A),
       (∀ v, Function.Surjective (ρ v)) ∧
       (∀ v, (H.incl v : (H.G (v + 1)).A →ₐ[k] (H.G v).A).comp (ρ (v + 1)) = ρ v) ∧
       (∀ w v, w ≤ v → RingHom.ker (ρ v) ≤ spanXPow (Fin d) k (p ^ w)) ∧
       ⨅ v, RingHom.ker (ρ v) = ⊥ :=
-  ⟨_, H.rho hconn, H.rho_surjective hconn hk, H.incl_comp_rho hconn,
-    H.ker_rho_le_spanXPow hconn hk, H.iInf_ker_rho hconn hk⟩
+  ⟨_, H.rho hconn, H.rho_surjective hconn, H.incl_comp_rho hconn,
+    H.ker_rho_le_spanXPow hconn, H.iInf_ker_rho hconn⟩
 
 end PDivGroup
 
