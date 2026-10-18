@@ -99,7 +99,7 @@ variable (R) in
 /-- `[1] − 1 ∈ R[ℤ/p^v]`. -/
 abbrev w (v : ℕ) : MonoidAlgebra R (CycP p v) := MonoidAlgebra.single (genP p v) 1 - 1
 
-omit [IsLocalRing R] [IsAdicComplete (maximalIdeal R) R] in
+omit [IsLocalRing R] [IsAdicComplete (maximalIdeal R) R] hp in
 theorem single_genP_pow (v : ℕ) :
     (MonoidAlgebra.single (genP p v) (1 : R)) ^ (p ^ v) = 1 := by
   rw [MonoidAlgebra.single_pow, genP_pow_card, one_pow, MonoidAlgebra.one_def]
@@ -173,6 +173,7 @@ theorem comul_u (v : ℕ) : (G p hpR).comul v (u p hpR v) = u p hpR v ⊗ₜ u p
   simp only [add_tmul, tmul_add, Algebra.TensorProduct.one_def]
   abel
 
+omit [IsLocalRing R] [IsAdicComplete 𝔪R R] hp in
 theorem comul_single (v : ℕ) (a : CycP p v) :
     Coalgebra.comul (R := R) (MonoidAlgebra.single a (1 : R)) =
       MonoidAlgebra.single a 1 ⊗ₜ MonoidAlgebra.single a 1 := by
