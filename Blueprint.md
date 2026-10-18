@@ -602,7 +602,54 @@ in place of Kähler differentials (all rings of integers here are monogenic), ev
   `Spec k[[T]]/([p]_F, T^p)` of `F[p]` has order `p^d`** (`finrank_frobKernel`; [Hong,
   Cor. 1.5.11, Cor. 2.2.18]).
 
-## Hand-off (2026-10-18, tenth session)
+## Hand-off (2026-10-18, eleventh session)
+
+Scope (unchanged, `~/iut-scratch/multiradial/MR6-scoping.md`, item A2): [LocAn] needs Tate's
+Theorem 4 (full faithfulness of `G ↦ T_p G` over `O_{K'}`) for `p`-divisible groups of Jacobians.
+
+Done this session (`63cf447`, pushed with green validation; see PH4 above for the file-level
+summary):
+
+* **Injectivity of `α` on `G(ℤ_p)`** ([Hong, Prop. 3.4.9], `K = ℚ_p`, connected `G = F[p^∞]`):
+  `PDivFGL.eq_zero_of_alpha_eq_one` (`AlphaInj.lean`), via `T_p(G^∨)(O_C) → G_v^∨(O_C)`
+  surjective and `ker(T_p(G^∨) → G_1^∨) = p T_p(G^∨)` (`DualTateField.lean`, `DualTateOC.lean`,
+  counting over `ℂ_p`), perfectness of the level-1 pairing over `O_C` (both halves), and
+  [Hong, Lemmas 3.4.2, 3.4.3] over `ℚ_p`. **Injectivity of `dα` on `t_G(ℚ_p)`**
+  (`DAlphaInj.lean`, local inverse of `log_F` instead of the snake lemma).
+* **`d + d^∨ = h` sub-project started**: `MvPowerSeries.pderiv` and the chain rule
+  `pderiv_subst` (`PDeriv.lean`, generic, upstreamable); invariant derivations and
+  **`[p]_F(T) ∈ (T^p)` in characteristic `p`** (`InvDeriv.lean`); **order `p^d` of the Frobenius
+  kernel of `F[p]`** (`FrobKernel.lean`).
+* **`T_p(G^∨)(O_{ℂ_p}) ≃* T_p(G_{ℚ_p}^∨)(ℚ̄_p)`** for `G` over `ℤ_p` (`DualTateZp.lean`), from
+  Cartier duality commuting with base change on points (`DualBaseChange.lean`).
+
+Next steps, in order:
+
+1. **`d + d^∨ = h`** ([Hong, Thm. 2.2.19]), remaining: (c) Frobenius `φ` and Verschiebung
+   `ψ = (φ_{G^∨})^∨` for finite flat group schemes over a perfect field `k` of char. `p`
+   (`A^{(p)} = A ⊗_{k,Frob} k`; for `k = 𝔽_p`, `A^{(p)} = A` and `φ^*(a) = a^p`), `ψ ∘ φ = [p]`
+   ([Hong, Prop. 1.5.8], via symmetric tensors after [Pink, §14]); (d) orders in exact sequences
+   of finite `k`-group schemes (faithful flatness over Hopf subalgebras) and exactness of Cartier
+   duality; (e) `d^∨` for non-connected `G^∨`: the Cartier dual `p`-divisible group over `ℤ_p`
+   (only `dualPDiv` over `ℚ_p` exists), the connected–étale sequence and Serre–Tate essential
+   surjectivity for `(G^∨)°` ([Hong, Thm. 2.2.16, second half]). Note: only `h ≤ d + d^∨` is
+   needed in [Hong, proof of Thm. 3.4.10] (the reverse inequality follows from (3.9)–(3.11)).
+2. **Tate [Hong, Thm. 3.4.10], Cor. 3.4.11, Thm. 3.4.12** for `G` over `ℤ_p`: inputs now
+   available: injectivity of `α_K`, `dα_K` (this session), Galois equivariance (`alpha_gal`),
+   `dualTateZpEquiv` (still to do: its Galois equivariance, `galDual ↔ galDualTate`, and the
+   compatibility of `α` on torsion with `tatePairing` through it), `tateDualHom`,
+   `sum_finrank_DHT_le`. Missing: (3.10) for `G^∨` (needs `α`, `dα` for the possibly
+   non-connected `G^∨`, i.e. item 1(e) and [Hong, Prop. 3.4.9] for general `G` via `G°`), and
+   item 1.
+3. Base `O_{K'}` ([Hong] with `K = K'`): `AlphaInj` uses `GalFixed` for all of `Γ_{ℚ_p}` and
+   [Hong, Lemma 3.4.3] over `ℚ_p` (`eq_zero_of_forall_pow_nsmul_Qp`); for `K'` one needs the
+   bound `|x| ≤ |π_{K'}|` on `m_{K'}` (discreteness of the value group of a finite `K'/ℚ_p`;
+   `Cyclotomic/Norms.lean` has value groups of finite extensions) and `galPt_fixed_iff` with
+   `L = K'`; plus the concrete `O_{K'}` coefficient ring (hand-off 10, item 4).
+4. Discriminant formula and full faithfulness ([Hong, Prop. 3.5.1, Lemma 3.5.2, Prop. 3.5.3,
+   Thm. 3.5.4]): proof plan in hand-off 10 (Tate §(2.2) Prop. 2, Haines §2.3, Lipnowski App.).
+
+## Hand-off (2026-10-18, tenth session; superseded)
 
 Scope (unchanged, `~/iut-scratch/multiradial/MR6-scoping.md`, item A2): [LocAn] needs Tate's
 Theorem 4 (full faithfulness of `G ↦ T_p G` over `O_{K'}`) for `p`-divisible groups of Jacobians
