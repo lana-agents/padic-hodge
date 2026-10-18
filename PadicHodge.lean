@@ -40,6 +40,7 @@ import PadicHodge.FormalGroup.Law
 import PadicHodge.FormalGroup.LayerFree
 import PadicHodge.FormalGroup.LayerHopf
 import PadicHodge.FormalGroup.LayerLimit
+import PadicHodge.FormalGroup.LayerLimitBase
 import PadicHodge.FormalGroup.LayerPDiv
 import PadicHodge.FormalGroup.LayerPoints
 import PadicHodge.FormalGroup.LayerSurj

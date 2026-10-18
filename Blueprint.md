@@ -481,6 +481,29 @@ in place of Kähler differentials (all rings of integers here are monogenic), ev
 * **done** `FormalGroup/GmMu.lean`: **`Ĝ_m[p^∞] ≅ μ_{p^∞}`** as `p`-divisible groups
   (`GmMu.gmToMu`, `muToGm`, both composites the identity; `[k] ↦ (1+t)^k`, `t ↦ [1] − 1`),
   `T_p(Ĝ_m[p^∞]) ≅ T_p μ_{p^∞}` (`GmMu.tateEquiv`).
+* **done** `FormalGroup/Filtration.lean`: the coefficient filtration `N_w = {f | coeff_m f ∈
+  𝔪^{w−|m|}}` of `R[[T]]` (an ideal, `N_a N_b ⊆ N_{a+b}`, `⋂ N_w = 0` for separated `R`; no
+  noetherianity of `R[[T]]` needed); linear parts of substitutions (`coeff_single_subst`);
+  **[Hong, Lemma 2.2.14]** (`coeff_single_Φ`, `coeff_single_mulPS`, `mulPS_sub_mem`:
+  `[n](T) ≡ nT` mod `(T)^2`); `J_v ⊆ (𝔪A + I)^{v+1}` if `p ∈ 𝔪` (`layerIdeal_le_pow`) and
+  **`⋂_v J_v = 0`** (`eq_zero_of_mem_layerIdeal`).
+* **done** `FormalGroup/LayerLimit.lean` (**[Hong, Lemma 2.2.15]**): `R[[T]] → lim_v A_v`
+  surjective (`PDivFGL.exists_mk_eq`; coefficientwise limits, `N_w ⊆ J_v + 𝔪^k A` for `w ≫ k`).
+  Hypothesis `p ∈ 𝔪_R` (residue characteristic `p`).
+* **done** `FormalGroup/SerreTateHom.lean` (**[Hong, Thm. 2.2.16], full faithfulness**): a
+  power series in `(T, U)` vanishing in all `A_v ⊗ A_v` is zero (`PDivFGL.eq_zero_of_evPair`,
+  via `R[[T,U]] → A_v ⊗ A_v → R[[T,U]]/K_v`); **`FGL.Hom.pdivEquiv :
+  Hom(F, F') ≃ Hom(F[p^∞], F'[p^∞])`** (`ofPDiv`, `toPDiv_injective`, `toPDiv_ofPDiv`), any
+  dimensions `d, d'` (in particular `d = g` for Jacobians).
+* **done** `FormalGroup/LayerLimitBase.lean`: for an `R`-algebra `S` complete for `𝔪_R S`
+  (e.g. `O_{ℂ_p}` over `ℤ_p`, once its `p`-adic completeness is formalised): evaluation
+  `evB v : S[[T]] → S ⊗_R A_v` (surjective, compatible with the closed immersions) and
+  **`S[[T]] ≅ lim_v S ⊗_R A_v`** (`eq_zero_of_evB`, `exists_evB_eq`; [Hong, Lemma 2.2.15] for
+  `F_S`, without proving that `F_S` is `p`-divisible over `S`); the two-variable injectivity
+  over `S` (`eq_zero_of_evB2`); **compatible group-like families `b_v ∈ S ⊗ A_v` come from a
+  power series `U ∈ S[[T]]` with `U(Φ(T, T')) = U(T) U(T')`** (`exists_groupLike`: the step
+  `lim_v Hom(G_v ⊗ S, μ_{p^v}) → Hom(F_S, Ĝ_m)` of [Hong, Prop. 3.4.9, (3.7)]). Generic kernel
+  lemma `MvPowerSeries.mem_sup_pow_of_comp_eq_mk`.
 
 ## Hand-off (2026-10-18, eighth session)
 
