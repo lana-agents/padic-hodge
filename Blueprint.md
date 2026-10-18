@@ -649,6 +649,17 @@ in place of Kähler differentials (all rings of integers here are monogenic), ev
   `ρ_v : k[[t_1..t_d]] ↠ A_v`, invariant derivations `(id ⊗ ℓ_j)∘Δ` making `ker ρ_v` `∂`-stable;
   **`exists_coords`**: `ker ρ_v ⊆ (t_i^{p^w})` for `w ≤ v`, `⋂ ker ρ_v = 0`
   (i.e. `lim A_v ≅ k[[t]]` up to surjectivity onto the limit).
+* **done** `GroupScheme/SerreTateCompact.lean`, `SerreTateFGL.lean`, `SerreTatePDiv.lean`,
+  `SerreTateLift.lean`, `SerreTateEss.lean`: **Serre–Tate, essential surjectivity [Hong,
+  Thm. 2.2.16]**: every connected `p`-divisible group over `ℤ_p` is `F[p^∞]` for a
+  `p`-divisible formal group law: **`PDivGroup.exists_pdivFGL_iso`** (`H ≅ P.pdivGroup` with
+  inverse homomorphisms). Proof: special fibre via `exists_coords` over `𝔽_p`; Hong's lifting
+  of coordinates (`liftSeq`); compactness of `ℤ_p^{ℕ^σ}` instead of Chevalley's lemma for
+  `ℤ_p[[t]] ↠ lim A_v` and kernels `→ 0` (`exists_forall_eq`, `exists_ker_le_coeffFilt`);
+  injectivity by dividing out the largest power of `p`; `Φ` from the comultiplications
+  (`Coords.fgl`), `p`-divisibility by levelwise bijectivity `A_v^{p^h} → A_{v+1}`
+  (`Coords.isPDivisible`), levelwise bialgebra isomorphisms (`levelEquiv`). With
+  `FGL.Hom.pdivEquiv` this is the Serre–Tate equivalence over `ℤ_p`.
 
 ## Hand-off (2026-10-18, eleventh session)
 
