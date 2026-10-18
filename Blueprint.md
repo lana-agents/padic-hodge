@@ -452,6 +452,11 @@ in place of Kähler differentials (all rings of integers here are monogenic), ev
 * **done** `FormalGroup/Divisible.lean` ([Hong, Prop. 3.2.7], connected case): **`F(m_{ℂ_p})` is
   `p`-divisible** for `p`-divisible `F` (`PDivFGL.exists_p_nsmul_eq`), hence `log_F` is surjective
   (`PDivFGL.logF_surjective`, [Hong, Prop. 3.4.7] for `G = F[p^∞]`).
+* **done** `FormalGroup/FGLHom.lean`: homomorphisms of formal group laws `FGL.Hom F F'`
+  (`f(Φ(T,U)) = Φ'(f(T), f(U))`), their evaluation on topologically nilpotent families
+  (`fE_addE`, `fE_mulE`, `fE_comp`), the bialgebra maps `A'_v → A_v`, `t' ↦ f(t)`
+  (`layerHom`) and **the induced homomorphism `F[p^∞] → F'[p^∞]`** (`FGL.Hom.toPDiv`; the
+  functor of [Hong, Thm. 2.2.16] on morphisms, formal → `p`-divisible direction).
 * **done** `FormalGroup/ExactSeq.lean` ([Hong, Prop. 3.4.7] for `G = F[p^∞]`):
   `phiPt v : G_v(O_{ℂ_p}) ↪ F(m_{ℂ_p})` (inverse of `layerPtEquiv`), compatible with
   `G_v ↪ G_{v+1}` (`phiPt_incl`); `exact_logHom`: `ker log_F = ⋃_v phiPt(G_v(O_{ℂ_p}))`
