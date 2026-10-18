@@ -684,6 +684,12 @@ in place of Kähler differentials (all rings of integers here are monogenic), ev
   immersion `connPartHom : G° → G`, and **`exists_connPart_iso`**: `G° ≅ F[p^∞]` over `ℤ_p`
   (Serre–Tate). Missing: uniqueness of `d` / [Hong, Def. 2.2.17]; `G^{et}` as a `p`-divisible
   group.
+* **done** `FormalGroup/DAlphaHT.lean` (**(3.9) of [Hong, proof of Thm. 3.4.10]**): for
+  `P : PDivFGL ℤ_p d p`, `dα_K` as an `L`-linear map `L^d → D_0(V_p(G^∨)^∨) = W^Γ`
+  (`dalphaK`, via `dualTateZpLinearEquiv`, `dalpha_zpSmul`, Galois equivariance
+  `dalpha_galDualZp`), injective for `L = ℚ_p` (`dalphaK_injective`); twisted version into
+  `D_{-1}(V_p G)` via `V_p(G^∨)^∨ ≅ V_p(G)(-1)` (`tateRepDualDualEquiv`, `dalphaKTwist`), and
+  **`d ≤ dim D_{-1}(V_p G)`** (`le_finrank_DHT_tateRep`).
 
 ## Hand-off (2026-10-18, eleventh session)
 
