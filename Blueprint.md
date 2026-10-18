@@ -418,7 +418,11 @@ in place of Kähler differentials (all rings of integers here are monogenic), ev
 Done this session (all pushed with green validation): the formal-group drafts were moved into
 `PadicHodge/FormalGroup/` and finished (`2742552`), [Hong, Prop. 3.3.6 (1)–(4)] with inverses
 (`762011a`), formal identities, torsion, Galois action, `Ĝ_m`, layers (`a04dcc8`), layer points
-(see `git log`). See PH4 above.
+(`bd2d774`), `log_{Ĝ_m} = log` (`3089268`), Galois invariants and [Hong, Lemma 3.4.3]
+(`9f3ed00`), Tate module `T_p F` (`a8786ca`). See PH4 above. Items 1–2 of the fifth-session
+plan were only partly reached: step 1 (Prop. 3.3.6) is complete; step 2 (Prop. 2.2.10) has the
+ideals, layers, transition maps and the torsion points but not yet finiteness nor the group
+scheme structure; steps 3–4 were not started.
 
 Next steps, in order:
 
