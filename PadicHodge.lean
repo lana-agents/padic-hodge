@@ -107,6 +107,7 @@ import PadicHodge.GroupScheme.ConstPDiv
 import PadicHodge.GroupScheme.ConstPDivMap
 import PadicHodge.GroupScheme.ConstPDivTate
 import PadicHodge.GroupScheme.Constant
+import PadicHodge.GroupScheme.Discriminant
 import PadicHodge.GroupScheme.DualBaseChange
 import PadicHodge.GroupScheme.DualPDivFree
 import PadicHodge.GroupScheme.DualTateField

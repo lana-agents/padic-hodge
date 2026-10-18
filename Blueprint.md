@@ -794,8 +794,81 @@ in place of Kähler differentials (all rings of integers here are monogenic), ev
   over `K'`** (`tate_dalphaOL`, `dalphaKOL_bijective`), **Cor. 3.4.11** (`finrank_DHT_tateRepOL_neg_one`),
   **Thm. 3.4.12** (`hodgeTate_decompositionOL`), **Cor. 3.4.14** (`isHodgeTate_tateRepOL`) for
   `F[p^∞]` over `O_{K'}`, `V_p` as a `Gal(ℚ̄_p/K')`-representation.
+* **done (17th session) Hilbert 90 and the étale part over `K'`**: `Hilbert90/` is generalised
+  in place from `(ℚ_p, p, Gal(ℚ̄_p/ℚ_p))` to a base field `F` with `ℚ_p → F → ℚ̄_p` (a type, so
+  `F = ℚ_p` and `F = ↥K'` are both instances), `π ∈ F` with `0 < |π| < 1` and
+  `G_F = GalOver p F = (ℚ̄_p ≃ₐ[F] ℚ̄_p)`: `IsUnrStableOver F π M` (`M : IntermediateField F ℚ̄_p`,
+  `|z| < 1 ⇒ |z| ≤ |π|`), `exists_trace_one` over the `F`-embeddings, `exists_additive` and
+  `exists_GL_mod_p` modulo `π`, **`exists_hilbert90_over`** (approximation by powers of `π`;
+  conclusion `A(σ) σ(X) = X` with `σ` acting on `ℂ_p` by `autCp (σ.restrictScalars ℚ_p)`,
+  i.e. `galCp`). The `ℚ_p` statements are specialisations (`IsUnrStable`, `IsUnrStable.over`,
+  `exists_hilbert90` unchanged for the callers). New files:
+  - `Hilbert90/UnrOver.lean`: `FrobPeriodicMod F π` (Frobenius periodic mod `π` on `O_F`),
+    `FrobClosedOver F π S`, **`unr_adjoin_over`** (`F(S)` unramified relative to `π` via
+    `|d| ∈ |π|^ℕ` on `ℤ_p[S ∪ O_F]`), **`isUnrStableOver_adjoin`** (stability + rigidity);
+  - `FormalGroup/OLFrob.lean`: `norm_coeff_minpoly_le_one` (spectral norm: `|z| ≤ 1` ⇒ minimal
+    polynomial over `ℤ_p`), **`OL.instFiniteResidueField`** (`κ_{K'}` finite),
+    `OL.exists_frobenius_period_OL`, `OL.frobPeriodicMod`, `OL.ofL`, `OL.uniformizerL`,
+    **`Hilbert90.exists_frobenius_period_local`** (Frobenius periodic mod `π` on finite free
+    étale algebras over a local ring with finite residue field; generalises
+    `exists_frobenius_period`);
+  - `GroupScheme/EtaleHTOL.lean`: `coordFieldOL G k = K'(G_w(ℚ̄_p), w ≤ k)`,
+    `isUnrStableOver_coordFieldOL`, `tateMatrixOL_fix`, **`isHodgeTate_tateRepOver_of_etale_OL`**
+    (étale `G` over `O_{K'}`: `V_p(G_{K'})` Hodge–Tate, all weights `0`, as a
+    `Gal(ℚ̄_p/K')`-representation);
+  - `FormalGroup/TateNonConnOL.lean`: **[Hong, Cor. 3.4.11] over `K'` for non-connected `G`**
+    (**`finrank_DHT_tateRepOver_neg_one_of_iso_OL`**,
+    **`exists_finrank_DHT_tateRepOver_neg_one_OL`**: `dim_{K'} D_{-1}(V_p G_{K'}) = dim G⁰`),
+    the proof of `TateNonConn` with `etCoordFieldOL` over `K'` and `exists_hilbert90_over`.
+    Elaboration: instance terms over `L = ↥K'` are large; shortcut instances for
+    `Additive (H.TateModule ℚ̄_p)` and `DHT`, `let` instead of `set`, and two documented heartbeat
+    bumps (`galQMatrix_fixOL`, `finrank_DHT_tateRepOver_neg_one_of_iso_OL`, ~0.5 s per step).
+* **done (17th session) `GroupScheme/Discriminant.lean`** (§3.5 start): `discIdeal R A`
+  (basis-independent, `discIdeal_eq_span_discr`), `trace_algebraMap_of_bijective_baseChange`
+  (a map of finite free algebras bijective after `K ⊗_R -` preserves traces), and the algebraic
+  core of [Hong, Lemma 3.5.2]: **`bijective_of_discIdeal_eq`** (same rank, `K ⊗ α` bijective,
+  `disc(A/R) = disc(B/R) ≠ 0` ⇒ `α` bijective), `bijective_of_discr`.
 
-## Hand-off (2026-10-18, sixteenth session)
+## Hand-off (2026-10-18, seventeenth session)
+
+Done this session (pushed, validated): `b72c142` (Hilbert 90 over a base field `F`/`K'`:
+`exists_hilbert90_over`, `unr_adjoin_over`, `isUnrStableOver_adjoin`; `OLFrob`: `κ_{K'}`
+finite, Frobenius on `O_{K'}` and on finite étale `O_{K'}`-algebras; `EtaleHTOL`: étale `G` over
+`O_{K'}` is Hodge–Tate of weight `0`), `0e3fdaf` (`TateNonConnOL`: [Hong, Cor. 3.4.11] over
+`K'` for non-connected `G` over `O_{K'}`), and the commit with `Discriminant.lean` + this
+hand-off. See PH4 "17th session" above. Lead order item 1 (Hilbert 90 over `K'`, `etCoordField`
+over `K'`, `TateNonConn`/`EtaleHT` over `K'`) is complete.
+
+MR7 compatibility: the general base is a field `F` (type) with `ℚ_p → F → ℚ̄_p` and an element
+`π`; the coefficient ring of the group schemes is `OL L`. `exists_frobenius_period_local` is
+stated for any local ring with finite residue field (usable for finite étale algebras over
+`O_{K'}` in Kummer-map arguments). Tate modules stay `ℤ_p`-modules (matrices in `GL_h(ℤ_p)`).
+
+Next steps, in order:
+
+1. **§3.5 over `O_{K'}`** (`R = OL L`, also `ZpD p`):
+   (a) [Hong, Prop. 3.5.1] `disc(A_v/O_K) = (p^{d v p^{hv}})` — the hard input; plan in hand-off
+       10 (multiplicativity in exact sequences [Tate §(2.2) Prop. 2], [Haines §2.3]; reduction to
+       `v = 1`, connected; `disc(A_1) = N(det J)` [Lipnowski App., Claims 2', 2'']; `det J =
+       p^d · unit` via invariant differentials). `Discriminant.lean` has the ideal and its
+       basis independence; Mathlib has `Algebra.discr`, `discr_of_matrix_vecMul`,
+       `discr_powerBasis_eq_norm`, but no tensor/transitivity formula.
+   (b) [Hong, Lemma 3.5.2] = `bijective_of_discIdeal_eq` (done) + (a) + Cor. 3.4.11 over `K'`
+       (`exists_finrank_DHT_tateRepOver_neg_one_OL`, done) + height from `T_p` (`finrank_tateRep`):
+       remaining wiring: a hom `f : G → H` over `O_K` whose generic fibre is an isomorphism gives
+       `α_v : B_v → A_v` with `K ⊗ α_v` bijective; ranks `p^{hv}` equal.
+   (c) [Hong, Prop. 3.5.3] (scheme-theoretic closure of `\tilde H_v ⊆ G_v ⊗ K`, quotients
+       `H_{v+1}/H_v`, the increasing chain of orders `B_v` stabilises because the integral
+       closure of `O_K` in the étale `K`-algebra `B_1 ⊗ K` is noetherian), then Thm. 3.5.4 and
+       Cor. 3.5.5 (graph of `τ`, products of `p`-divisible groups, Prop. 2.1.14).
+2. `α_K` bijective (hand-off 13, item 1).
+3. Possible cleanup: prove `TateNonConn`/`TateNonConnOL` once for an abstract coefficient ring and
+   base field (the two files are parallel copies; the `OL` names carry an `OL` suffix), which
+   would also remove the two heartbeat bumps.
+
+No WIP branch; nothing unpushed after the final commit.
+
+## Hand-off (2026-10-18, sixteenth session; superseded)
 
 Done this session (pushed, validated): `f2d5f87` (Tate duality over `K'`: the `WIP` branch
 `wip-tatedual-over` finished; the slowdown was not one unfolding but every `rw` motive carrying
