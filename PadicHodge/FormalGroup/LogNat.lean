@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Claude (Anthropic)
 -/
 import PadicHodge.FormalGroup.FGLHomPoints
+import PadicHodge.FormalGroup.Filtration
 
 /-!
 # Naturality of the logarithm
@@ -27,28 +28,6 @@ noncomputable section
 open MvPowerSeries Topology Filter
 
 namespace PadicHodge
-
-theorem Finsupp.eq_single_of_degree_eq_one {σ : Type*} (m : σ →₀ ℕ) (h : m.degree = 1) :
-    ∃ j, m = Finsupp.single j 1 := by
-  have hm : m ≠ 0 := by
-    rintro rfl
-    simp at h
-  obtain ⟨j, hj⟩ := Finsupp.ne_iff.mp hm
-  have hle : m j ≤ 1 := h ▸ Finsupp.le_degree j m
-  have h1 : m j = 1 := by simp only [Finsupp.coe_zero, Pi.zero_apply] at hj; omega
-  refine ⟨j, ?_⟩
-  have hs : Finsupp.single j 1 ≤ m := by
-    intro i
-    by_cases hi : i = j
-    · subst hi; simp [h1]
-    · simp [Ne.symm hi]
-  have e : m = (m - Finsupp.single j 1) + Finsupp.single j 1 := (tsub_add_cancel_of_le hs).symm
-  have h0 : (m - Finsupp.single j 1).degree = 0 := by
-    have := congrArg Finsupp.degree e
-    rw [map_add, Finsupp.degree_single, h] at this
-    omega
-  rw [Finsupp.degree_eq_zero_iff] at h0
-  rw [e, h0, zero_add]
 
 namespace FGL.Hom
 
