@@ -873,8 +873,74 @@ in place of Kähler differentials (all rings of integers here are monogenic), ev
   `bijective_of_discIdeal_eq`.
   Generic-fibre form: **`PDivGroup.Hom.bijective_of_baseChange_inverse_OL`** (`f_L` has an
   inverse homomorphism over `L`).
+* **done (18th session) `GroupScheme/Product.lean`** (for the graph in [Hong, proof of
+  Thm. 3.5.4]): `FFGroupScheme.prod` (`A ⊗_R B`), `order_prod`, `prodPointsEquiv : (G × H)(S) ≃*
+  G(S) × H(S)`, `prodMap`, projections `fst`, `snd`; `PDivGroup.prod` (height `h_G + h_H`,
+  kernel condition componentwise), `PDivGroup.fst`, `PDivGroup.snd`, **`prodTateEquiv :
+  T_p(G × H)(S) ≃* T_p G(S) × T_p H(S)`**.
 
-## Hand-off (2026-10-18, seventeenth session)
+## Hand-off (2026-10-18, eighteenth session)
+
+Done this session (pushed, validated): `65de82d` (**[Hong, Prop. 3.5.1]** over `O_{K'}`,
+`PDivGroup.discIdeal_eq_of_iso_OL` / `exists_discIdeal_eq_OL`, proved for real via Hopf
+integrals; **[Hong, Lemma 3.5.2]** over `O_{K'}`, `PDivGroup.Hom.bijective_of_mapPoints_bijective_OL`),
+`0374df9` (generic-fibre form `bijective_of_baseChange_inverse_OL`), and the commit with
+`Product.lean` + this hand-off. See PH3 "18th session" entries. The lead's route suggestions for
+Prop. 3.5.1 (transitivity formula, étale ⇒ disc = 1, multiplicativity in exact sequences,
+Lipnowski's `v = 1` connected case) were replaced by the integral argument: Lipnowski's Claim 2'
+needs Tate's Thm. A.3 (appendix to Mazur–Roberts; not available), whereas the integrals need
+only Cramer's rule, the trace formula over `ℚ̄_p`, `h = d + d'` (already proved via Tate's
+theorem) and the connected–étale trace reduction. Discriminants of `G` itself are never compared
+along exact sequences.
+
+**Blocker for Prop. 3.5.3 / Thm. 3.5.4 (decision needed):** both [Hong, proof of Prop. 3.5.3]
+and [Tate, proof of Prop. 12, p. 182] use quotients `H_{v+1}/H_v`, `E_{i+ν}/E_i` of finite flat
+group schemes by closed finite flat subgroups, i.e. **[Hong, Thm. 1.1.9] (Grothendieck)**, stated
+in [Hong] without proof ([Tate] cites Raynaud, *Passage au quotient par une relation
+d'équivalence plate*). In Hopf terms: for a closed finite flat subgroup `H ⊆ G` over `O_{K'}`
+(`A ↠ C`), `A` is finite locally free over the invariants `A^H` of rank `|H|` and the kernel of
+`G → Spec A^H` is `H`. The repo has this only for `H = G⁰` (`EtaleQuotient*.lean`, special
+arguments: formal unramifiedness of `A^{et}`). Analysis this session:
+* A quotient-free reformulation does not avoid it: with `S_v ⊆ G_v(ℚ̄_p)` the image of `M`,
+  closures `C_v = im(A_v → ℚ̄_p^{S_v})` and the orders
+  `D_v = ⋃_i {f : [p^i]^* f ∈ C_{i+v}}` (functions on `S_v`; increasing in `i`, inside the
+  integral closure, hence stabilising), one gets Hopf orders (saturation:
+  `(C ⊗ C) ∩ (V ⊗ V) = (C ∩ V) ⊗ (C ∩ V)` over a PID) with the right generic fibres, and the
+  invariants `D_{v+1}^{S_v} = [p^v]^*(D_1)`; but the kernel condition `range_eq` for `(D_v)` is
+  again "`D_{v+1}` is free over its `S_v`-invariants", and surjectivity of `D_{v+1} → D_v` is
+  also open.
+* Options: (i) formalise [Hong, Thm. 1.1.9] over a complete DVR (references: SGA 3, Exp. V,
+  Thm. 4.1; Mumford, *Abelian varieties*, §12, Thm. 1 over a field + fibrewise flatness
+  over `O_{K'}`), several sessions; (ii) enter Thm. 1.1.9 (in the Hopf form above) as an
+  explicit, honestly named theorem argument recorded as a debt (rule 4), if the lead agrees that
+  it is a prerequisite not currently provable cheaply.
+* Also needed for Prop. 3.5.3 (independent of the blocker): the closed subgroup schemes
+  `H̃_v ⊆ G_{v,K'}` from a `Γ_{K'}`-stable direct summand `M ⊆ T_p G` ([Hong, Prop. 2.1.14]
+  direction "Galois module → group scheme"; Galois descent for finite étale `K'`-algebras:
+  an element of `K'⊗A` vanishing on a Galois-stable `S` and not at `x ∉ S`, via a norm over a
+  finite Galois `L'/K'`), and the integral closure of `O_{K'}` in a finite étale `K'`-algebra
+  being finite. `Product.lean` (graph) and Lemma 3.5.2 in the points form are ready for
+  [Hong, proof of Thm. 3.5.4]: with `ι : G' → G × H`, `π_1 ∘ ι` is bijective on `ℚ̄_p`-points,
+  so `bijective_of_mapPoints_bijective_OL` applies without Prop. 2.1.14.
+
+Next steps, in order:
+1. Lead decision on [Hong, Thm. 1.1.9] (prove vs. named debt). Then Prop. 3.5.3 (closures, the
+   orders `D_v` / Tate's `Γ_v = E_{i₀+v}/E_{i₀}`, kernel condition from the stabilisation),
+   Thm. 3.5.4 (graph via `PDivGroup.prod`, `prodTateEquiv`; `Hom.ext_of_mapTate` for
+   uniqueness), Cor. 3.5.5.
+2. `α_K` bijective (hand-off 13, item 1).
+3. Cleanup (not done, not cheap): `TateNonConn`/`TateNonConnOL` are parallel 550-line files
+   (`ZpD p` vs `OL L`); unifying them needs an abstract coefficient-ring/base-field version of
+   `etCoordField` and of the Hilbert 90 wiring, with the two heartbeat bumps.
+
+MR7 compatibility: everything new is over `O_{K'}` (`OL L`), with `Ω = ℚ̄_p`; the Hopf-level
+lemmas (`HopfTrace`, `HopfDisc`, `IntegralConn`) are over a general domain `R` with an injection
+into a separably closed field. No ℤ_p (`ZpD p`) versions of Prop. 3.5.1 / Lemma 3.5.2 were made
+(`O_{ℚ_p}` is the case `K' = ℚ_p`).
+
+No WIP branch; nothing unpushed after the final commit.
+
+## Hand-off (2026-10-18, seventeenth session; superseded)
 
 Done this session (pushed, validated): `b72c142` (Hilbert 90 over a base field `F`/`K'`:
 `exists_hilbert90_over`, `unr_adjoin_over`, `isUnrStableOver_adjoin`; `OLFrob`: `κ_{K'}`

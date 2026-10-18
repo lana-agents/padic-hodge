@@ -137,6 +137,7 @@ import PadicHodge.GroupScheme.Mu
 import PadicHodge.GroupScheme.PDivisible
 import PadicHodge.GroupScheme.PDivisibleHom
 import PadicHodge.GroupScheme.PDivisiblePoints
+import PadicHodge.GroupScheme.Product
 import PadicHodge.GroupScheme.SerreTateCompact
 import PadicHodge.GroupScheme.SerreTateEss
 import PadicHodge.GroupScheme.SerreTateFGL
