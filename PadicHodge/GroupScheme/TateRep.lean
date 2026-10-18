@@ -157,6 +157,11 @@ theorem finrank_tate :
     Module.finrank ℤ_[p] (Additive (H.TateModule (PadicAlgCl p))) = H.height := by
   rw [← H.nonempty_tateLinearEquiv.some.finrank_eq, Module.finrank_fin_fun]
 
+/-- `dim_{ℚ_p} V_p G = h`. -/
+theorem finrank_tateRep :
+    Module.finrank ℚ_[p] (ℚ_[p] ⊗[ℤ_[p]] Additive (H.TateModule (PadicAlgCl p))) = H.height := by
+  rw [Module.finrank_baseChange, finrank_tate]
+
 /-- **The Galois representation `V_p G = ℚ_p ⊗_{ℤ_p} T_p G(ℚ̄_p)` of `G_K = Gal(ℚ̄_p/K)`** for
 `G` over a field `K ⊆ ℚ̄_p` (e.g. `K = K'` a finite extension of `ℚ_p`, as `↥K'`). -/
 def tateRepOver : Representation ℚ_[p] (PadicAlgCl p ≃ₐ[K] PadicAlgCl p)
@@ -191,11 +196,6 @@ def tateRep : Representation ℚ_[p] (PadicAlgCl p ≃ₐ[L] PadicAlgCl p)
       LinearMap.ext fun x => rfl
     rw [this, LinearMap.baseChange_comp]
     rfl
-
-/-- `dim_{ℚ_p} V_p G = h`. -/
-theorem finrank_tateRep :
-    Module.finrank ℚ_[p] (ℚ_[p] ⊗[ℤ_[p]] Additive (H.TateModule (PadicAlgCl p))) = H.height := by
-  rw [Module.finrank_baseChange, finrank_tate]
 
 /-- **`V_p` of (the generic fibre of) a `p`-divisible group over `ℤ_p` with étale layers is
 unramified.** -/

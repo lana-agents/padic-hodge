@@ -22,6 +22,10 @@ representation `V_p G = ℚ_p ⊗_{ℤ_p} T_p G(ℚ̄_p)` of `G_L` is continuous
   generated);
 * hence `σ ↦ φ(σ t)` is continuous: if `τ` fixes the level-`n` point of `t`, then
   `σ τ t − σ t ∈ p^n T_p G`.
+
+Everything is done for `G` over any field `F ⊆ ℚ̄_p` with `G_L` acting through
+`ι : G_L → G_F` (`eventually_galPoints_eq_of`, `continuous_galLin_of`, `continuous_tateRep_of`);
+`continuous_tateRepOver`: `V_p G` of `G` over `L` is a continuous `G_L`-representation.
 -/
 
 noncomputable section
@@ -38,13 +42,20 @@ variable {p : ℕ} [hp : Fact p.Prime]
 
 local notation "K" => PadicAlgCl p
 
+section Gen
+
+variable {F : Type} [Field F] [Algebra F (PadicAlgCl p)]
+  (L : IntermediateField ℚ_[p] (PadicAlgCl p))
+  (ι : (PadicAlgCl p ≃ₐ[L] PadicAlgCl p) → (PadicAlgCl p ≃ₐ[F] PadicAlgCl p))
+  (hι : ∀ σ x, ι σ x = σ x)
+
+include hι in
 /-- **Points over `ℚ̄_p` are fixed by an open subgroup**: `σ ∘ x = x` for all `σ ∈ G_L` in a
-neighbourhood of `1`. -/
-theorem eventually_galPoints_eq (L : IntermediateField ℚ_[p] K) (G : FFGroupScheme ℚ_[p])
-    (x : G.points K) :
-    ∀ᶠ σ in 𝓝 (1 : K ≃ₐ[L] K), galPoints G (σ.restrictScalars ℚ_[p]) x = x := by
+neighbourhood of `1` (`G` over a field `F ⊆ ℚ̄_p`, `G_L` acting through `ι`). -/
+theorem eventually_galPoints_eq_of (G : FFGroupScheme F) (x : G.points K) :
+    ∀ᶠ σ in 𝓝 (1 : K ≃ₐ[L] K), galPoints G (ι σ) x = x := by
   classical
-  let b := Module.Free.chooseBasis ℚ_[p] G.A
+  let b := Module.Free.chooseBasis F G.A
   set S : Set K := Set.range fun i => WithConv.ofConv x (b i)
   have hint : ∀ s ∈ S, IsIntegral L s := fun s _ =>
     (Algebra.IsIntegral.isIntegral (R := ℚ_[p]) s).tower_top
@@ -59,14 +70,18 @@ theorem eventually_galPoints_eq (L : IntermediateField ℚ_[p] K) (G : FFGroupSc
   refine b.ext fun i => ?_
   have hs : WithConv.ofConv x (b i) ∈ IntermediateField.adjoin L S :=
     IntermediateField.subset_adjoin L S ⟨i, rfl⟩
+  change ι σ (WithConv.ofConv x (b i)) = WithConv.ofConv x (b i)
+  rw [hι]
   exact (IntermediateField.mem_fixingSubgroup_iff _ σ).mp hσ _ hs
 
-variable (H : PDivGroup ℚ_[p] p)
+variable [CharZero F] (H : PDivGroup F p)
 
 local instance : NeZero p := ⟨hp.out.ne_zero⟩
 
+omit [Algebra F (PadicAlgCl p)] in
 /-- **`ker(T_p G → G_n(ℚ̄_p)) = p^n T_p G`.** -/
-theorem exists_eq_p_pow_smul (n : ℕ) (s : Additive (H.TateModule K))
+theorem exists_eq_p_pow_smul [Algebra F (PadicAlgCl p)] (n : ℕ)
+    (s : Additive (H.TateModule K))
     (hs : (Additive.toMul s).1 n = 1) : ∃ s', s = (p : ℤ_[p]) ^ n • s' := by
   classical
   obtain ⟨t, hlev, hphi⟩ := H.exists_tateBasis
@@ -115,11 +130,14 @@ theorem exists_norm_le (φ : Additive (H.TateModule K) →ₗ[ℤ_[p]] ℚ_[p]) 
   refine mul_le_of_le_one_left (norm_nonneg _) ?_
   exact PadicInt.norm_le_one (Multiplicative.toAdd c i)
 
+include hι in
 /-- `σ ↦ φ(σ t)` is continuous on `G_L`. -/
-theorem continuous_galLin (L : IntermediateField ℚ_[p] K)
-    (φ : Additive (H.TateModule K) →ₗ[ℤ_[p]] ℚ_[p]) (t : Additive (H.TateModule K)) :
-    Continuous fun σ : K ≃ₐ[L] K => φ (H.galLin (σ.restrictScalars ℚ_[p]) t) := by
+theorem continuous_galLin_of (φ : Additive (H.TateModule K) →ₗ[ℤ_[p]] ℚ_[p])
+    (t : Additive (H.TateModule K)) :
+    Continuous fun σ : K ≃ₐ[L] K => φ (H.galLin (ι σ) t) := by
   obtain ⟨M, hM⟩ := H.exists_norm_le φ
+  have hmul : ∀ σ τ, ι (σ * τ) = ι σ * ι τ := fun σ τ => AlgEquiv.ext fun y => by
+    rw [hι, AlgEquiv.mul_apply, AlgEquiv.mul_apply, hι, hι]
   rw [continuous_iff_continuousAt]
   intro σ₀
   rw [ContinuousAt, Metric.tendsto_nhds]
@@ -131,18 +149,17 @@ theorem continuous_galLin (L : IntermediateField ℚ_[p] K)
     rw [zero_mul] at h1
     exact (h1.eventually (gt_mem_nhds hε)).exists
   rw [← map_mul_left_nhds_one σ₀, eventually_map]
-  filter_upwards [eventually_galPoints_eq L (H.G n) ((Additive.toMul t).1 n)] with τ hτ
-  set σ := σ₀ * τ
-  have hlev : (Additive.toMul (H.galLin (τ.restrictScalars ℚ_[p]) t - t)).1 n = 1 := by
-    change (Additive.toMul (H.galLin (τ.restrictScalars ℚ_[p]) t)).1 n *
-      ((Additive.toMul t).1 n)⁻¹ = 1
-    change galPoints (H.G n) (τ.restrictScalars ℚ_[p]) ((Additive.toMul t).1 n) * _ = 1
+  filter_upwards [eventually_galPoints_eq_of L ι hι (H.G n) ((Additive.toMul t).1 n)] with τ hτ
+  have hlev : (Additive.toMul (H.galLin (ι τ) t - t)).1 n = 1 := by
+    change (Additive.toMul (H.galLin (ι τ) t)).1 n * ((Additive.toMul t).1 n)⁻¹ = 1
+    change galPoints (H.G n) (ι τ) ((Additive.toMul t).1 n) * _ = 1
     rw [hτ, mul_inv_cancel]
   obtain ⟨s', hs'⟩ := H.exists_eq_p_pow_smul n _ hlev
-  have hdiff : H.galLin (σ.restrictScalars ℚ_[p]) t - H.galLin (σ₀.restrictScalars ℚ_[p]) t =
-      (p : ℤ_[p]) ^ n • H.galLin (σ₀.restrictScalars ℚ_[p]) s' := by
-    have e : H.galLin (σ.restrictScalars ℚ_[p]) t =
-        H.galLin (σ₀.restrictScalars ℚ_[p]) (H.galLin (τ.restrictScalars ℚ_[p]) t) := rfl
+  have hdiff : H.galLin (ι (σ₀ * τ)) t - H.galLin (ι σ₀) t =
+      (p : ℤ_[p]) ^ n • H.galLin (ι σ₀) s' := by
+    have e : H.galLin (ι (σ₀ * τ)) t = H.galLin (ι σ₀) (H.galLin (ι τ) t) := by
+      rw [hmul]
+      rfl
     rw [e, ← map_sub, hs', map_smul]
   rw [dist_eq_norm, ← map_sub, hdiff, map_smul, ← algebraMap_smul ℚ_[p], smul_eq_mul, norm_mul]
   refine lt_of_le_of_lt ?_ hn
@@ -151,11 +168,15 @@ theorem continuous_galLin (L : IntermediateField ℚ_[p] K)
   rw [hp']
   exact mul_le_mul_of_nonneg_left (hM _) (by positivity)
 
-/-- **The Galois representation `V_p G` is continuous.** -/
-theorem continuous_tateRep (L : IntermediateField ℚ_[p] K)
+include hι in
+/-- **The Galois representation `V_p G` is continuous** (`G_L` acting through `ι` by any `ρ`
+with `ρ(σ)(a ⊗ t) = a ⊗ (ι σ) t`). -/
+theorem continuous_tateRep_of
+    {ρ : Representation ℚ_[p] (K ≃ₐ[L] K) (ℚ_[p] ⊗[ℤ_[p]] Additive (H.TateModule K))}
+    (hρ : ∀ σ (a : ℚ_[p]) t, ρ σ (a ⊗ₜ t) = a ⊗ₜ H.galLin (ι σ) t)
     (φ : Module.Dual ℚ_[p] (ℚ_[p] ⊗[ℤ_[p]] Additive (H.TateModule K)))
     (v : ℚ_[p] ⊗[ℤ_[p]] Additive (H.TateModule K)) :
-    Continuous fun σ => φ (H.tateRep L σ v) := by
+    Continuous fun σ => φ (ρ σ v) := by
   induction v using TensorProduct.induction_on with
   | zero =>
     simp only [map_zero]
@@ -163,20 +184,44 @@ theorem continuous_tateRep (L : IntermediateField ℚ_[p] K)
   | tmul a t =>
     set φ' : Additive (H.TateModule K) →ₗ[ℤ_[p]] ℚ_[p] :=
       ((φ.restrictScalars ℤ_[p]).comp (TensorProduct.mk ℤ_[p] ℚ_[p] _ 1))
-    have h : ∀ σ : K ≃ₐ[L] K, φ (H.tateRep L σ (a ⊗ₜ t)) =
-        a * φ' (H.galLin (σ.restrictScalars ℚ_[p]) t) := by
+    have h : ∀ σ : K ≃ₐ[L] K, φ (ρ σ (a ⊗ₜ t)) = a * φ' (H.galLin (ι σ) t) := by
       intro σ
-      change φ (a ⊗ₜ H.galLin (σ.restrictScalars ℚ_[p]) t) = _
-      rw [show (a ⊗ₜ[ℤ_[p]] H.galLin (σ.restrictScalars ℚ_[p]) t :
-          ℚ_[p] ⊗[ℤ_[p]] Additive (H.TateModule K)) =
-          a • ((1 : ℚ_[p]) ⊗ₜ H.galLin (σ.restrictScalars ℚ_[p]) t) by
+      rw [hρ]
+      rw [show (a ⊗ₜ[ℤ_[p]] H.galLin (ι σ) t : ℚ_[p] ⊗[ℤ_[p]] Additive (H.TateModule K)) =
+          a • ((1 : ℚ_[p]) ⊗ₜ H.galLin (ι σ) t) by
         rw [TensorProduct.smul_tmul', smul_eq_mul, mul_one], map_smul, smul_eq_mul]
       rfl
     simp_rw [h]
-    exact continuous_const.mul (H.continuous_galLin L φ' t)
+    exact continuous_const.mul (H.continuous_galLin_of L ι hι φ' t)
   | add x y hx hy =>
     simp only [map_add]
     exact hx.add hy
+
+end Gen
+
+/-- **Points over `ℚ̄_p` are fixed by an open subgroup**: `σ ∘ x = x` for all `σ ∈ G_L` in a
+neighbourhood of `1`. -/
+theorem eventually_galPoints_eq (L : IntermediateField ℚ_[p] K) (G : FFGroupScheme ℚ_[p])
+    (x : G.points K) :
+    ∀ᶠ σ in 𝓝 (1 : K ≃ₐ[L] K), galPoints G (σ.restrictScalars ℚ_[p]) x = x :=
+  eventually_galPoints_eq_of L (fun σ => σ.restrictScalars ℚ_[p]) (fun _ _ => rfl) G x
+
+variable (H : PDivGroup ℚ_[p] p)
+
+/-- **The Galois representation `V_p G` is continuous.** -/
+theorem continuous_tateRep (L : IntermediateField ℚ_[p] K)
+    (φ : Module.Dual ℚ_[p] (ℚ_[p] ⊗[ℤ_[p]] Additive (H.TateModule K)))
+    (v : ℚ_[p] ⊗[ℤ_[p]] Additive (H.TateModule K)) :
+    Continuous fun σ => φ (H.tateRep L σ v) :=
+  H.continuous_tateRep_of L (fun σ => σ.restrictScalars ℚ_[p]) (fun _ _ => rfl)
+    (fun _ _ _ => rfl) φ v
+
+/-- **The Galois representation `V_p G` of `G_L` is continuous**, for `G` over `L`. -/
+theorem continuous_tateRepOver {L : IntermediateField ℚ_[p] K} (H : PDivGroup L p)
+    (φ : Module.Dual ℚ_[p] (ℚ_[p] ⊗[ℤ_[p]] Additive (H.TateModule K)))
+    (v : ℚ_[p] ⊗[ℤ_[p]] Additive (H.TateModule K)) :
+    Continuous fun σ => φ (H.tateRepOver σ v) :=
+  H.continuous_tateRep_of L (fun σ => σ) (fun _ _ => rfl) (fun _ _ _ => rfl) φ v
 
 end PDivGroup
 
