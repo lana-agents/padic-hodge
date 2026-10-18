@@ -557,7 +557,10 @@ Done this session (pushed with green validation): `33a51f4` (`CartierChar`, `Alp
 group-like `χ_{y_v} ∈ O_C ⊗ A_v`, hence `U_y ∈ O_C[[T]]` with `U_y(Φ) = U_y U_y`,
 `α(x)(y) = U_y(x)` bimultiplicative with values in `1 + m_C`, left square = Cartier pairing on
 torsion, `u_y = U_y − 1 : F_{O_C} → Ĝ_m`, `dα`, right square via `LogNat`, Galois equivariance)
-and the commit with `Zp` (all hypotheses discharged for `R = ℤ_p`) and this hand-off.
+`addf7c1` (`Zp`: all hypotheses discharged for `R = ℤ_p`; this hand-off), `9fbfffa`
+(`OCAdicPi`: `O_C` is `π`-adically complete; `alpha_gal` for each `σ` fixing the coefficients),
+`dcce379` (`IntegralPoints`: `G(O_C) ≃* G(ℂ_p)`; `CartierPerfectOC`: the Cartier pairing over
+`O_C` separates points of `G` killed by `n ≠ 0`), and the commit updating this hand-off.
 
 **[Hong, Prop. 3.5.1] (discriminant formula): proofs located.** Downloaded (not committed) to
 `~/iut-scratch/lit/dl/padic-hodge/disc/` (text via `python3 -I`): [Tate] OCR scan — the
@@ -594,7 +597,11 @@ Next steps, in order:
    (`eq_one_of_pairing_OC`; the surjectivity half is `pairingHom'_bijective` over `ℂ_p` with
    `card_points_sepClosed` for `#G_v(ℂ_p)`, transported by `pointsOCEquiv`). Missing: (ii) surjectivity of
    `DualTate → G_v^∨(O_C)` (lifting along `i_v^∨`; over `ℚ̄_p` this is
-   `exists_dual_quot_eq_padicAlgCl`), (iii) `x ↦ α(x)` determines torsion: `α(t) = 1 ⇒ t = 0`.
+   `exists_dual_quot_eq_padicAlgCl`; for `G` over `ℤ_p` either extend characters from
+   `G_v(ℂ_p)` to `G_{v+1}(ℂ_p)` — via `pairingHom_bijective` both duals are character groups —
+   or prove `Dual(ℚ_p ⊗ A) ≅ ℚ_p ⊗ Dual(A)` to reuse `dualPDiv`), (iii) `α(t) = 1 ⇒ t = 0` for
+   torsion `t`: from `alpha_torsion`, (ii) and `eq_one_of_pairing_OC` (plus `layerPt` of `0`
+   is the unit point and `layerPt_injective`).
 2. **`d + d^∨ = h`** ([Hong, Thm. 2.2.19]) — sub-project, all in characteristic `p` (special
    fibre `B_v = A_v ⊗ k`): (a) partial derivatives on `MvPowerSeries` and the chain rule for
    `subst` (not in Mathlib); (b) **`[p]_F(T) ∈ (T_1^p, …, T_d^p)` over `k`** (invariant
