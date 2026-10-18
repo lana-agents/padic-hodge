@@ -545,6 +545,62 @@ in place of Kähler differentials (all rings of integers here are monogenic), ev
   discharges all hypotheses (`p ∈ 𝔪`, `𝔪 ↦ m_{ℂ_p}`, `O_{ℂ_p}` complete for `𝔪 O_{ℂ_p}`,
   `GalFixed`): `alphaZp` with `alphaZp_add`, `alphaZp_mul`, `alphaZp_gal`, `alphaZp_torsion`,
   `logGm_alphaZp` ([Hong, Prop. 3.4.9] over `K = ℚ_p`, connected `G`, except injectivity).
+* **done** `GroupScheme/DualTateField.lean`: over a field `S` with `#G_v(S) = #G_v^∨(S) = |G_v|`:
+  `i_v^∨ : G_{v+1}^∨(S) → G_v^∨(S)` surjective (`dual_incl_surjective_of_card`: its kernel is the
+  annihilator of `i_v(G_v(S))`, which embeds into the characters of the quotient; counting),
+  `T_p(G^∨)(S) → G_v^∨(S)` surjective (`DualTate.proj_surjective_of_card`, via the generic
+  `exists_compat_of_surjective` for inverse sequences of surjections), `i_v^∨ ∘ quot_v^∨ = [p]`,
+  `quot_v^∨` injective, kernel condition (`exists_dual_quot_eq_of_card`), and **`y ∈ T_p(G^∨)(S)`
+  with `y_1 = 1` is a `p`-th power** (`DualTate.exists_pow_eq_of_card`).
+* **done** `GroupScheme/DualTateOC.lean`: the same over `O_{ℂ_p}` for `G` over `R → O_{ℂ_p}`
+  (via `ℂ_p`: `card_points_Cp`, `card_dual_points_Cp'`, `pointsOCEquiv`):
+  **`DualTate.proj_surjective_OC`**, **`DualTate.exists_pow_eq_OC`**, `dualTateOCEquiv :
+  T_p(G^∨)(O_C) ≃* T_p(G^∨)(ℂ_p)`, and the surjective half of perfectness over `O_C`
+  (**`exists_pairing_eq_OC`**: every character of `G^∨(O_C)` is `⟨t, ·⟩`).
+* **done** `FormalGroup/AlphaInj.lean` (**[Hong, Prop. 3.4.9]: `α` is injective on
+  `G(O_K)`, `K = ℚ_p`**): `α` injective on torsion points (`eq_zero_of_alpha_torsion`, from
+  `alpha_torsion`, `proj_surjective_OC`, `eq_one_of_pairing_OC`); a `p`-torsion character `α(x)` is
+  `α(t)` with `t ∈ F[p]` (`exists_torsion_alpha_eq`: it kills `p T_p(G^∨) = ker(T_p(G^∨) → G_1^∨)`,
+  factors through `G_1^∨(O_C)`, perfectness, `layerPt_surjective`); divisibility step
+  (`exists_p_nsmul_eq_of_alpha`: an invariant `z ∈ ker α` is `p x'` with `x'` invariant in
+  `ker α`; `σ x' − x' ∈ ker α ∩ F[p] = 0` by `alpha_gal`); **`eq_zero_of_alpha_eq_one`**: a
+  `Gal(ℚ̄_p/ℚ_p)`-invariant `x` with `α(x) = 1` is `0` ([Hong, Lemma 3.4.2] over `ℚ_p`:
+  `coord_mem_Qp_of_fixed`; [Hong, Lemma 3.4.3]: `eq_zero_of_forall_pow_nsmul_Qp`). The snake
+  lemma of [Hong] is avoided.
+* **done** `FormalGroup/DAlphaInj.lean`: **`dα` is injective on `t_G(ℚ_p) = ℚ_p^d`**
+  (`dalpha_injective_Qp`; [Hong, Prop. 3.4.9, proof]): scale `z` into the polydisc of radius
+  `|p|^2` where `log_F` is bijective ([Hong, Prop. 3.3.6 (2)], `exists_logF_eq`, `logF_injOn`);
+  the preimage `x` is Galois-invariant by uniqueness; `log(α(x)(y)) = dα(z)(y) = 0` in the same
+  disc of `Ĝ_m` gives `α(x) = 1`, so `x = 0` by `eq_zero_of_alpha_eq_one`.
+* **done** `GroupScheme/DualBaseChange.lean`: **Cartier duality commutes with base change on
+  points**: `f ↦ f_S` (`dualBC`, Mathlib's `Module.Dual.baseChange`) is an algebra map
+  `A^∨ → (S ⊗ A)^∨` compatible with the comultiplications (`comulD_dualBC`); with
+  `IsBaseChange.dual` this gives **`dualBaseChangePointsEquiv : (G_S)^∨(T) ≃* G^∨(T)`** (natural,
+  `dualBaseChangePointsEquiv_mapPoints`) and **`PDivGroup.dualTateBaseChangeEquiv :
+  T_p((G_S)^∨)(T) ≃* T_p(G^∨)(T)`**.
+* **done** `FormalGroup/DualTateZp.lean`: for `G` over `ℤ_p` (`ZpD`, now also a `ℚ_p`- and
+  `ℚ̄_p`-coefficient ring): `#G^∨(Ω) = |G|` over separably closed `Ω`
+  (`card_dual_points_sepClosed`), `G_v^∨(ℚ̄_p) ≃* G_v^∨(ℂ_p)`, and **`dualTateZpEquiv :
+  T_p(G^∨)(O_{ℂ_p}) ≃* T_p(G_{ℚ_p}^∨)(ℚ̄_p)`** (the Tate module of `dualPDiv` of the generic
+  fibre), identifying the source of `α` with the `ℤ_p`-lattice of `V_p(G^∨)`.
+* **done** `FormalGroup/PDeriv.lean` (generic, Mathlib-style, candidate for upstreaming):
+  **partial derivatives of multivariate power series** `MvPowerSeries.pderiv R i` (an
+  `R`-derivation; `coeff_pderiv`, `pderiv_coe` = `MvPolynomial.pderiv`, `pderiv_X`,
+  `constantCoeff_pderiv`; Leibniz rule by truncation to polynomials, `coeff_mul_congr`), the
+  **chain rule for polynomials** `MvPolynomial.derivation_aeval` (any derivation) and **for
+  substitution** `MvPowerSeries.pderiv_subst`: `∂_i f(a) = ∑_j (∂_j f)(a) · ∂_i a_j` for families
+  `a` without constant terms (`coeff_subst_congr`: coefficients of `f(a)` up to total degree `k`
+  only depend on those of `f`); `subst_zero_eq_C`, `constantCoeff_subst_of_constantCoeff_zero`.
+* **done** `FormalGroup/InvDeriv.lean`: `[n]_F(Φ(f, g)) = Φ([n]f, [n]g)` (`mulPS_subst_addPS`);
+  **invariant derivations** `D_j g = ∂_{U_j} g(Φ(T, U))|_{U=0} = ∑_l ∂_l g · M_{lj}` with `M(0) = 1`
+  (`invDeriv_eq`, `isUnit_det_invMat`); `D_j [n] = 0` if `n = 0` in `k`, hence **`∂_m [p]_F = 0`
+  in characteristic `p`** (`pderiv_mulPS_eq_zero`) and **`[p]_F(T) ∈ (T_1^p, …, T_d^p)`**
+  (`mulPS_p_mem`; [Hong, Prop. 1.5.10, proof], via `mem_span_X_pow_of_pderiv` and the generic
+  `MvPowerSeries.mem_span_X_pow`).
+* **done** `FormalGroup/FrobKernel.lean`: `R[[T]]/(T_j^N)` is free with basis the monomials
+  `T^m`, `m_j < N` (`boxBasis`, `finrank_quot_spanXPow = N^d`); **the Frobenius kernel
+  `Spec k[[T]]/([p]_F, T^p)` of `F[p]` has order `p^d`** (`finrank_frobKernel`; [Hong,
+  Cor. 1.5.11, Cor. 2.2.18]).
 
 ## Hand-off (2026-10-18, tenth session)
 
