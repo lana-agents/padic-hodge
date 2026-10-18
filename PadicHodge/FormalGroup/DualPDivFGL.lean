@@ -318,16 +318,17 @@ end PDivFGL
 namespace PDivFGL
 
 variable {R : Type} [CommRing R] [IsLocalRing R] [IsAdicComplete (maximalIdeal R) R]
-  {d p : ℕ} [hp : Fact p.Prime] [Algebra R ℚ_[p]] (P : PDivFGL R d p) (T : Type) [CommRing T]
-  [Algebra R T] [Algebra ℚ_[p] T] [IsScalarTower R ℚ_[p] T]
+  {d p : ℕ} [hp : Fact p.Prime] (P : PDivFGL R d p)
+  (F : Type) [Field F] [CharZero F] [Algebra F (PadicAlgCl p)] [Algebra R F]
+  (T : Type) [CommRing T] [Algebra R T] [Algebra F T] [IsScalarTower R F T]
 
-/-- **Cartier duality for `F[p^∞]` commutes with base change to `ℚ_p`** on Tate modules:
-`T_p(((F[p^∞])^∨)_{ℚ_p})(T) ≃* T_p((F[p^∞]_{ℚ_p})^∨)(T)` (levelwise
+/-- **Cartier duality for `F[p^∞]` commutes with base change to a field `F`** (e.g. `ℚ_p`) on
+Tate modules: `T_p(((F[p^∞])^∨)_F)(T) ≃* T_p((F[p^∞]_F)^∨)(T)` (levelwise
 `PDivGroup.dualPDivOfBaseChangePointsEquiv`). -/
 def dualPDivBaseChangeTateEquiv :
-    (P.dualPDiv.baseChange ℚ_[p]).TateModule T ≃*
-      ((P.pdivGroup.baseChange ℚ_[p]).dualPDiv).TateModule T :=
-  PDivGroup.dualPDivOfBaseChangeTateEquiv P.dualPDivData T
+    (P.dualPDiv.baseChange F).TateModule T ≃*
+      ((P.pdivGroup.baseChange F).dualPDiv).TateModule T :=
+  PDivGroup.dualPDivOfBaseChangeTateEquiv F P.dualPDivData T
 
 end PDivFGL
 

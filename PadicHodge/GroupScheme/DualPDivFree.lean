@@ -490,41 +490,42 @@ theorem tateModule_dualPDivOf [NeZero p] (S : Type u) [CommRing S] [Algebra R S]
 
 end PDivGroup
 
-/-! ### Compatibility with base change to `ℚ_p` -/
+/-! ### Compatibility with base change to a field `F` (e.g. `ℚ_p`, `K'`) -/
 
 namespace PDivGroup
 
 open FFGroupScheme
 
-variable {R : Type} [CommRing R] [Nontrivial R] {p : ℕ} [hp : Fact p.Prime] [Algebra R ℚ_[p]]
+variable {R : Type} [CommRing R] [Nontrivial R] {p : ℕ} [hp : Fact p.Prime]
+  (F : Type) [Field F] [CharZero F] [Algebra F (PadicAlgCl p)] [Algebra R F]
   {G : PDivGroup R p} (D : DualPDivData G) (T : Type) [CommRing T] [Algebra R T]
-  [Algebra ℚ_[p] T] [IsScalarTower R ℚ_[p] T]
+  [Algebra F T] [IsScalarTower R F T]
 
-/-- **Levelwise**: `(G_v^∨)_{ℚ_p}(T) ≃* ((G_v)_{ℚ_p})^∨(T)` (both are `G_v^∨(T)`). -/
+/-- **Levelwise**: `(G_v^∨)_F(T) ≃* ((G_v)_F)^∨(T)` (both are `G_v^∨(T)`). -/
 def dualPDivOfBaseChangePointsEquiv (v : ℕ) :
-    (((dualPDivOf D).baseChange ℚ_[p]).G v).points T ≃*
-      (((G.baseChange ℚ_[p]).dualPDiv).G v).points T :=
+    (((dualPDivOf D).baseChange F).G v).points T ≃*
+      (((G.baseChange F).dualPDiv).G v).points T :=
   ((G.G v).dual.baseChangePointsEquiv T).trans
-    ((G.G v).dualBaseChangePointsEquiv (S := ℚ_[p]) (T := T)).symm
+    ((G.G v).dualBaseChangePointsEquiv (S := F) (T := T)).symm
 
-/-- **Cartier duality commutes with base change to `ℚ_p`** on Tate modules:
-`T_p((G^∨)_{ℚ_p})(T) ≃* T_p((G_{ℚ_p})^∨)(T)`, both identified with `T_p(G^∨)(T) = DualTate G T`
+/-- **Cartier duality commutes with base change to `F`** on Tate modules:
+`T_p((G^∨)_F)(T) ≃* T_p((G_F)^∨)(T)`, both identified with `T_p(G^∨)(T) = DualTate G T`
 (`baseChangeTateEquiv`, `tateModule_dualPDivOf`, `dualTateBaseChangeEquiv`,
 `tateModule_dualPDiv`). -/
 def dualPDivOfBaseChangeTateEquiv :
-    ((dualPDivOf D).baseChange ℚ_[p]).TateModule T ≃*
-      ((G.baseChange ℚ_[p]).dualPDiv).TateModule T :=
+    ((dualPDivOf D).baseChange F).TateModule T ≃*
+      ((G.baseChange F).dualPDiv).TateModule T :=
   (((dualPDivOf D).baseChangeTateEquiv T).trans
     (MulEquiv.subgroupCongr (tateModule_dualPDivOf D T))).trans
-    (((G.dualTateBaseChangeEquiv (S := ℚ_[p]) T).symm).trans
-      (MulEquiv.subgroupCongr ((G.baseChange ℚ_[p]).tateModule_dualPDiv T).symm))
+    (((G.dualTateBaseChangeEquiv (S := F) T).symm).trans
+      (MulEquiv.subgroupCongr ((G.baseChange F).tateModule_dualPDiv T).symm))
 
-theorem dualPDivOfBaseChangeTateEquiv_apply (x : ((dualPDivOf D).baseChange ℚ_[p]).TateModule T)
+theorem dualPDivOfBaseChangeTateEquiv_apply (x : ((dualPDivOf D).baseChange F).TateModule T)
     (v : ℕ) :
-    ((dualPDivOfBaseChangeTateEquiv D T x : ((G.baseChange ℚ_[p]).dualPDiv).TateModule T) :
-      (v : ℕ) → (((G.baseChange ℚ_[p]).dualPDiv).G v).points T) v =
-      dualPDivOfBaseChangePointsEquiv D T v ((x : (v : ℕ) →
-        (((dualPDivOf D).baseChange ℚ_[p]).G v).points T) v) := rfl
+    ((dualPDivOfBaseChangeTateEquiv F D T x : ((G.baseChange F).dualPDiv).TateModule T) :
+      (v : ℕ) → (((G.baseChange F).dualPDiv).G v).points T) v =
+      dualPDivOfBaseChangePointsEquiv F D T v ((x : (v : ℕ) →
+        (((dualPDivOf D).baseChange F).G v).points T) v) := rfl
 
 end PDivGroup
 

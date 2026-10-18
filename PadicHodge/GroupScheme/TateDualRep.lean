@@ -220,6 +220,45 @@ theorem isHodgeTate_tateRep_dualPDiv [FiniteDimensional ℚ_[p] L]
 
 end Qp
 
+section Via
+
+/-! `G` over a field `F ⊆ ℚ̄_p`, with `G_L` acting through `ι : G_L → G_F` (e.g. `σ ↦ σ|_{ℚ_p}`
+for `F = ℚ_p`, the identity for `F = L`) by representations `ρ`, `ρd` on `V_p G`, `V_p(G^∨)`. -/
+
+variable {F : Type} [Field F] [CharZero F] [Algebra F (PadicAlgCl p)] [Algebra ℚ_[p] F]
+  [IsScalarTower ℚ_[p] F (PadicAlgCl p)] (G : PDivGroup F p) {L}
+  (ι : (PadicAlgCl p ≃ₐ[L] PadicAlgCl p) → (PadicAlgCl p ≃ₐ[F] PadicAlgCl p))
+  (hι : ∀ σ x, ι σ x = σ x)
+  {ρ : Representation ℚ_[p] (PadicAlgCl p ≃ₐ[L] PadicAlgCl p)
+    (ℚ_[p] ⊗[ℤ_[p]] Additive (G.TateModule (PadicAlgCl p)))}
+  {ρd : Representation ℚ_[p] (PadicAlgCl p ≃ₐ[L] PadicAlgCl p)
+    (ℚ_[p] ⊗[ℤ_[p]] Additive (G.dualPDiv.TateModule (PadicAlgCl p)))}
+  (hρ : ∀ σ (a : ℚ_[p]) x, ρ σ (a ⊗ₜ x) = a ⊗ₜ G.galLin (ι σ) x)
+  (hρd : ∀ σ (a : ℚ_[p]) y, ρd σ (a ⊗ₜ y) = a ⊗ₜ G.dualPDiv.galLin (ι σ) y)
+
+include hι hρ hρd in
+/-- **`V_p(G^∨) ≅ V_p(G)^∨ ⊗ ℚ_p(1)` as representations of `G_L`**, `G_L` acting through
+`ι : G_L → G_F`. -/
+theorem tateRepDualEquiv_galVia (σ : K ≃ₐ[L] K) :
+    (G.tateRepDualEquiv : _ →ₗ[ℚ_[p]] _) ∘ₗ ρd σ =
+      (ρ.dual.tprod (charRep L 1) σ) ∘ₗ G.tateRepDualEquiv := by
+  have hres : ∀ τ, (ι τ).restrictScalars ℚ_[p] = τ.restrictScalars ℚ_[p] := fun τ =>
+    AlgEquiv.ext (hι τ)
+  have hinv : ∀ τ, ι τ⁻¹ = (ι τ)⁻¹ := fun τ => AlgEquiv.ext fun y => (ι τ).injective (by
+    rw [hι, hι]
+    change τ (τ.symm y) = (ι τ) ((ι τ).symm y)
+    rw [AlgEquiv.apply_symm_apply, AlgEquiv.apply_symm_apply])
+  refine baseChangeDualEquiv_gal _ L (fun τ => G.galLin (ι τ)) (fun τ => G.dualPDiv.galLin (ι τ))
+    (fun τ => ((chi ((ι τ).restrictScalars ℚ_[p]) : ℤ_[p]ˣ) : ℤ_[p]))
+    (fun τ => TensorProduct.AlgebraTensorModule.ext fun a x => by
+      rw [hρ, LinearMap.baseChange_tmul])
+    (fun τ => TensorProduct.AlgebraTensorModule.ext fun a y => by
+      rw [hρd, LinearMap.baseChange_tmul])
+    (fun τ x => by rw [hinv]; exact G.galLin_galLin_inv (ι τ) x)
+    (fun τ y x => G.tateDualHom_galOver (ι τ) y x) (fun τ => by rw [hres]; exact chiL_one_eq L τ) σ
+
+end Via
+
 section Over
 
 variable {L} (G : PDivGroup L p)
