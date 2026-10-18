@@ -23,6 +23,7 @@ import PadicHodge.Cyclotomic.Vanishing
 import PadicHodge.FormalGroup.Formal
 import PadicHodge.FormalGroup.GaloisAction
 import PadicHodge.FormalGroup.Gm
+import PadicHodge.FormalGroup.GmLog
 import PadicHodge.FormalGroup.Law
 import PadicHodge.FormalGroup.LayerPoints
 import PadicHodge.FormalGroup.Layers

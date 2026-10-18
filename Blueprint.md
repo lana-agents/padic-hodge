@@ -400,7 +400,8 @@ in place of Kähler differentials (all rings of integers here are monogenic), ev
 * **done** `FormalGroup/GaloisAction.lean`: `GalFixed`, `galPt`, `ev_autCp`, `logF_galPt`.
 * **done** `FormalGroup/Gm.lean`: `logF_surjective_of_divisible`; `Ĝ_m`: `n·x = (1+x)^n − 1`,
   `p`-divisible (`gm_exists_p_nsmul_eq`), `gm_logF_surjective`, `gm_logF_eq_zero_iff`
-  ([Hong, Ex. 3.4.8]: `0 → μ_{p^∞} → 1 + m_{ℂ_p} → ℂ_p → 0`).
+  ([Hong, Ex. 3.4.8]: `0 → μ_{p^∞} → 1 + m_{ℂ_p} → ℂ_p → 0`). `FormalGroup/GmLog.lean`:
+  `log_{Ĝ_m}(x) = log(1 + x)` on `p ℤ_p` (`gm_logF_eq_logQp`, [Hong, Ex. 3.3.5]).
 * **done** `FormalGroup/Layers.lean`, `LayerPoints.lean` (start of [Hong, Prop. 2.2.10]):
   `mem_span_X` (`ker ε = I`), `layerIdeal` `J_v`, `J_{v+1} ⊆ J_v`, `Layer` `A_v`, `layerIncl`,
   `layerP`; `layerPt : F(m)[p^v] → Hom_R(A_v, O_{ℂ_p})`, injective, compatible with `layerIncl`
