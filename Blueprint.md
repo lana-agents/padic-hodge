@@ -452,6 +452,10 @@ in place of Kähler differentials (all rings of integers here are monogenic), ev
 * **done** `FormalGroup/Divisible.lean` ([Hong, Prop. 3.2.7], connected case): **`F(m_{ℂ_p})` is
   `p`-divisible** for `p`-divisible `F` (`PDivFGL.exists_p_nsmul_eq`), hence `log_F` is surjective
   (`PDivFGL.logF_surjective`, [Hong, Prop. 3.4.7] for `G = F[p^∞]`).
+* **done** `FormalGroup/ExactSeq.lean` ([Hong, Prop. 3.4.7] for `G = F[p^∞]`):
+  `phiPt v : G_v(O_{ℂ_p}) ↪ F(m_{ℂ_p})` (inverse of `layerPtEquiv`), compatible with
+  `G_v ↪ G_{v+1}` (`phiPt_incl`); `exact_logHom`: `ker log_F = ⋃_v phiPt(G_v(O_{ℂ_p}))`
+  (`= Φ_p(G)`), `log_F` surjective.
 * **done** `FormalGroup/WeierstrassFree.lean`: for `A` complete local and `g ∈ A[[X]]` without
   constant term whose reduction has order `n`, `A[[X]]` is free of rank `n` over itself via
   `f ↦ f(g)`, basis `1, …, X^{n−1}` (`WeierstrassFree.freeVia_psi`; iterated Weierstrass division,

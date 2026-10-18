@@ -23,6 +23,7 @@ import PadicHodge.Cyclotomic.Vanishing
 import PadicHodge.FormalGroup.AdicEval
 import PadicHodge.FormalGroup.AdicPoints
 import PadicHodge.FormalGroup.Divisible
+import PadicHodge.FormalGroup.ExactSeq
 import PadicHodge.FormalGroup.Formal
 import PadicHodge.FormalGroup.FormalInv
 import PadicHodge.FormalGroup.GaloisAction
