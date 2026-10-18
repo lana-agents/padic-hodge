@@ -827,7 +827,10 @@ in place of Kähler differentials (all rings of integers here are monogenic), ev
   (basis-independent, `discIdeal_eq_span_discr`), `trace_algebraMap_of_bijective_baseChange`
   (a map of finite free algebras bijective after `K ⊗_R -` preserves traces), and the algebraic
   core of [Hong, Lemma 3.5.2]: **`bijective_of_discIdeal_eq`** (same rank, `K ⊗ α` bijective,
-  `disc(A/R) = disc(B/R) ≠ 0` ⇒ `α` bijective), `bijective_of_discr`.
+  `disc(A/R) = disc(B/R) ≠ 0` ⇒ `α` bijective), `bijective_of_discr`; `discr_baseChange`
+  (discriminants commute with base change), **`discIdeal_tensorProduct`**
+  (`disc(A ⊗ B / R) = disc(A/R)^{rk B} disc(B/R)^{rk A}`, via `trace_tmul_tmul` and
+  `Matrix.det_kronecker`; an ingredient of the multiplicativity [Haines, Lemmas 2.3.1–2.3.2]).
 
 ## Hand-off (2026-10-18, seventeenth session)
 
@@ -850,9 +853,12 @@ Next steps, in order:
    (a) [Hong, Prop. 3.5.1] `disc(A_v/O_K) = (p^{d v p^{hv}})` — the hard input; plan in hand-off
        10 (multiplicativity in exact sequences [Tate §(2.2) Prop. 2], [Haines §2.3]; reduction to
        `v = 1`, connected; `disc(A_1) = N(det J)` [Lipnowski App., Claims 2', 2'']; `det J =
-       p^d · unit` via invariant differentials). `Discriminant.lean` has the ideal and its
-       basis independence; Mathlib has `Algebra.discr`, `discr_of_matrix_vecMul`,
-       `discr_powerBasis_eq_norm`, but no tensor/transitivity formula.
+       p^d · unit` via invariant differentials). `Discriminant.lean` has the ideal, its
+       basis independence, base change and the tensor-product formula; still missing: the
+       transitivity formula `disc(C/R) = disc(B/R)^{rk C/B} N_{B/R}(disc(C/B))`, and étale ⇒
+       `disc = (1)` (reduce mod `𝔪` with `discr_baseChange`; over the residue field use
+       Mathlib's `Algebra.Etale.iff_exists_algEquiv_prod` and `traceForm_nondegenerate` on each
+       separable factor; a lemma for traces on finite products is not in Mathlib).
    (b) [Hong, Lemma 3.5.2] = `bijective_of_discIdeal_eq` (done) + (a) + Cor. 3.4.11 over `K'`
        (`exists_finrank_DHT_tateRepOver_neg_one_OL`, done) + height from `T_p` (`finrank_tateRep`):
        remaining wiring: a hom `f : G → H` over `O_K` whose generic fibre is an isomorphism gives
