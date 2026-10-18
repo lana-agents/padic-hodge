@@ -675,6 +675,15 @@ in place of Kähler differentials (all rings of integers here are monogenic), ev
   `dim D_q(V) + dim D_{q'}(V^∨) ≤ dim V` (`finrank_DHT_add_finrank_DHT_dual_le`, [Hong,
   Lemma 3.1.13]); **`bijective_of_finrank_le_add_fin`**: injections `L^d ↪ D_{-1}(V)`,
   `L^{d'} ↪ D_0(V^∨)` with `dim V ≤ d + d'` are bijective (equality in (3.9), (3.10)).
+* **done** `GroupScheme/ConnectedPDiv.lean` (connected part of a `p`-divisible group, [Hong,
+  Prop. 2.1.10]; counting is a standard argument written up here): functoriality of `G ↦ G°`
+  (`connectedComponentMap`), Nakayama over the local base (`order_le_mul_of_surjective`),
+  `#G(Ω) = |G^{et}|` over an algebraically closed residue field extension; `c_{v+1} ≤ c_1 c_v`
+  and `n_{v+1} ≤ n_1 n_v` force `|G_v°| = p^{h°v}` (`exists_order_connectedComponent`);
+  **`PDivGroup.connPart`** (layers `G_v°`, kernel condition `connIncl_range_eq`) with the closed
+  immersion `connPartHom : G° → G`, and **`exists_connPart_iso`**: `G° ≅ F[p^∞]` over `ℤ_p`
+  (Serre–Tate). Missing: uniqueness of `d` / [Hong, Def. 2.2.17]; `G^{et}` as a `p`-divisible
+  group.
 
 ## Hand-off (2026-10-18, eleventh session)
 

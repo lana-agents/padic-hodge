@@ -92,6 +92,7 @@ import PadicHodge.GroupScheme.CartierPerfect
 import PadicHodge.GroupScheme.CartierPerfectOC
 import PadicHodge.GroupScheme.Connected
 import PadicHodge.GroupScheme.ConnectedIdempotent
+import PadicHodge.GroupScheme.ConnectedPDiv
 import PadicHodge.GroupScheme.ConstPDiv
 import PadicHodge.GroupScheme.ConstPDivMap
 import PadicHodge.GroupScheme.ConstPDivTate
