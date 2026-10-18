@@ -532,8 +532,84 @@ in place of Kähler differentials (all rings of integers here are monogenic), ev
   `R`-algebra map (`galS`) and on `T_p(G^∨)(O_C)` (`galDual`); `U_{σy} = σ(U_y)`
   (`charSeries_gal`, via `evB_map_gal` and the general `AdicEval.ringHom_ext`); **`α(σx)(σy) =
   σ(α(x)(y))`** (`alpha_gal`).
+* **done** `FormalGroup/Zp.lean`: `ZpD p` (`ℤ_p` with the discrete uniformity, `ℤ_p → O_{ℂ_p}`)
+  discharges all hypotheses (`p ∈ 𝔪`, `𝔪 ↦ m_{ℂ_p}`, `O_{ℂ_p}` complete for `𝔪 O_{ℂ_p}`,
+  `GalFixed`): `alphaZp` with `alphaZp_add`, `alphaZp_mul`, `alphaZp_gal`, `alphaZp_torsion`,
+  `logGm_alphaZp` ([Hong, Prop. 3.4.9] over `K = ℚ_p`, connected `G`, except injectivity).
 
-## Hand-off (2026-10-18, ninth session)
+## Hand-off (2026-10-18, tenth session)
+
+Scope (unchanged, `~/iut-scratch/multiradial/MR6-scoping.md`, item A2): [LocAn] needs Tate's
+Theorem 4 (full faithfulness of `G ↦ T_p G` over `O_{K'}`) for `p`-divisible groups of Jacobians
+(dimension `d = g`).
+
+Done this session (pushed with green validation): `33a51f4` (`CartierChar`, `Alpha`, `MapFGL`,
+`AlphaLog`, `AlphaGal`: **`α` for connected `G = F[p^∞]`** — `T_p(G^∨)(O_C)` points give
+group-like `χ_{y_v} ∈ O_C ⊗ A_v`, hence `U_y ∈ O_C[[T]]` with `U_y(Φ) = U_y U_y`,
+`α(x)(y) = U_y(x)` bimultiplicative with values in `1 + m_C`, left square = Cartier pairing on
+torsion, `u_y = U_y − 1 : F_{O_C} → Ĝ_m`, `dα`, right square via `LogNat`, Galois equivariance)
+and the commit with `Zp` (all hypotheses discharged for `R = ℤ_p`) and this hand-off.
+
+**[Hong, Prop. 3.5.1] (discriminant formula): proofs located.** Downloaded (not committed) to
+`~/iut-scratch/lit/dl/padic-hodge/disc/` (text via `python3 -I`): [Tate] OCR scan — the
+statement is **[Tate, §(2.2), Prop. 2, pp. 164–165]** (over complete noetherian local `R` with
+residue char. `p`; *not* §2.3, which is duality, Prop. 3 = `n + n' = h`, p. 166); [Haines,
+§2.3, Lemmas 2.3.1–2.3.3, pp. 5–7]; [Lipnowski, Appendix, Claims 2, 2', 2'', pp. 17–19] (B.
+Conrad's proof of Tate's Lemma 1, which Tate only reduces to an unproved trace map);
+[Stacks, Tags 0BWA, 0BWC, 0BWD, 0BWH, 0BVZ, 0BJF]. See `references/README.md`. Proof plan
+(for `R = O_K` a complete DVR, everything free):
+  (a) multiplicativity `disc H = (disc H')^{m''} (disc H'')^{m'}` for `0 → H' → H → H'' → 0`
+      ([Tate, p. 164–165]; [Haines, Lemma 2.3.2] via `A' ⊗ A ≅ A ⊗_{A''} A` and the tensor /
+      transitivity formulas [Haines, Lemma 2.3.1]); étale ⇒ `disc = 1` ([Stacks 0BJF]);
+  (b) reduce to `v = 1` and connected `G` via `0 → G_1 → G_{v+1} → G_v → 0` and
+      connected–étale;
+  (c) `disc(A_1) = N(det J)` with `J = (∂[p]_i/∂T_j)`: [Lipnowski, Claim 2''] (full proof, pure
+      linear algebra: `disc = N(τ)` if `Hom_A(R, A) ≅ R`, `Tr ↦ τ`) + [Lipnowski, Claim 2'] =
+      Tate's Thm. A.3 in the appendix to Mazur–Roberts (**not available**; Stacks 0BWC/0BWH is
+      the polynomial version). Alternative avoiding A.3: compute the trace form of
+      `A_1 = R[[T]]/[p](T)` directly in the Weierstrass basis (`WeierstrassFree`) for `d = 1`;
+  (d) `det J = p^d · unit` via invariant differentials ([Tate, p. 165]: `[p]^*ω_i = p ω_i`
+      for a basis of translation-invariant differentials; needs partial derivatives of power
+      series, cf. item 2(a) below).
+  Not started (3.5.x waits for items 1–2 below).
+
+Next steps, in order:
+
+1. **Injectivity of `α` on `G(O_K)`** ([Hong, Prop. 3.4.9, proof]). Route (avoids the snake
+   lemma): for `x ∈ ker α ∩ G(ℤ_p)` write `x = p x''` in `F(m_C)` (`Divisible.lean`); then
+   `α(x'')` is `p`-torsion, so by **perfectness of the level-1 Cartier pairing over `O_C`**
+   there is `t ∈ G[p](O_C)` with `α(t) = α(x'')` (`alpha_torsion`), `x' = x'' − t ∈ ker α`,
+   `p x' = x`, and `σx' − x' ∈ ker α ∩ G[p] = 0`, so `x' ∈ G(ℤ_p)` (`Invariants.lean`, [Hong,
+   Lemma 3.4.2]); hence `x` is infinitely `p`-divisible in `G(ℤ_p)`, `x = 0` ([Hong, Lemma
+   3.4.3]). Missing: (i) perfectness of `G_v(O_C) × G_v^∨(O_C) → μ_{p^v}` (from
+   `CartierPerfect` over `ℚ̄_p` via `G_v(O_C) = G_v(ℚ̄_p)` for finite free `A_v` — integrality
+   of finite `ℤ_p`-algebras — and `baseChangePointsEquiv`), (ii) surjectivity of
+   `DualTate → G_v^∨(O_C)` (lifting along `i_v^∨`; over `ℚ̄_p` this is
+   `exists_dual_quot_eq_padicAlgCl`), (iii) `x ↦ α(x)` determines torsion: `α(t) = 1 ⇒ t = 0`.
+2. **`d + d^∨ = h`** ([Hong, Thm. 2.2.19]) — sub-project, all in characteristic `p` (special
+   fibre `B_v = A_v ⊗ k`): (a) partial derivatives on `MvPowerSeries` and the chain rule for
+   `subst` (not in Mathlib); (b) **`[p]_F(T) ∈ (T_1^p, …, T_d^p)` over `k`** (invariant
+   derivations `D_j f = ∂_{U_j} f(Φ(T, U))|_{U=0}` = invertible matrix times `∂/∂T`, and
+   `D_j [p] = 0` since `d[p] = p = 0`; [Hong, Prop. 1.5.10, proof]); hence `ker φ_{G_1}` =
+   `Spec k[T]/(T^p)` has order `p^d` ([Hong, Cor. 1.5.11, Cor. 2.2.18]); (c) Frobenius `φ` and
+   Verschiebung `ψ = φ_{G^∨}^∨` of finite flat `k`-group schemes, `ψ ∘ φ = [p]`
+   ([Hong, Prop. 1.5.8], proof via symmetric tensors, which [Hong] takes from Pink's notes, §14); (d) orders in exact
+   sequences of finite `k`-group schemes, Cartier duality exchanges kernels and cokernels;
+   (e) **for non-connected `G^∨`**: `d^∨` is the dimension of `(G^∨)°`, needing the
+   connected–étale sequence and Serre–Tate *essential surjectivity* ([Hong, Thm. 2.2.16, second
+   half], uses Prop. 2.2.13). Estimate: several sessions.
+3. Tate's theorem [Hong, Thm. 3.4.10] / Cor. 3.4.11 for connected `G` over `ℤ_p`: `dα` is now
+   defined (`dalpha`); needs injectivity (1), the `ℚ_p`-linear algebra of (3.9)–(3.11)
+   (`tateDualHom`, `sum_finrank_DHT_le` exist), the identification of `DualTate (OC p)` of `G`
+   over `ℤ_p` with `T_p(G^∨_{ℚ_p})(ℚ̄_p)` (`dualPDiv`, via `G_v^∨(O_C) = G_v^∨(ℚ̄_p)`), and (2).
+4. Base `O_{K'}` (item 4 of the task): `Zp.lean` is the template — an `O_{K'}` analogue needs
+   `𝔪_{K'} O_C = (π)` and `π`-adic completeness of `O_C` (generalise `OCAdic` from `p` to any
+   `0 < |π| < 1`), and `GalFixed` relative to `Gal(ℚ̄_p/K')` (currently `GalFixed` quantifies
+   over all of `Gal(ℚ̄_p/ℚ_p)`; `ev_autCp`, `galPt`, `galDual` work verbatim for a subgroup).
+5. Full faithfulness, existence half [Hong, Thm. 3.5.4] (Prop. 3.5.3, Lemma 3.5.2 with the
+   discriminant formula above).
+
+## Hand-off (2026-10-18, ninth session; superseded)
 
 Scope (unchanged, `~/iut-scratch/multiradial/MR6-scoping.md`, item A2): [LocAn] needs Tate's
 Theorem 4 (full faithfulness of `G ↦ T_p G` over `O_{K'}`), for `p`-divisible groups of Jacobians,

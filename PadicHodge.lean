@@ -64,6 +64,7 @@ import PadicHodge.FormalGroup.SerreTateHom
 import PadicHodge.FormalGroup.TateModule
 import PadicHodge.FormalGroup.Torsion
 import PadicHodge.FormalGroup.WeierstrassFree
+import PadicHodge.FormalGroup.Zp
 import PadicHodge.Galois.Basic
 import PadicHodge.Galois.Continuity
 import PadicHodge.GroupScheme.BaseChange
