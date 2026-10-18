@@ -377,7 +377,72 @@ in place of Kähler differentials (all rings of integers here are monogenic), ev
   Tate's Hodge–Tate decomposition of `T_p G ⊗ ℂ_p` and full faithfulness ([Tate] §4, Thm. 4;
   [Tate] not available locally, statements as quoted in [LocAn] and [BC]); see the hand-off.
 
-## Hand-off (2026-10-17, fifth session)
+## PH4. Formal groups and the logarithm — wip
+
+* **done** `FormalGroup/Law.lean`: `FGL R d` ([Hong, Def. 2.2.3]; axioms (i)–(iii) as identities
+  of `MvPowerSeries.subst`). `FormalGroup/Mult.lean`: `Ĝ_m` ([Hong, Ex. 2.2.4]).
+* **done** `FormalGroup/OC.lean`: `O_{ℂ_p}` as a complete linearly topologised ring;
+  `norm_eval₂_le`. `FormalGroup/Points.lean`: the commutative monoid `F(m_{ℂ_p})` (open
+  polydisc, coefficients in a discrete `R` with `R → O_{ℂ_p}`), via `MvPowerSeries.eval₂_subst`.
+* **done** `FormalGroup/Neg.lean`: `F(m_{ℂ_p})` is a group (`instAddCommGroupPt`): the inverse of
+  `x` is the fixed point of `y ↦ y − Φ(x, y)`, a contraction of the polydisc of radius
+  `max |x_j|` (Lipschitz estimates `norm_add_sub_add_le`, Banach `exists_fixed_of_contract`);
+  `bnd_neg`, `rad`. (The formal inverse `ι(T)` of [Hong, Lemma 2.2.5 (3)] is not constructed.)
+* **done** `FormalGroup/Log.lean`, `LogProps.lean`: [Hong, Lemma 3.3.2, 3.3.3, Def. 3.3.4,
+  Prop. 3.3.6]: `log_F = lim (p^n x)/p^n`, additive (`logF_add`, `logHom`);
+  `|log_F x − x| ≤ r²/|p|` on radius `r ≤ |p|`; **(2)** `logF_bijOn` for `r < |p|` (deviation:
+  [Hong] says `ν ≥ λ ≥ 1`, i.e. `r ≤ |p|`, which fails for `p = 2`, `Ĝ_m`, `x = −2`);
+  **(3)** `logF_eq_zero_iff`, `ker_logHom` (kernel = torsion); **(4)** `exists_logF_eq_pow_mul`.
+* **done** `FormalGroup/Formal.lean`: `addPS`, `mulPS` (`[n]_F`, [Hong, Ex. 2.2.8]),
+  `addPS_assoc/comm/zero`, `mulPS_add`, `subst_mulPS` (`[m]∘[n] = [mn]`).
+* **done** `FormalGroup/Torsion.lean`: `ev_mulPS` (`[n]_F(x) = n·x`), no prime-to-`p` torsion,
+  `torsionBy v = F(m)[p^v]`, `isOfFinAddOrder_iff`, `logF_eq_zero_iff_mem_torsionBy`.
+* **done** `FormalGroup/GaloisAction.lean`: `GalFixed`, `galPt`, `ev_autCp`, `logF_galPt`.
+* **done** `FormalGroup/Gm.lean`: `logF_surjective_of_divisible`; `Ĝ_m`: `n·x = (1+x)^n − 1`,
+  `p`-divisible (`gm_exists_p_nsmul_eq`), `gm_logF_surjective`, `gm_logF_eq_zero_iff`
+  ([Hong, Ex. 3.4.8]: `0 → μ_{p^∞} → 1 + m_{ℂ_p} → ℂ_p → 0`).
+* **done** `FormalGroup/Layers.lean`, `LayerPoints.lean` (start of [Hong, Prop. 2.2.10]):
+  `mem_span_X` (`ker ε = I`), `layerIdeal` `J_v`, `J_{v+1} ⊆ J_v`, `Layer` `A_v`, `layerIncl`,
+  `layerP`; `layerPt : F(m)[p^v] → Hom_R(A_v, O_{ℂ_p})`, injective, compatible with `layerIncl`
+  and `layerP`, Galois-equivariant.
+
+## Hand-off (2026-10-18, sixth session)
+
+Done this session (all pushed with green validation): the formal-group drafts were moved into
+`PadicHodge/FormalGroup/` and finished (`2742552`), [Hong, Prop. 3.3.6 (1)–(4)] with inverses
+(`762011a`), formal identities, torsion, Galois action, `Ĝ_m`, layers (`a04dcc8`), layer points
+(see `git log`). See PH4 above.
+
+Next steps, in order:
+
+1. **Finish [Hong, Prop. 2.2.10]** (connected `p`-divisible group `F[p^∞]` of a `p`-divisible
+   formal group law; base `R` complete noetherian local, e.g. `ℤ_p`):
+   (a) *finiteness*: assume `[p]_F^* : A → A` makes `A = R[[T]]` finite free of rank `p^h` over
+   itself (definition of height `h`); show `A_v ≅ R ⊗_{A, [p^v]^*} A` (`J_v = [p^v]^*(I) A`,
+   `mem_span_X`) is finite free of rank `p^{hv}` (`[p^{v}]^* = ([p]^*)^v` by `subst_mulPS`,
+   freeness in towers);
+   (b) *group structure*: topologise `A_v ⊗_R A_v` (finite free over `R`, `t_i` nilpotent mod
+   `m_R` because `A_v/m_R A_v` is a finite local `k`-algebra) and define the comultiplication
+   `t ↦ Φ(t ⊗ 1, 1 ⊗ t)` by `MvPowerSeries.eval₂`; counit `t ↦ 0`; antipode from the **formal
+   inverse** `ι(T)` ([Hong, Lemma 2.2.5 (3)]: degree-by-degree, not yet done — only inverses of
+   points exist); Hopf axioms from `addPS_assoc/comm/zero`; package as `FFGroupScheme`;
+   (c) `PDivGroup` with `incl = layerIncl` (surjective, done) and the kernel condition on
+   `S`-points: the convolution power `y^{p^v}` is `y ∘ [p^v]^*`;
+   (d) `layerPt` surjective over `ℚ̄_p`/`O_{ℂ_p}` (points of a finite `R`-algebra are integral,
+   so `|f(t_i)| ≤ 1`, and `t_i^N ∈ m_R A_v` gives `< 1`), identifying
+   `F[p^v](ℚ̄_p) ≅ F(m)[p^v]` Galois-equivariantly, hence `T_p F[p^∞] ≅ lim F(m)[p^v]`.
+2. **Tate's theorem** ([Stix, Thm. 91], [Hong, Prop. 3.4.7, 3.4.9, Thm. 3.4.10]): needs, beyond
+   1., the formal group of `G°` for a `p`-divisible group `G` over `ℤ_p`/`O_K` ([Hong, Prop.
+   2.2.13, Thm. 2.2.16], Serre–Tate), `G(O_{ℂ_p})` with `0 → G°(O_C) → G(O_C) → G^{et}(O_C) → 0`
+   ([Hong, Prop. 3.2.5]), `d + d^∨ = h` ([Hong, Thm. 2.2.19]); then `α`, `dα` as in
+   [Hong, Prop. 3.4.9] using `logF_galPt`, `gm_logF_surjective`/`gm_logF_eq_zero_iff` (bottom
+   row), `tateDualHom`, and the dimension count via `sum_finrank_DHT_le`; the splitting step is
+   `isHodgeTate_of_exact_of_disjoint`. For `p`-divisible formal groups over `ℤ_p` themselves,
+   `F(m_{ℂ_p})` is `p`-divisible ([Hong, Prop. 3.2.7]; needs Weierstrass preparation /
+   finiteness of `[p]`) and then `logF_surjective_of_divisible` gives Prop. 3.4.7 for `G°`.
+3. **Full faithfulness** [Hong, Thm. 3.5.4]: unchanged plan (a)–(d) of the fifth hand-off.
+
+## Hand-off (2026-10-17, fifth session; superseded)
 
 Done this session (pushed `c278a2c`, validation green): items 1 and 2 of the fourth-session
 list. **Hilbert 90 for `\hat{ℚ_p^{ur}}`** (`Hilbert90/`, `exists_hilbert90`) and **`V_p G`

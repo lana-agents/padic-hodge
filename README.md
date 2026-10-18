@@ -82,6 +82,17 @@ Phase PH0 (skeleton), PH1 (Tate's `H⁰` and `H¹` of `ℂ_p(j)`, including almo
 * `PadicHodge/GroupScheme/TateDualRep.lean`: **`V_p(G^∨) ≅ V_p(G)^∨ ⊗ ℚ_p(1)`** as Galois
   representations (`tateRepDualEquiv_gal`), Hodge–Tate data invariant under isomorphism, and
   `isHodgeTate_tateRep_dualPDiv`.
+* `PadicHodge/FormalGroup/`: **formal group laws** ([Hong, §2.2, §3.3]): `FGL R d` (axioms via
+  `MvPowerSeries.subst`), `Ĝ_m`; the group `F(m_{ℂ_p})` of points of the open polydisc
+  (`Points.lean`, inverses by Banach's fixed point theorem, `Neg.lean`); **the logarithm**
+  `log_F = lim p^{-n}[p^n]` (`Log.lean`) and [Hong, Prop. 3.3.6] (`LogProps.lean`): a
+  homomorphism, a bijection of closed polydiscs of radius `r < |p|` (`logF_bijOn`),
+  `ker log_F = F(m)_{tors} = ⋃_v F(m)[p^v]`, `F(m) ⊗ ℚ ≅ ℂ_p^d`; formal identities
+  `[m+n] = Φ([m],[n])`, `[m]∘[n] = [mn]` (`Formal.lean`); Galois-equivariance of `log_F`
+  (`GaloisAction.lean`); `p`-divisible formal groups have surjective `log_F`, and for `Ĝ_m` the
+  exact sequence `0 → μ_{p^∞} → 1 + m_{ℂ_p} → ℂ_p → 0` (`Gm.lean`); the layers
+  `A_v = R[[T]]/[p^v](I)` with `A_{v+1} ↠ A_v`, `A_v → A_{v+1}` and the injective,
+  Galois-equivariant map `F(m)[p^v] → Hom_R(A_v, O_{ℂ_p})` (`Layers.lean`, `LayerPoints.lean`).
 
 No `sorry`, no `axiom`. All builds use `lake build --wfail`.
 

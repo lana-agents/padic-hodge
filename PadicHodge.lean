@@ -24,6 +24,7 @@ import PadicHodge.FormalGroup.Formal
 import PadicHodge.FormalGroup.GaloisAction
 import PadicHodge.FormalGroup.Gm
 import PadicHodge.FormalGroup.Law
+import PadicHodge.FormalGroup.LayerPoints
 import PadicHodge.FormalGroup.Layers
 import PadicHodge.FormalGroup.Log
 import PadicHodge.FormalGroup.LogProps
