@@ -31,6 +31,7 @@ import PadicHodge.FormalGroup.FormalInv
 import PadicHodge.FormalGroup.GaloisAction
 import PadicHodge.FormalGroup.Gm
 import PadicHodge.FormalGroup.GmHeight
+import PadicHodge.FormalGroup.GmHom
 import PadicHodge.FormalGroup.GmLog
 import PadicHodge.FormalGroup.GmMu
 import PadicHodge.FormalGroup.Invariants

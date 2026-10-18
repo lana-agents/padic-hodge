@@ -463,6 +463,9 @@ in place of Kähler differentials (all rings of integers here are monogenic), ev
 * **done** `FormalGroup/LogNat.lean`: **naturality of the logarithm**
   `log_{F'}(f(x)) = df · log_F(x)` (`FGL.Hom.logF_ptMap`; the right square of
   [Hong, Prop. 3.4.9, proof]), via the local estimate `|D(y)| ≤ s²/|p|` (`norm_defect_le`).
+* **done** `FormalGroup/GmHom.lean`: a formal homomorphism `u : F → Ĝ_m` gives
+  `F[p^∞] → μ_{p^∞}` (`PDivFGL.toMuOfFGLHom`) and `T_p F[p^∞](S) → T_p μ_{p^∞}(S)`
+  (`tateToMu`); the `u_{O_C}` of [Hong, Prop. 3.4.9], for `u` defined over `R`.
 * **done** `FormalGroup/ExactSeq.lean` ([Hong, Prop. 3.4.7] for `G = F[p^∞]`):
   `phiPt v : G_v(O_{ℂ_p}) ↪ F(m_{ℂ_p})` (inverse of `layerPtEquiv`), compatible with
   `G_v ↪ G_{v+1}` (`phiPt_incl`); `exact_logHom`: `ker log_F = ⋃_v phiPt(G_v(O_{ℂ_p}))`
@@ -479,7 +482,48 @@ in place of Kähler differentials (all rings of integers here are monogenic), ev
   (`GmMu.gmToMu`, `muToGm`, both composites the identity; `[k] ↦ (1+t)^k`, `t ↦ [1] − 1`),
   `T_p(Ĝ_m[p^∞]) ≅ T_p μ_{p^∞}` (`GmMu.tateEquiv`).
 
-## Hand-off (2026-10-18, seventh session)
+## Hand-off (2026-10-18, eighth session)
+
+Scope reminder (`~/iut-scratch/multiradial/MR6-scoping.md`, item A2): [LocAn] needs only
+Tate's Theorem 4 (full faithfulness of `G ↦ T_p G` over `O_{K'}`), whose proof in [Hong, Thm.
+3.5.4] uses Tate's theorem [Hong, Thm. 3.4.10 / Cor. 3.4.11] (dimension of `G` from `T_p G`)
+and the discriminant formula [Hong, Prop. 3.5.1] (stated in [Hong] without proof).
+
+Done this session (all pushed with green validation, `origin/main`): `3630199`, `0ad70ec`
+(`WeierstrassFree`, `GmHeight`: **`Ĝ_m` is `p`-divisible of height 1**; `GmMu`:
+**`Ĝ_m[p^∞] ≅ μ_{p^∞}`**, `T_p` iso), `6e6c08b` (`GroupScheme/Faithful`: **`Hom.ext_of_mapTate`,
+`Hom.ext_of_baseChange`** — faithfulness of `G ↦ T_p G(Ω)` and of the generic fibre functor,
+i.e. the uniqueness half of [Hong, Thm. 3.5.4]), `6d9163d` (`ExactSeq`: [Hong, Prop. 3.4.7] for
+`G = F[p^∞]`), `36398e4` (`FGLHom`: formal homomorphisms induce `F[p^∞] → F'[p^∞]`),
+`387c52f` (`FGLHomPoints`: on points, Galois-equivariant, compatible with the layers),
+`2d67761` (`LogNat`: **`log_{F'} ∘ f = df · log_F`**, the right square of [Hong, Prop. 3.4.9]),
+and the commit with `GmHom` (`F → Ĝ_m` gives `F[p^∞] → μ_{p^∞}`) and this hand-off.
+
+Next steps, in order (each a validated increment; split further if blocked):
+
+1. **Serre–Tate for `G = F[p^∞]`** ([Hong, Prop. 2.2.13, Thm. 2.2.16]): `R[[T]] ≅ lim_v A_v`
+   (injective since `J_v ⊆ (𝔪, T)^v`, from `[p](T) ∈ 𝔪T + (T)^2`, plus Krull; surjective needs
+   `J_v` closed in `R[[T]]`). **Blocker**: Mathlib (81a5d25) has `IsNoetherianRing R⟦X⟧` but not
+   for `MvPowerSeries (Fin d) R`; do `d = 1` first (via `FGL.fin1Equiv`), or prove closedness of
+   `J_v` directly from the basis of `R[[T]]` over `[p^v]^*` (`freeVia_psiV`, coordinates are
+   `(T)`-adically continuous). Then `Hom(F[p^∞], F'[p^∞]) = Hom(F, F')` (`FGL.Hom.toPDiv` is the
+   map; inverse: a compatible family of Hopf maps gives a power series in the limit).
+2. **`α` for connected `G = F[p^∞]`** ([Hong, Prop. 3.4.9]): needs formal homomorphisms
+   `F_{O_C} → Ĝ_m` with coefficients in `O_{ℂ_p}`; the `Pt`/`ev` framework requires a *discrete*
+   coefficient ring `R → O_{ℂ_p}`, so add a variant with bounded coefficients in `O_{ℂ_p}`
+   (evaluation converges for `|x| < 1`). Then `T_p(G^∨) ≅ Hom(F_{O_C}, Ĝ_m)` (via 1. over `O_C`,
+   (3.7)), `α(x)(u) = 1 + u(x)`, `dα` from `LogNat` (`logF_ptMap`), injectivity of `α` on
+   `G(O_K)` ([Hong, Lemma 3.4.2, 3.4.3]: `Invariants.lean` has both).
+3. **`d + d^∨ = h`** ([Hong, Thm. 2.2.19]) and the general (non-connected) `G` over `O_K`:
+   connected–étale sequence for `G(O_C)` ([Hong, Prop. 3.2.5]); then Tate's theorem
+   [Hong, Thm. 3.4.10] and the Hodge–Tate decomposition [Hong, Thm. 3.4.12] as in the
+   sixth-session plan (`tateDualHom`, `sum_finrank_DHT_le`, `isHodgeTate_of_exact_of_disjoint`).
+4. **Full faithfulness, existence half** [Hong, Thm. 3.5.4]: uniqueness is done
+   (`Hom.ext_of_baseChange`). Existence: [Hong, Prop. 3.5.3] (closure of a Galois-stable direct
+   summand of `T_p G`), [Hong, Lemma 3.5.2] (an iso on generic fibres is an iso; needs
+   Cor. 3.4.11 and the discriminant formula Prop. 3.5.1, plan (a)–(d) of the fifth hand-off).
+
+## Hand-off (2026-10-18, seventh session; superseded)
 
 Done this session (all pushed with green validation): `abc5a8d` (`AdicEval`, `LayerFree`:
 `A_v` free of rank `p^{hv}`), `1887dff` (`AdicPoints`, `LayerHopf`, `LayerPDiv`: Hopf algebras
