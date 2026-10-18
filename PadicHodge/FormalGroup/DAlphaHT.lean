@@ -37,6 +37,8 @@ invariants of the Tate representations of `PadicHodge.HodgeTate`:
   (`finrank_DHT_dual_tateRep_dualPDiv`). This gives **`dalphaKTwist : L^d → D_{-1}(V_p G)`**,
   injective for `L = ℚ_p` (`dalphaKTwist_injective`), and **`le_finrank_DHT_tateRep`**:
   `d ≤ dim_{ℚ_p} D_{-1}(V_p G)`, the form of (3.9) used in `bijective_of_finrank_le_add_fin`.
+  The dual-dual step is proved for abstract representations (`dualDualEquiv`,
+  `dualDualEquiv_gal`, `finrank_DHT_dualDual`) so that it also applies over `K'`.
 
 ## References
 
@@ -118,6 +120,72 @@ theorem rid_tprod_charRep {V : Type*} [AddCommGroup V] [Module ℚ_[p] V]
       charRep_apply, map_smul, mul_smul]
   | add x y hx hy => simp only [map_add, hx, hy, smul_add]
 
+/-! The abstract form: an equivariant `e : V ≅ W^∨ ⊗ ℚ_p(1)` gives `V^∨ ≅ W(-1)`. Stated for
+abstract representations (cheap to elaborate), then applied to `tateRepDualEquiv`. -/
+
+section Abstract
+
+variable {L} {V W : Type*} [AddCommGroup V] [Module ℚ_[p] V] [AddCommGroup W] [Module ℚ_[p] W]
+  [FiniteDimensional ℚ_[p] W]
+  {ρV : Representation ℚ_[p] (PadicAlgCl p ≃ₐ[L] PadicAlgCl p) V}
+  {ρW : Representation ℚ_[p] (PadicAlgCl p ≃ₐ[L] PadicAlgCl p) W}
+  (e : V ≃ₗ[ℚ_[p]] Dual ℚ_[p] W ⊗[ℚ_[p]] ℚ_[p])
+
+/-- `V^∨ ≅ W`, the dual of `e : V ≅ W^∨ ⊗ ℚ_p` composed with `W ≅ W^{∨∨}`. -/
+def dualDualEquiv : Dual ℚ_[p] V ≃ₗ[ℚ_[p]] W :=
+  (e ≪≫ₗ TensorProduct.rid ℚ_[p] _).symm.dualMap ≪≫ₗ (Module.evalEquiv ℚ_[p] W).symm
+
+theorem dualDualEquiv_symm_apply (v : W) (w : V) :
+    (dualDualEquiv e).symm v w = TensorProduct.rid ℚ_[p] _ (e w) v :=
+  rfl
+
+variable (he : ∀ σ, (e : V →ₗ[ℚ_[p]] _) ∘ₗ ρV σ = (ρW.dual.tprod (charRep L 1) σ) ∘ₗ e)
+include he
+
+theorem dualDualEquiv_symm_gal (σ : PadicAlgCl p ≃ₐ[L] PadicAlgCl p) (v : W) :
+    (dualDualEquiv e).symm (ρW σ v) = chiL L 1 σ • ρV.dual σ ((dualDualEquiv e).symm v) := by
+  refine LinearMap.ext fun w => ?_
+  have he' : e (ρV σ⁻¹ w) = (ρW.dual.tprod (charRep L 1) σ⁻¹) (e w) :=
+    LinearMap.congr_fun (he σ⁻¹) w
+  rw [LinearMap.smul_apply, Representation.dual_apply, Module.Dual.transpose_apply,
+    LinearMap.comp_apply, dualDualEquiv_symm_apply, dualDualEquiv_symm_apply, he',
+    rid_tprod_charRep, LinearMap.smul_apply, Representation.dual_apply,
+    Module.Dual.transpose_apply, LinearMap.comp_apply, inv_inv, smul_eq_mul, smul_eq_mul,
+    ← mul_assoc, ← chiL_mul, mul_inv_cancel, chiL_one, one_mul]
+
+/-- **`V^∨ ≅ W(-1)`**: `σ (F x) = χ(σ) F(σ x)` for `F = dualDualEquiv e`. -/
+theorem dualDualEquiv_gal (σ : PadicAlgCl p ≃ₐ[L] PadicAlgCl p) (x : Dual ℚ_[p] V) :
+    ρW σ (dualDualEquiv e x) = chiL L 1 σ • dualDualEquiv e (ρV.dual σ x) := by
+  apply (dualDualEquiv e).symm.injective
+  rw [map_smul, LinearEquiv.symm_apply_apply, dualDualEquiv_symm_gal e he,
+    LinearEquiv.symm_apply_apply]
+
+theorem dualDualEquiv_symm_gal' (σ : PadicAlgCl p ≃ₐ[L] PadicAlgCl p) (v : W) :
+    ρV.dual σ ((dualDualEquiv e).symm v) =
+      chiL L (-1) σ • (dualDualEquiv e).symm (ρW σ v) := by
+  rw [dualDualEquiv_symm_gal e he, smul_smul, ← chiL_add, neg_add_cancel, chiL_zero, one_smul]
+
+variable [FiniteDimensional ℚ_[p] L]
+
+/-- `D_0(V^∨) → D_{-1}(W)`, induced by `dualDualEquiv e`. -/
+def DHTdualDualMap : DHT ρV.dual 0 →ₗ[L] DHT ρW (-1) :=
+  DHTtwistMap 1 (dualDualEquiv e : _ →ₗ[ℚ_[p]] _) (fun σ x => dualDualEquiv_gal e he σ x)
+    (by norm_num)
+
+theorem DHTdualDualMap_injective : Function.Injective (DHTdualDualMap e he) :=
+  DHTtwistMap_injective 1 _ _ (dualDualEquiv e).injective
+
+/-- **`dim D_0(V^∨) = dim D_{-1}(W)`.** -/
+theorem finrank_DHT_dualDual [FiniteDimensional ℚ_[p] V] :
+    finrank L (DHT ρV.dual 0) = finrank L (DHT ρW (-1)) :=
+  le_antisymm (LinearMap.finrank_le_finrank_of_injective (DHTdualDualMap_injective e he))
+    (LinearMap.finrank_le_finrank_of_injective
+      (DHTtwistMap_injective (-1) (f := ((dualDualEquiv e).symm : _ →ₗ[ℚ_[p]] _))
+        (fun σ v => dualDualEquiv_symm_gal' e he σ v) (q := -1) (q' := 0) (by norm_num)
+        (dualDualEquiv e).symm.injective))
+
+end Abstract
+
 namespace PDivGroup
 
 variable (H : PDivGroup ℚ_[p] p)
@@ -127,62 +195,29 @@ variable (H : PDivGroup ℚ_[p] p)
 def tateRepDualDualEquiv :
     Dual ℚ_[p] (ℚ_[p] ⊗[ℤ_[p]] Additive (H.dualPDiv.TateModule (PadicAlgCl p))) ≃ₗ[ℚ_[p]]
       ℚ_[p] ⊗[ℤ_[p]] Additive (H.TateModule (PadicAlgCl p)) :=
-  (H.tateRepDualEquiv ≪≫ₗ TensorProduct.rid ℚ_[p] _).symm.dualMap ≪≫ₗ
-    (Module.evalEquiv ℚ_[p] _).symm
-
-theorem tateRepDualDualEquiv_symm_apply (v : ℚ_[p] ⊗[ℤ_[p]] Additive (H.TateModule K))
-    (w : ℚ_[p] ⊗[ℤ_[p]] Additive (H.dualPDiv.TateModule K)) :
-    H.tateRepDualDualEquiv.symm v w = TensorProduct.rid ℚ_[p] _ (H.tateRepDualEquiv w) v :=
-  rfl
-
-theorem tateRepDualDualEquiv_symm_gal (σ : PadicAlgCl p ≃ₐ[L] PadicAlgCl p)
-    (v : ℚ_[p] ⊗[ℤ_[p]] Additive (H.TateModule K)) :
-    H.tateRepDualDualEquiv.symm (H.tateRep L σ v) =
-      chiL L 1 σ • (H.dualPDiv.tateRep L).dual σ (H.tateRepDualDualEquiv.symm v) := by
-  refine LinearMap.ext fun w => ?_
-  have he : H.tateRepDualEquiv ((H.dualPDiv.tateRep L) σ⁻¹ w) =
-      ((H.tateRep L).dual.tprod (charRep L 1) σ⁻¹) (H.tateRepDualEquiv w) :=
-    LinearMap.congr_fun (H.tateRepDualEquiv_gal L σ⁻¹) w
-  rw [LinearMap.smul_apply, Representation.dual_apply, Module.Dual.transpose_apply,
-    LinearMap.comp_apply, tateRepDualDualEquiv_symm_apply, tateRepDualDualEquiv_symm_apply, he,
-    rid_tprod_charRep, LinearMap.smul_apply, Representation.dual_apply,
-    Module.Dual.transpose_apply, LinearMap.comp_apply, inv_inv, smul_eq_mul, smul_eq_mul,
-    ← mul_assoc, ← chiL_mul, mul_inv_cancel, chiL_one, one_mul]
+  dualDualEquiv H.tateRepDualEquiv
 
 /-- **`V_p(G^∨)^∨ ≅ V_p(G)(-1)`**: `σ (F x) = χ(σ) F(σ x)` for `F = tateRepDualDualEquiv`. -/
 theorem tateRepDualDualEquiv_gal (σ : PadicAlgCl p ≃ₐ[L] PadicAlgCl p)
     (x : Dual ℚ_[p] (ℚ_[p] ⊗[ℤ_[p]] Additive (H.dualPDiv.TateModule K))) :
     H.tateRep L σ (H.tateRepDualDualEquiv x) =
-      chiL L 1 σ • H.tateRepDualDualEquiv ((H.dualPDiv.tateRep L).dual σ x) := by
-  apply H.tateRepDualDualEquiv.symm.injective
-  rw [map_smul, LinearEquiv.symm_apply_apply, tateRepDualDualEquiv_symm_gal,
-    LinearEquiv.symm_apply_apply]
-
-theorem tateRepDualDualEquiv_symm_gal' (σ : PadicAlgCl p ≃ₐ[L] PadicAlgCl p)
-    (v : ℚ_[p] ⊗[ℤ_[p]] Additive (H.TateModule K)) :
-    (H.dualPDiv.tateRep L).dual σ (H.tateRepDualDualEquiv.symm v) =
-      chiL L (-1) σ • H.tateRepDualDualEquiv.symm (H.tateRep L σ v) := by
-  rw [tateRepDualDualEquiv_symm_gal, smul_smul, ← chiL_add, neg_add_cancel, chiL_zero, one_smul]
+      chiL L 1 σ • H.tateRepDualDualEquiv ((H.dualPDiv.tateRep L).dual σ x) :=
+  dualDualEquiv_gal _ (H.tateRepDualEquiv_gal L) σ x
 
 variable [FiniteDimensional ℚ_[p] L]
 
 /-- `D_0(V_p(G^∨)^∨) → D_{-1}(V_p G)`, induced by `tateRepDualDualEquiv`. -/
 def DHTdualTateEquivMap :
     DHT (H.dualPDiv.tateRep L).dual 0 →ₗ[L] DHT (H.tateRep L) (-1) :=
-  DHTtwistMap 1 (H.tateRepDualDualEquiv : _ →ₗ[ℚ_[p]] _)
-    (fun σ x => H.tateRepDualDualEquiv_gal L σ x) (by norm_num)
+  DHTdualDualMap H.tateRepDualEquiv (H.tateRepDualEquiv_gal L)
 
 theorem DHTdualTateEquivMap_injective : Function.Injective (H.DHTdualTateEquivMap L) :=
-  DHTtwistMap_injective 1 _ _ H.tateRepDualDualEquiv.injective
+  DHTdualDualMap_injective _ _
 
 /-- **`dim D_0(V_p(G^∨)^∨) = dim D_{-1}(V_p G)`.** -/
 theorem finrank_DHT_dual_tateRep_dualPDiv :
     finrank L (DHT (H.dualPDiv.tateRep L).dual 0) = finrank L (DHT (H.tateRep L) (-1)) :=
-  le_antisymm (LinearMap.finrank_le_finrank_of_injective (H.DHTdualTateEquivMap_injective L))
-    (LinearMap.finrank_le_finrank_of_injective
-      (DHTtwistMap_injective (-1) (f := (H.tateRepDualDualEquiv.symm : _ →ₗ[ℚ_[p]] _))
-        (fun σ v => H.tateRepDualDualEquiv_symm_gal' L σ v) (q := -1) (q' := 0) (by norm_num)
-        H.tateRepDualDualEquiv.symm.injective))
+  finrank_DHT_dualDual _ (H.tateRepDualEquiv_gal L)
 
 end PDivGroup
 

@@ -30,7 +30,8 @@ namespace PDivGroup
 
 open FFGroupScheme
 
-variable {p : ℕ} [hp : Fact p.Prime] (G : PDivGroup ℚ_[p] p)
+variable {p : ℕ} [hp : Fact p.Prime] {K : Type} [Field K] [CharZero K] [Algebra K (PadicAlgCl p)]
+  (G : PDivGroup K p)
 
 local instance : NeZero p := ⟨hp.out.ne_zero⟩
 
@@ -38,6 +39,7 @@ theorem eps_pow_expo_mul (a b : ℤ_[p]) (v : ℕ) :
     (eps (p := p) v ^ expo b v) ^ expo a v = eps v ^ expo (a * b) v := by
   rw [← pow_mul, expo, expo, expo, map_mul, ZMod.val_mul, pow_mod_eq (eps_pow_card v), mul_comm]
 
+omit [CharZero K] in
 theorem tatePairingZp_zpPow_left (a : ℤ_[p]) (x : G.TateModule (PadicAlgCl p))
     (y : G.DualTate (PadicAlgCl p)) :
     G.tatePairingZp (G.zpPow _ a x) y = a * G.tatePairingZp x y := by
@@ -47,6 +49,7 @@ theorem tatePairingZp_zpPow_left (a : ℤ_[p]) (x : G.TateModule (PadicAlgCl p))
   rw [zpPow_val, ← cartierPairingBase_apply, map_pow, MonoidHom.pow_apply,
     cartierPairingBase_apply, hb v, eps_pow_expo_mul]
 
+omit [CharZero K] in
 theorem tatePairingZp_pow_right (a : ℤ_[p]) (x : G.TateModule (PadicAlgCl p))
     (y : G.DualTate (PadicAlgCl p)) (y' : G.DualTate (PadicAlgCl p))
     (hy : ∀ v, y'.1 v = y.1 v ^ expo a v) :
@@ -88,6 +91,7 @@ theorem tateDualHom_apply (y : Additive (G.dualPDiv.TateModule (PadicAlgCl p)))
     G.tateDualHom y x =
       G.tatePairingZp (Additive.toMul x) (G.dualTateEquiv (Additive.toMul y)) := rfl
 
+omit [CharZero K] in
 theorem phi_single (t : Fin G.height → G.TateModule (PadicAlgCl p)) (i : Fin G.height) :
     G.phi (PadicAlgCl p) t (Multiplicative.ofAdd (Pi.single i 1)) = t i := by
   apply Subtype.ext
@@ -131,14 +135,23 @@ theorem tateDualHom_bijective : Function.Bijective G.tateDualHom := by
   exact (Multiplicative.toAdd.bijective.comp (dualTateCoord_bijective t ht)).comp
     (G.dualTateEquiv.bijective.comp Additive.toMul.bijective)
 
-/-- **The twist by `ℤ_p(1)`**: `⟨σx, σy⟩ = χ(σ) ⟨x, y⟩`. -/
-theorem tateDualHom_gal (σ : PadicAlgCl p ≃ₐ[ℚ_[p]] PadicAlgCl p)
+/-- **The twist by `ℤ_p(1)`**: `⟨σx, σy⟩ = χ(σ) ⟨x, y⟩` for `σ ∈ Gal(ℚ̄_p/K)`, `K ⊇ ℚ_p`. -/
+theorem tateDualHom_galOver [Algebra ℚ_[p] K] [IsScalarTower ℚ_[p] K (PadicAlgCl p)]
+    (σ : PadicAlgCl p ≃ₐ[K] PadicAlgCl p)
     (y : Additive (G.dualPDiv.TateModule (PadicAlgCl p)))
     (x : Additive (G.TateModule (PadicAlgCl p))) :
     G.tateDualHom (G.dualPDiv.galLin σ y) (G.galLin σ x) =
-      ((chi σ : ℤ_[p]ˣ) : ℤ_[p]) * G.tateDualHom y x := by
-  rw [tateDualHom_apply, tateDualHom_apply, ← tatePairingZp_gal]
+      ((chi (σ.restrictScalars ℚ_[p]) : ℤ_[p]ˣ) : ℤ_[p]) * G.tateDualHom y x := by
+  rw [tateDualHom_apply, tateDualHom_apply, ← tatePairingZp_galOver]
   rfl
+
+/-- **The twist by `ℤ_p(1)`**: `⟨σx, σy⟩ = χ(σ) ⟨x, y⟩`. -/
+theorem tateDualHom_gal (G : PDivGroup ℚ_[p] p) (σ : PadicAlgCl p ≃ₐ[ℚ_[p]] PadicAlgCl p)
+    (y : Additive (G.dualPDiv.TateModule (PadicAlgCl p)))
+    (x : Additive (G.TateModule (PadicAlgCl p))) :
+    G.tateDualHom (G.dualPDiv.galLin σ y) (G.galLin σ x) =
+      ((chi σ : ℤ_[p]ˣ) : ℤ_[p]) * G.tateDualHom y x :=
+  G.tateDualHom_galOver σ y x
 
 end PDivGroup
 
