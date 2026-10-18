@@ -718,6 +718,21 @@ in place of Kähler differentials (all rings of integers here are monogenic), ev
   `ℂ_p ⊗ V^∨ = Hom(T_p G, ℂ_p)` is Hodge–Tate with weight-`0` part of dimension `d' = h − d`
   and weight-`1` part of dimension `d`) and **[Hong, Cor. 3.4.14]** (`isHodgeTate_tateRep`) for
   `G = F[p^∞]` over `ℤ_p`.
+* **done** `FormalGroup/TateNonConn.lean` (**[Hong, Cor. 3.4.11] for non-connected `G` over
+  `ℤ_p`**, the input of [Hong, Lemma 3.5.2]): **`PDivGroup.finrank_DHT_tateRep_neg_one_of_iso`**,
+  **`exists_finrank_DHT_tateRep_neg_one`**: `dim D_{-1}(V_p G) = d` where `G⁰ ≅ F[p^∞]`, `F` of
+  dimension `d`. Lower bound: `V_p(F[p^∞]) ≅ V_p(G⁰) ↪ V_p G` (`connTateLin`,
+  `tateLin_baseChange_injective`). Upper bound by the direct Hilbert 90 route (no `G^{et}` as a
+  `p`-divisible group): `T⁰ = T_p(G⁰) ⊆ T` is characterised levelwise (`mem_connTate_iff`;
+  points of `G_v⁰` are those killing `1 - e₀`, and `i_v^*(e₀) = e₀`), so `T/T⁰` is torsion free
+  (`mem_connTate_of_smul_mem`), hence free; `etCoordField G k = ℚ_p(x(a) : x ∈ G_w(ℚ̄_p),
+  a ∈ A_w^{et}, w ≤ k)` is `IsUnrStable` (`isUnrStable_etCoordField`, as in `EtaleHT`, since
+  `A_w^{et}` is finite étale); for `ν` fixing it `ν x − x ∈ T⁰ + p^k T` (`exists_galLin_sub`:
+  kernel of `G_k → G_k^{et}` is `G_k⁰`, `T_p(G⁰) ↠ G_k⁰(ℚ̄_p)`, `ker(T → G_k) = p^k T`), so
+  `exists_hilbert90` trivialises `V_p G / V_p(G⁰)` (`etRep`, `isHodgeTate_etRep`: Hodge–Tate of
+  weight `0`), and `0 → D_{-1}(V_p G⁰) → D_{-1}(V_p G) → D_{-1}(V_p G/V_p G⁰) = 0`.
+  `ZpD p` vs `ℤ_[p]`: everything is stated over `ZpD p`; `exists_frobenius_period_zpD` transports
+  the one `ℤ_[p]`-specific input (Frobenius periodicity) by definitional unfolding.
 
 ## Hand-off (2026-10-18, thirteenth session)
 
