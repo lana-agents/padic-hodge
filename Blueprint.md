@@ -831,6 +831,46 @@ in place of Kähler differentials (all rings of integers here are monogenic), ev
   (discriminants commute with base change), **`discIdeal_tensorProduct`**
   (`disc(A ⊗ B / R) = disc(A/R)^{rk B} disc(B/R)^{rk A}`, via `trace_tmul_tmul` and
   `Matrix.det_kronecker`; an ingredient of the multiplicativity [Haines, Lemmas 2.3.1–2.3.2]).
+* **done (18th session) [Hong, Prop. 3.5.1] over `O_{K'}`** (the discriminant formula, stated
+  in [Hong] without proof): **`PDivGroup.discIdeal_eq_of_iso_OL`**,
+  **`PDivGroup.exists_discIdeal_eq_OL`**: for `G` over `O_L` with `G⁰ ≅ F[p^∞]`, `dim F = d`,
+  `disc(A_v/O_L) = ((p^v)^{d p^{hv}})`; connected case `PDivFGL.discIdeal_eq_OL`.
+  **Deviation from Tate's proof** ([Tate, §(2.2) Prop. 2], [Haines, §2.3], [Lipnowski, App.]):
+  Tate's Lemma 1 (`disc(A/A') = N(Jacobian)`) rests on Tate's trace theorem for complete
+  intersections [Lipnowski, Claim 2'] = [Tate, Thm. A.3, appendix to Mazur–Roberts], not
+  available; instead (standard Hopf-algebra arguments, written up here):
+  - `GroupScheme/HopfTrace.lean`: `trace_pi_eq_sum` (traces on `K^X`, the missing product
+    lemma), `trace_eq_sum_algHom` (finite étale over separably closed `Ω`),
+    `algebraMap_trace_eq_sum` (`Tr_{A/R}(x) = ∑_{k ∈ G(Ω)} k(x)` for `R ↪ Ω`, `G_Ω` étale),
+    `eq_of_forall_points`, integrals `IsIntegral Λ` (`aΛ = ε(a)Λ`; `apply_integral`:
+    `Λ = ε(Λ)δ_1` pointwise) and **the trace formula `trL_mul_comul_integral`**:
+    `(Tr ⊗ id)((x ⊗ 1)Δ(Λ)) = ε(Λ) S(x)`; `antipode_antipode` (`S² = 1`);
+  - `GroupScheme/HopfDisc.lean`: **`discIdeal_eq_of_trace_eq_smul`**: if moreover
+    `Tr = c λ`, `c = ε(Λ) ≠ 0`, then `disc = (c^N)` (the trace form composed with the Fourier map
+    `φ ↦ (φ ⊗ id)Δ(Λ)` is `c S`, so `det(λ-form)` is a unit; the linear algebra of [Haines,
+    Lemma 2.3.3]); **`trace_eq_smul_of_dual_integral`**: an integral `λ` of the Cartier dual
+    with `c λ(1) = N` gives `Tr = c(λ ∘ S)` (`c λ(Sx) = λ(Λ) Tr(x)`);
+    `discIdeal_eq_of_integral_of_trace_mem`, `trace_eq_smul_of_integrals`;
+  - `FormalGroup/LayerIntegral.lean`: **Cramer's integral** `Λ = det(b_{ij})` of
+    `A_v = R[[T]]/[p^v]` (`[p^v]_i = ∑_j t_j b_{ij}`, `FGL.exists_eq_sum_X_mul`),
+    `isIntegral_layerDet`, `counit_layerDet : ε(Λ) = (p^v)^d` ([Hong, Lemma 2.2.14]);
+  - `GroupScheme/IntegralConn.lean`: integrals along surjective bialgebra maps, lifting from
+    `G⁰` by `e₀` (`exists_isIntegral_of_connectedComponent`), and **the connected–étale
+    reduction `trace_mem_of_connectedComponent`** (`Tr(A⁰) ⊆ I ⇒ Tr(A) ⊆ I`, via
+    `Tr_{A/R} = Tr_{A^{et}/R} ∘ Tr_{A/A^{et}}`, the Galois isomorphism and faithful flatness);
+  - `FormalGroup/DiscFormula.lean`: for `F[p^∞]` the dual integral comes from Cramer for the
+    connected part `F'[p^∞]` of the Cartier dual, and `h = d + d'`
+    (`exists_connPart_dual_iso_height_eq_OL`, from Tate's theorem `tate_dalphaGen`), so
+    `ε(Λ) λ(1) = (p^v)^h = |G_v|`.
+  No transitivity formula and no multiplicativity in general exact sequences are needed.
+* **done (18th session) [Hong, Lemma 3.5.2] over `O_{K'}`** (`FormalGroup/GenericIso.lean`):
+  **`PDivGroup.Hom.bijective_of_mapPoints_bijective_OL`**: `f : G → H` over `O_L` bijective on
+  `ℚ̄_p`-points at every level (e.g. an isomorphism on generic fibres) has all `α_v`
+  bijective. Inputs: `bijective_of_bijective_comp_algHom` (maps of finite étale algebras over a
+  separably closed field bijective on points are bijective), `bijective_baseChange_of_mapPoints`,
+  `Hom.mapTate_bijective`, `Hom.dim_eq_of_mapPoints_bijective_OL` (same `d` via `V_p(G_L) ≅
+  V_p(H_L)` and Cor. 3.4.11 over `L`), heights by counting points, Prop. 3.5.1,
+  `bijective_of_discIdeal_eq`.
 
 ## Hand-off (2026-10-18, seventeenth session)
 

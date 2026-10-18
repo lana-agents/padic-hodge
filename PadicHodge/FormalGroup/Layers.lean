@@ -33,9 +33,11 @@ namespace FGL
 
 variable {R : Type*} [CommRing R]
 
-/-- **A power series in `t_1, …, t_d` without constant term lies in `(t_1, …, t_d)`.** -/
-theorem mem_span_X {d : ℕ} {f : MvPowerSeries (Fin d) R} (hf : constantCoeff f = 0) :
-    f ∈ Ideal.span (Set.range (X : Fin d → MvPowerSeries (Fin d) R)) := by
+/-- **A power series without constant term is `∑_j t_j g_j`**, with `g_j(0)` the coefficient of
+`t_j` in `f`. -/
+theorem exists_eq_sum_X_mul {d : ℕ} {f : MvPowerSeries (Fin d) R} (hf : constantCoeff f = 0) :
+    ∃ g : Fin d → MvPowerSeries (Fin d) R, f = ∑ j, X j * g j ∧
+      ∀ j, constantCoeff (g j) = coeff (Finsupp.single j 1) f := by
   classical
   let g : Fin d → MvPowerSeries (Fin d) R := fun j m =>
     if ∀ k < j, m k = 0 then coeff (m + Finsupp.single j 1) f else 0
@@ -76,6 +78,13 @@ theorem mem_span_X {d : ℕ} {f : MvPowerSeries (Fin d) R} (hf : constantCoeff f
             omega
         · rw [if_neg hle]
       · intro h; exact absurd (Finset.mem_univ j0) h
+  refine ⟨g, key, fun j => ?_⟩
+  rw [← coeff_zero_eq_constantCoeff_apply, hg, if_pos (fun _ _ => Finsupp.zero_apply), zero_add]
+
+/-- **A power series in `t_1, …, t_d` without constant term lies in `(t_1, …, t_d)`.** -/
+theorem mem_span_X {d : ℕ} {f : MvPowerSeries (Fin d) R} (hf : constantCoeff f = 0) :
+    f ∈ Ideal.span (Set.range (X : Fin d → MvPowerSeries (Fin d) R)) := by
+  obtain ⟨g, key, -⟩ := exists_eq_sum_X_mul hf
   rw [key]
   exact Ideal.sum_mem _ fun j _ => Ideal.mul_mem_right _ _ (Ideal.subset_span ⟨j, rfl⟩)
 

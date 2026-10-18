@@ -32,6 +32,7 @@ import PadicHodge.FormalGroup.DAlphaHT
 import PadicHodge.FormalGroup.DAlphaHTOL
 import PadicHodge.FormalGroup.DAlphaInj
 import PadicHodge.FormalGroup.DerivStable
+import PadicHodge.FormalGroup.DiscFormula
 import PadicHodge.FormalGroup.Divisible
 import PadicHodge.FormalGroup.DualPDivFGL
 import PadicHodge.FormalGroup.DualTateGal
@@ -44,6 +45,7 @@ import PadicHodge.FormalGroup.Formal
 import PadicHodge.FormalGroup.FormalInv
 import PadicHodge.FormalGroup.FrobKernel
 import PadicHodge.FormalGroup.GaloisAction
+import PadicHodge.FormalGroup.GenericIso
 import PadicHodge.FormalGroup.Gm
 import PadicHodge.FormalGroup.GmHeight
 import PadicHodge.FormalGroup.GmHom
@@ -58,6 +60,7 @@ import PadicHodge.FormalGroup.InvariantsK
 import PadicHodge.FormalGroup.Law
 import PadicHodge.FormalGroup.LayerFree
 import PadicHodge.FormalGroup.LayerHopf
+import PadicHodge.FormalGroup.LayerIntegral
 import PadicHodge.FormalGroup.LayerLimit
 import PadicHodge.FormalGroup.LayerLimitBase
 import PadicHodge.FormalGroup.LayerPDiv
@@ -126,6 +129,9 @@ import PadicHodge.GroupScheme.EtaleUnramified
 import PadicHodge.GroupScheme.Faithful
 import PadicHodge.GroupScheme.FiniteFlat
 import PadicHodge.GroupScheme.Frobenius
+import PadicHodge.GroupScheme.HopfDisc
+import PadicHodge.GroupScheme.HopfTrace
+import PadicHodge.GroupScheme.IntegralConn
 import PadicHodge.GroupScheme.IntegralPoints
 import PadicHodge.GroupScheme.Mu
 import PadicHodge.GroupScheme.PDivisible
