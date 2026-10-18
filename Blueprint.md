@@ -633,7 +633,13 @@ in place of Kähler differentials (all rings of integers here are monogenic), ev
   per-`σ` Galois action (`CoeffFixed`, `GalFixedOver p R L`, `galFixedOver_of_mem`); **injectivity
   of `α` on `G(O_L)` and of `dα` on `t_G(L)` using only `Gal(ℚ̄_p/L)`**
   (`eq_zero_of_alpha_eq_one_K`, `dalpha_injective_K`; [Hong, Prop. 3.4.9] with `K = L`).
-  Missing: a concrete `O_{K'}` coefficient ring discharging `GalFixedOver`, `hR`, `hC`.
+  The concrete `O_{K'}` is `OK.lean` below.
+* **done** `FormalGroup/OK.lean`: **the concrete coefficient ring `O_L = L ∩ O_{ℂ_p}`** (`OL L`,
+  discrete uniformity, as `ZpD`): local, uniformiser (`OL.exists_uniformizer`,
+  `OL.maximalIdeal_eq`), `𝔪`-adically complete, `O_C` complete for `𝔪_L O_C`, `GalFixedOver`;
+  for `P : PDivFGL (OL L) d p`: `alphaK` (both squares, Galois equivariance for `σ` fixing `L`),
+  **`eq_zero_of_alphaK_eq_one`**, **`dalpha_injective_OL`** ([Hong, Prop. 3.4.9] over `O_{K'}`).
+  Missing: Tate-module / Hodge–Tate wiring (`tateRep`, `dualPDiv`, `tatePairingZp`) over `K'`.
 
 ## Hand-off (2026-10-18, eleventh session)
 
