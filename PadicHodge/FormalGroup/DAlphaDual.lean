@@ -279,7 +279,7 @@ def dalphaDual : (Fin d' → L) →ₗ[L] DHT (P.genericFibre.tateRep L).dual 0 
 theorem dalphaDual_injective (hφψ : φ.comp ψ = PDivGroup.Hom.id _) :
     Function.Injective (P.dalphaDual P' ψ ⊥) :=
   (P.dualTwistDHT_injective ⊥).comp
-    ((P.dualConnDHT_injective P' φ ψ ⊥ hφψ).comp P'.dalphaKTwist_injective)
+    ((P.dualConnDHT_injective P' φ ψ ⊥ hφψ).comp (P'.dalphaKTwist_injective ⊥))
 
 end PDivFGL
 
@@ -313,7 +313,7 @@ theorem tate_dalpha :
     rw [finrank_tateRep]
     exact hle
   obtain ⟨b1, b2, e1, e2⟩ := bijective_of_finrank_le_add_fin (P.genericFibre.tateRep ⊥)
-    (P.dalphaKTwist ⊥) (P.dalphaDual P' ψ ⊥) P.dalphaKTwist_injective
+    (P.dalphaKTwist ⊥) (P.dalphaDual P' ψ ⊥) (P.dalphaKTwist_injective ⊥)
     (P.dalphaDual_injective P' φ ψ hφψ) hV
   refine ⟨d', P', ψ, b1, b2, e1, e2, le_antisymm hle ?_⟩
   have := finrank_DHT_add_finrank_DHT_dual_le (P.genericFibre.tateRep ⊥)
@@ -325,7 +325,7 @@ theorem tate_dalpha :
 `dα_K : t_G(ℚ_p) = ℚ_p^d → Hom_{ℤ_p[Γ]}(T_p(G^∨), ℂ_p) = D_0(V_p(G^∨)^∨)` is bijective. -/
 theorem dalphaK_bijective : Function.Bijective (P.dalphaK ⊥) := by
   obtain ⟨d', P', ψ, b1, -⟩ := P.tate_dalpha
-  refine ⟨P.dalphaK_injective, fun y => ?_⟩
+  refine ⟨P.dalphaK_injective ⊥, fun y => ?_⟩
   obtain ⟨z, hz⟩ := b1.2 (P.genericFibre.DHTdualTateEquivMap ⊥ y)
   exact ⟨z, P.genericFibre.DHTdualTateEquivMap_injective ⊥ hz⟩
 

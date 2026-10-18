@@ -170,6 +170,13 @@ def galDualGen (σ : PadicAlgCl p ≃ₐ[ℚ_[p]] PadicAlgCl p)
   map_one' := by ext1; funext v; exact map_one _
   map_mul' x y := by ext1; funext v; exact map_mul _ _ _
 
+theorem galDualGen_congr {σ₁ σ₂ : PadicAlgCl p ≃ₐ[ℚ_[p]] PadicAlgCl p} (h : σ₁ = σ₂)
+    (h₁ : ∀ r : R, autCp σ₁ ((algebraMap R (OC p) r : OC p) : ℂ_[p]) = algebraMap R (OC p) r)
+    (h₂ : ∀ r : R, autCp σ₂ ((algebraMap R (OC p) r : OC p) : ℂ_[p]) = algebraMap R (OC p) r)
+    (y : G.DualTate (OCd p)) : G.galDualGen σ₁ h₁ y = G.galDualGen σ₂ h₂ y := by
+  subst h
+  rfl
+
 theorem galDualGen_apply (σ : PadicAlgCl p ≃ₐ[ℚ_[p]] PadicAlgCl p)
     (hR : ∀ r : R, autCp σ ((algebraMap R (OC p) r : OC p) : ℂ_[p]) = algebraMap R (OC p) r)
     (y : G.DualTate (OCd p)) (v : ℕ) (f : Cartier.Dual R (G.G v).A) :
