@@ -88,23 +88,40 @@ theorem FFGroupScheme.one_sub_idemConn_mem_frobKerIdeal {R : Type u} [CommRing R
 
 /-! ### The Frobenius of a `k`-algebra -/
 
+/-- **Frobenius exponents**: `q` is a positive power `ℓ^{n+1}` of the characteristic `ℓ` of the
+field `k` (e.g. `q = p` for `k` of characteristic `p`, or `q = |k|` for `k` finite). Then
+`x ↦ x^q` is additive on every commutative `k`-algebra (`add_pow_of_algebra`), and it is
+`k`-linear when `c^q = c` on `k`. -/
+class FrobExp (k : Type*) [Field k] (q : ℕ) : Prop where
+  exists_pow : ∃ ℓ n : ℕ, ℓ.Prime ∧ CharP k ℓ ∧ q = ℓ ^ (n + 1)
+
+instance FrobExp.of_charP {k : Type*} [Field k] {p : ℕ} [hp : Fact p.Prime] [CharP k p] :
+    FrobExp k p :=
+  ⟨⟨p, 0, hp.out, inferInstance, (pow_one p).symm⟩⟩
+
+theorem FrobExp.ne_zero (k : Type*) [Field k] (q : ℕ) [hq : FrobExp k q] : q ≠ 0 := by
+  obtain ⟨ℓ, n, hℓ, -, rfl⟩ := hq.exists_pow
+  exact pow_ne_zero _ hℓ.ne_zero
+
 section Frobenius
 
-variable {p : ℕ} [hp : Fact p.Prime] {k : Type u} [Field k] [CharP k p]
+variable {p : ℕ} {k : Type u} [Field k] [hq : FrobExp k p]
 
 variable (k) in
 theorem add_pow_of_algebra {S : Type*} [CommRing S] [Algebra k S] (x y : S) :
     (x + y) ^ p = x ^ p + y ^ p := by
+  obtain ⟨ℓ, n, hℓ, hc, rfl⟩ := hq.exists_pow
+  haveI := Fact.mk hℓ
   rcases subsingleton_or_nontrivial S with hS | hS
   · exact Subsingleton.elim _ _
-  · haveI := charP_of_injective_algebraMap (algebraMap k S).injective p
-    exact add_pow_char ..
+  · haveI := charP_of_injective_algebraMap (algebraMap k S).injective ℓ
+    exact add_pow_char_pow ..
 
 variable (k) in
 /-- The additive map `x ↦ x^p` of a commutative `k`-algebra (characteristic `p`). -/
 def powAdd (S : Type*) [CommRing S] [Algebra k S] : S →+ S where
   toFun x := x ^ p
-  map_zero' := zero_pow hp.out.ne_zero
+  map_zero' := zero_pow (FrobExp.ne_zero k p)
   map_add' := add_pow_of_algebra k
 
 /-- The `p`-power map `x ↦ x^p` of a commutative `k`-algebra, a `k`-algebra map when `c^p = c`
@@ -113,7 +130,7 @@ def frobAlg (hk : ∀ x : k, x ^ p = x) (S : Type*) [CommRing S] [Algebra k S] :
   toFun x := x ^ p
   map_one' := one_pow p
   map_mul' x y := mul_pow x y p
-  map_zero' := zero_pow hp.out.ne_zero
+  map_zero' := zero_pow (FrobExp.ne_zero k p)
   map_add' := add_pow_of_algebra k
   commutes' c := by
     rw [← map_pow, hk]
@@ -127,7 +144,7 @@ theorem pow_eq_map_frobAlg (hk : ∀ x : k, x ^ p = x) {A B : Type*} [CommRing A
     [CommRing B] [Algebra k B] (x : A ⊗[k] B) :
     x ^ p = Algebra.TensorProduct.map (frobAlg hk A) (frobAlg hk B) x := by
   induction x with
-  | zero => rw [map_zero]; exact zero_pow hp.out.ne_zero
+  | zero => rw [map_zero]; exact zero_pow (FrobExp.ne_zero k p)
   | tmul a b => rw [Algebra.TensorProduct.tmul_pow, Algebra.TensorProduct.map_tmul]; rfl
   | add x y hx hy => rw [add_pow_of_algebra k, hx, hy, map_add]
 
@@ -261,7 +278,7 @@ theorem hat_pow {R : Type u} [CommRing R] (G : FFGroupScheme R) (S : Type*) [Com
   | zero => rw [pow_zero, pow_zero, hat_one]
   | succ n ih => rw [pow_succ, pow_succ, hat_mul, ih]
 
-variable {p : ℕ} [hp : Fact p.Prime] {k : Type u} [Field k] [CharP k p]
+variable {p : ℕ} {k : Type u} [Field k] [FrobExp k p]
 
 /-- The relative Frobenius `φ_G : G → G^{(p)} = G` ([Hong, Def. 1.5.1, Lemma 1.5.2,
 Cor. 1.5.4]). -/
@@ -383,7 +400,7 @@ theorem order_le_frobKer_mul_finrank_range (hk : ∀ x : k, x ^ p = x) (G : FFGr
     change Bialgebra.counitAlgHom k G.A (a ^ p) = 0
     rw [map_pow]
     change counit (R := k) a ^ p = 0
-    rw [ha, zero_pow hp.out.ne_zero]
+    rw [ha, zero_pow (FrobExp.ne_zero k p)]
   have hR : finrank k R₀ = finrank k (LinearMap.range (frobAlg hk G.A).toLinearMap) := by
     have : Subalgebra.toSubmodule R₀ = LinearMap.range (frobAlg hk G.A).toLinearMap :=
       Submodule.ext fun _ => Iff.rfl
@@ -405,7 +422,7 @@ theorem order_le_frobKer_mul (hk : ∀ x : k, x ^ p = x) (G : FFGroupScheme k)
 
 section Perfect
 
-variable [PerfectRing k p]
+variable [hp : Fact p.Prime] [CharP k p] [PerfectRing k p]
 
 /-- The `k`-linear map `σ⁻¹ ∘ f ∘ Frob` on `A^∨` (`k` perfect, `σ` the Frobenius of `k`); for
 `c^p = c` on `k` this is `frobT`. -/
@@ -436,7 +453,7 @@ theorem perfT_mul (A : Type u) [CommRing A] [HopfAlgebra k A] (f g : Cartier.Dua
   rw [LinearMap.convMul_apply, LinearMap.convMul_apply, hc]
   generalize comul (R := k) a = x
   induction x using TensorProduct.induction_on with
-  | zero => simp [zero_pow hp.out.ne_zero]
+  | zero => simp [zero_pow (FrobExp.ne_zero k p)]
   | tmul x y =>
     rw [Algebra.TensorProduct.tmul_pow, TensorProduct.map_tmul, TensorProduct.map_tmul,
       LinearMap.mul'_apply, LinearMap.mul'_apply, map_mul]

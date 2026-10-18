@@ -560,7 +560,7 @@ end Order
 
 end PDivGroup
 
-/-! ### Serre–Tate: `G⁰ ≅ F[p^∞]` over `ℤ_p` -/
+/-! ### Serre–Tate: `G⁰ ≅ F[p^∞]` over `ℤ_p` and over coefficient rings -/
 
 section SerreTate
 
@@ -579,6 +579,16 @@ theorem PDivGroup.exists_connPart_iso (G : PDivGroup (ZpD p) p) :
       (ψ : PDivGroup.Hom P.pdivGroup G.connPart),
       φ.comp ψ = PDivGroup.Hom.id _ ∧ ψ.comp φ = PDivGroup.Hom.id _ :=
   PDivGroup.exists_pdivFGL_iso G.connPart G.isConnected_connPart
+
+/-- **`G⁰ ≅ F[p^∞]` over a coefficient ring** `R` with `p ∈ 𝔪_R` (e.g. `O_{K'}`, `OL L`;
+[Hong, Prop. 2.1.10, Thm. 2.2.16, Def. 2.2.17]). -/
+theorem PDivGroup.exists_connPart_iso_of_coeffRing {R : Type} [CommRing R] [IsLocalRing R]
+    [IsAdicComplete (maximalIdeal R) R] [IsDomain R] [IsPrincipalIdealRing R]
+    [SerreTate.CoeffRing R] (hpm : (p : R) ∈ maximalIdeal R) (G : PDivGroup R p) :
+    ∃ (d : ℕ) (P : PDivFGL R d p) (φ : PDivGroup.Hom G.connPart P.pdivGroup)
+      (ψ : PDivGroup.Hom P.pdivGroup G.connPart),
+      φ.comp ψ = PDivGroup.Hom.id _ ∧ ψ.comp φ = PDivGroup.Hom.id _ :=
+  PDivGroup.exists_pdivFGL_iso_of_coeffRing hpm G.connPart G.isConnected_connPart
 
 end SerreTate
 

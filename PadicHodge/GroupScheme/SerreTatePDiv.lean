@@ -9,20 +9,21 @@ import PadicHodge.GroupScheme.SpecialFibre
 /-!
 # Serre–Tate, essential surjectivity: `p`-divisibility and `F[p^∞] ≅ H`
 
-Let `H` be a connected `p`-divisible group over `ℤ_p` with coordinates `C : Coords H d`
+Let `H` be a connected `p`-divisible group over a coefficient ring `R` (`SerreTate.CoeffRing`,
+e.g. `ℤ_p`, `O_{K'}`) with coordinates `C : Coords H d`
 (`GroupScheme/SerreTateFGL.lean`), `F = C.fgl` the formal group law of `H` and
-`f_v : ℤ_p[[T]] ↠ A_v`, `T ↦ y_v`. Following [Hong, Thm. 2.2.16, proof, last paragraph]:
+`f_v : R[[T]] ↠ A_v`, `T ↦ y_v`. Following [Hong, Thm. 2.2.16, proof, last paragraph]:
 
 * `Coords.ev_mulPS`: `f_v([n]_F(T)) = y^{*n}` (convolution power of the universal point), so
   `f_v` kills `[p^v]_F(T)` (`G_v` is killed by `p^v`), and `f_{v+1} ∘ [p]_F^* = quot_v^* ∘ f_v`
   (`Coords.ev_pSubst`, from `i_v ∘ quot_v = [p]`);
 * `PDivGroup.ker_toOne_le`: `ker(A_{v+1} ↠ A_1) ⊆ quot_v^*(I_v) A_{v+1}` (Yoneda: the kernel of
   `quot_v` is killed by `p`, hence lies in `G_1`);
-* `Coords.ThetaL_bijective`: if `b_j ∈ ℤ_p[[T]]` lift an `ℤ_p`-basis of `A_1`, then
+* `Coords.ThetaL_bijective`: if `b_j ∈ R[[T]]` lift an `R`-basis of `A_1`, then
   `A_v^{p^h} → A_{v+1}`, `c ↦ ∑ quot_v^*(c_j) f_{v+1}(b_j)`, is bijective (Nakayama over the local
   ring `A_v`, then ranks: `|G_{v+1}| = p^h |G_v|`);
-* **`Coords.isPDivisible`**: `ℤ_p[[T]]` is free of rank `p^h` over itself via `[p]_F^*` with basis
-  `(b_j)` (pass to the limit with `ℤ_p[[T]] ≅ lim_v A_v`) — "it is then straightforward to check
+* **`Coords.isPDivisible`**: `R[[T]]` is free of rank `p^h` over itself via `[p]_F^*` with basis
+  `(b_j)` (pass to the limit with `R[[T]] ≅ lim_v A_v`) — "it is then straightforward to check
   that `[p]_μ` is finite flat" in [Hong];
 * **`Coords.pdivHom`**: the bialgebra maps `R[[T]]/[p^v]_F(I) → A_v` induced by `f_v` form a
   homomorphism `H → F[p^∞]`, bijective at every level (surjective between free modules of the
@@ -115,15 +116,16 @@ theorem hom_ext {R : Type*} [CommRing R] {p : ℕ} {G H : PDivGroup R p}
     {φ ψ : PDivGroup.Hom G H} (h : φ.f = ψ.f) : φ = ψ := by
   cases φ; cases ψ; cases h; rfl
 
-variable {p : ℕ} [hp : Fact p.Prime]
+variable {R : Type} [CommRing R] [IsLocalRing R] [IsAdicComplete (maximalIdeal R) R]
+  [CoeffRing R] {p : ℕ}
 
-local notation "𝔪p" => maximalIdeal (ZpD p)
+local notation "𝔪p" => maximalIdeal R
 
 attribute [local instance] PDivFGL.isAdicComplete_free
 
 namespace Coords
 
-variable {H : PDivGroup (ZpD p) p} {d : ℕ} (C : Coords H d)
+variable {H : PDivGroup R p} {d : ℕ} (C : Coords H d)
 
 /-! ### Multiplication by `n` -/
 
@@ -173,51 +175,56 @@ theorem incl_quotAlg_comm (v : ℕ) (a : (H.G (v + 1)).A) :
 
 /-! ### A basis of `A_{v+1}` over `A_v` -/
 
-/-- An `ℤ_p`-basis of `A_1`. -/
-def basis1 (H : PDivGroup (ZpD p) p) : Module.Basis (Fin (p ^ H.height)) (ZpD p) (H.G 1).A :=
+/-- An `R`-basis of `A_1`. -/
+def basis1 (H : PDivGroup R p) : Module.Basis (Fin (p ^ H.height)) R (H.G 1).A :=
   Module.finBasisOfFinrankEq _ _ (by have := H.order_eq 1; rwa [mul_one] at this)
 
-/-- Lifts `b_j ∈ ℤ_p[[T]]` of the basis of `A_1`. -/
-def bL (j : Fin (p ^ H.height)) : MvPowerSeries (Fin d) (ZpD p) :=
+/-- Lifts `b_j ∈ R[[T]]` of the basis of `A_1`. -/
+def bL (j : Fin (p ^ H.height)) : MvPowerSeries (Fin d) R :=
   (C.ev_surjective 1 (basis1 H j)).choose
 
+omit [CoeffRing R] in
 theorem ev_bL (j : Fin (p ^ H.height)) : C.ev 1 (C.bL j) = basis1 H j :=
   (C.ev_surjective 1 (basis1 H j)).choose_spec
 
-theorem toOne_ev (v : ℕ) (g : MvPowerSeries (Fin d) (ZpD p)) :
+omit [CoeffRing R] in
+theorem toOne_ev (v : ℕ) (g : MvPowerSeries (Fin d) R) :
     H.toOne v (C.ev (v + 1) g) = C.ev 1 g := by
   induction v with
   | zero => rfl
   | succ v ih => rw [PDivGroup.toOne_succ_apply, C.incl_ev, ih]
 
 /-- `Θ_v : A_v^{p^h} → A_{v+1}`, `c ↦ ∑ quot_v^*(c_j) f_{v+1}(b_j)`. -/
-def ThetaL (v : ℕ) : (Fin (p ^ H.height) → (H.G v).A) →ₗ[ZpD p] (H.G (v + 1)).A where
+def ThetaL (v : ℕ) : (Fin (p ^ H.height) → (H.G v).A) →ₗ[R] (H.G (v + 1)).A where
   toFun c := ∑ j, H.quotAlg v (c j) * C.ev (v + 1) (C.bL j)
   map_add' c c' := by simp only [Pi.add_apply, map_add, add_mul, Finset.sum_add_distrib]
   map_smul' r c := by
     simp only [Pi.smul_apply, map_smul, smul_mul_assoc, Finset.smul_sum, RingHom.id_apply]
 
+omit [CoeffRing R] in
 theorem ThetaL_apply (v : ℕ) (c : Fin (p ^ H.height) → (H.G v).A) :
     C.ThetaL v c = ∑ j, H.quotAlg v (c j) * C.ev (v + 1) (C.bL j) := rfl
 
+omit [IsAdicComplete 𝔪p R] [CoeffRing R] in
 theorem counitKer_le_maximalIdeal (v : ℕ) [IsLocalRing (H.G v).A] :
-    counitKer (ZpD p) (H.G v).A ≤ maximalIdeal (H.G v).A := by
+    counitKer R (H.G v).A ≤ maximalIdeal (H.G v).A := by
   intro c hc
   rw [IsLocalRing.mem_maximalIdeal, mem_nonunits_iff]
   intro hu
-  have := hu.map (Bialgebra.counitAlgHom (ZpD p) (H.G v).A)
+  have := hu.map (Bialgebra.counitAlgHom R (H.G v).A)
   rw [RingHom.mem_ker.mp hc] at this
   exact not_isUnit_zero this
 
+omit [CoeffRing R] in
 /-- **`Θ_v` is surjective** (Nakayama over the local ring `A_v`). -/
 theorem ThetaL_surjective (v : ℕ) (hconn : (H.G v).IsConnected) :
     Function.Surjective (C.ThetaL v) := by
   haveI : IsLocalRing (H.G v).A := hconn
   letI : Algebra (H.G v).A (H.G (v + 1)).A := (H.quotAlg v).toRingHom.toAlgebra
-  haveI : IsScalarTower (ZpD p) (H.G v).A (H.G (v + 1)).A :=
+  haveI : IsScalarTower R (H.G v).A (H.G (v + 1)).A :=
     IsScalarTower.of_algebraMap_eq fun r => ((H.quotAlg v).commutes r).symm
   haveI : Module.Finite (H.G v).A (H.G (v + 1)).A :=
-    Module.Finite.of_restrictScalars_finite (ZpD p) _ _
+    Module.Finite.of_restrictScalars_finite R _ _
   set bb : Fin (p ^ H.height) → (H.G (v + 1)).A := fun j => C.ev (v + 1) (C.bL j)
   have key : (⊤ : Submodule (H.G v).A (H.G (v + 1)).A) ≤
       Submodule.span (H.G v).A (Set.range bb) ⊔ maximalIdeal (H.G v).A • ⊤ := by
@@ -227,13 +234,13 @@ theorem ThetaL_surjective (v : ℕ) (hconn : (H.G v).IsConnected) :
     have hw : H.toOne v w = H.toOne v a := by
       simp only [w, bb, map_sum, map_smul, C.toOne_ev, ev_bL]
       exact (basis1 H).sum_repr _
-    have hmem : a - w ∈ Ideal.map (H.quotAlg v) (counitKer (ZpD p) (H.G v).A) :=
+    have hmem : a - w ∈ Ideal.map (H.quotAlg v) (counitKer R (H.G v).A) :=
       H.ker_toOne_le v (by rw [RingHom.mem_ker, map_sub, hw, sub_self])
     have h1 : w ∈ Submodule.span (H.G v).A (Set.range bb) := by
       refine Submodule.sum_mem _ fun j _ => ?_
       rw [← algebraMap_smul (H.G v).A (r j) (bb j)]
       exact Submodule.smul_mem _ _ (Submodule.subset_span ⟨j, rfl⟩)
-    have hle : Ideal.map (H.quotAlg v) (counitKer (ZpD p) (H.G v).A) ≤
+    have hle : Ideal.map (H.quotAlg v) (counitKer R (H.G v).A) ≤
         Ideal.map (algebraMap (H.G v).A (H.G (v + 1)).A) (maximalIdeal (H.G v).A) :=
       Ideal.map_le_iff_le_comap.mpr fun c hc => Ideal.mem_comap.mpr
         (Ideal.mem_map_of_mem (algebraMap (H.G v).A (H.G (v + 1)).A)
@@ -252,18 +259,19 @@ theorem ThetaL_surjective (v : ℕ) (hconn : (H.G v).IsConnected) :
   rw [ThetaL_apply, ← hc]
   rfl
 
+omit [CoeffRing R] in
 theorem ThetaL_bijective (v : ℕ) (hconn : (H.G v).IsConnected) :
     Function.Bijective (C.ThetaL v) := by
   refine bijective_of_surjective_of_finrank_eq _ (C.ThetaL_surjective v hconn) ?_
-  have e1 : finrank (ZpD p) (H.G v).A = p ^ (H.height * v) := H.order_eq v
-  have e2 : finrank (ZpD p) (H.G (v + 1)).A = p ^ (H.height * (v + 1)) := H.order_eq (v + 1)
-  rw [Module.finrank_pi_fintype (ZpD p), Finset.sum_const, Finset.card_univ, Fintype.card_fin,
+  have e1 : finrank R (H.G v).A = p ^ (H.height * v) := H.order_eq v
+  have e2 : finrank R (H.G (v + 1)).A = p ^ (H.height * (v + 1)) := H.order_eq (v + 1)
+  rw [Module.finrank_pi_fintype R, Finset.sum_const, Finset.card_univ, Fintype.card_fin,
     smul_eq_mul, e1, e2]
   ring
 
 /-! ### `p`-divisibility -/
 
-theorem ev_sum_pSubst (v : ℕ) (c : Fin (p ^ H.height) → MvPowerSeries (Fin d) (ZpD p)) :
+theorem ev_sum_pSubst (v : ℕ) (c : Fin (p ^ H.height) → MvPowerSeries (Fin d) R) :
     C.ev (v + 1) (∑ i, (C.fgl.pSubst p).toRingHom (c i) * C.bL i) =
       C.ThetaL v (fun i => C.ev v (c i)) := by
   simp only [map_sum, map_mul, ThetaL_apply]
@@ -271,7 +279,7 @@ theorem ev_sum_pSubst (v : ℕ) (c : Fin (p ^ H.height) → MvPowerSeries (Fin d
   congr 1
   exact congrArg (fun φ => φ (c i)) (C.ev_pSubst v)
 
-/-- **`F` is `p`-divisible of height `h`**: `ℤ_p[[T]]` is free over itself via `[p]_F^*` with
+/-- **`F` is `p`-divisible of height `h`**: `R[[T]]` is free over itself via `[p]_F^*` with
 basis `(b_j)`. -/
 theorem isPDivisible (hconn : ∀ v, (H.G v).IsConnected) : C.fgl.IsPDivisible p H.height := by
   refine ⟨C.bL, ?_, ?_⟩
@@ -308,27 +316,29 @@ theorem isPDivisible (hconn : ∀ v, (H.G v).IsConnected) : C.fgl.IsPDivisible p
     exact hg i w
 
 /-- **The `p`-divisible formal group law of `H`.** -/
-def pdivFGL (hconn : ∀ v, (H.G v).IsConnected) : PDivFGL (ZpD p) d p :=
+def pdivFGL (hconn : ∀ v, (H.G v).IsConnected) : PDivFGL R d p :=
   ⟨C.fgl, H.height, C.isPDivisible hconn⟩
 
 /-! ### `F[p^∞] ≅ H` -/
 
-variable (hconn : ∀ v, (H.G v).IsConnected)
+variable [hp : Fact p.Prime] (hconn : ∀ v, (H.G v).IsConnected)
 
 /-- `R[[T]]/[p^v]_F(I) → A_v`, `t ↦ y_v`. -/
-def layerMap (v : ℕ) : (C.pdivFGL hconn).A v →ₐ[ZpD p] (H.G v).A :=
+def layerMap (v : ℕ) : (C.pdivFGL hconn).A v →ₐ[R] (H.G v).A :=
   (C.pdivFGL hconn).liftL v (C.ev v) (C.ev_mulPS_pow v)
 
-theorem layerMap_mk (v : ℕ) (g : MvPowerSeries (Fin d) (ZpD p)) :
+omit hp in
+theorem layerMap_mk (v : ℕ) (g : MvPowerSeries (Fin d) R) :
     C.layerMap hconn v (Ideal.Quotient.mk _ g) = C.ev v g :=
   PDivFGL.liftL_mk _ _ _ _ _
 
+omit hp in
 theorem layerMap_t (v : ℕ) (j : Fin d) :
     C.layerMap hconn v ((C.pdivFGL hconn).t v j) = C.y v j := by
   rw [layerMap, PDivFGL.liftL_t, ev_X]
 
 theorem counit_layerMap (v : ℕ) :
-    (Bialgebra.counitAlgHom (ZpD p) (H.G v).A).comp (C.layerMap hconn v) =
+    (Bialgebra.counitAlgHom R (H.G v).A).comp (C.layerMap hconn v) =
       (C.pdivFGL hconn).counit v :=
   (C.pdivFGL hconn).algHom_ext_A v fun j => by
     rw [AlgHom.comp_apply, layerMap_t, PDivFGL.counit_t, Bialgebra.counitAlgHom_apply,
@@ -337,7 +347,7 @@ theorem counit_layerMap (v : ℕ) :
 theorem comul_layerMap (v : ℕ) :
     (Algebra.TensorProduct.map (C.layerMap hconn v) (C.layerMap hconn v)).comp
       ((C.pdivFGL hconn).comul v) =
-      (Bialgebra.comulAlgHom (ZpD p) (H.G v).A).comp (C.layerMap hconn v) := by
+      (Bialgebra.comulAlgHom R (H.G v).A).comp (C.layerMap hconn v) := by
   refine (C.pdivFGL hconn).algHom_ext_A v fun j => ?_
   rw [AlgHom.comp_apply, AlgHom.comp_apply, PDivFGL.comul_t, layerMap_t, ← C.Φ_spec j v,
     ev2_eq_evF, PDivFGL.wΔ,
@@ -356,7 +366,7 @@ theorem toHom_apply (v : ℕ) (a : (C.pdivFGL hconn).A v) :
     C.toHom hconn v a = C.layerMap hconn v a := rfl
 
 theorem layerMap_incl (v : ℕ) :
-    (H.incl v : (H.G (v + 1)).A →ₐ[ZpD p] (H.G v).A).comp (C.layerMap hconn (v + 1)) =
+    (H.incl v : (H.G (v + 1)).A →ₐ[R] (H.G v).A).comp (C.layerMap hconn (v + 1)) =
       (C.layerMap hconn v).comp ((C.pdivFGL hconn).F.layerIncl p v) :=
   (C.pdivFGL hconn).algHom_ext_A (v + 1) fun j => by
     rw [AlgHom.comp_apply, AlgHom.comp_apply, layerMap_t, PDivFGL.layerIncl_t, layerMap_t]
@@ -377,7 +387,7 @@ theorem pdivHom_bijective (v : ℕ) : Function.Bijective ((C.pdivHom hconn).f v)
 /-- The levelwise isomorphisms `A_v ≅ R[[T]]/[p^v]_F(I)` of bialgebras. -/
 def levelEquiv (v : ℕ) :
     letI := (C.pdivFGL hconn).hopfAlgebra v
-    (C.pdivFGL hconn).A v ≃ₐc[ZpD p] (H.G v).A :=
+    (C.pdivFGL hconn).A v ≃ₐc[R] (H.G v).A :=
   letI := (C.pdivFGL hconn).hopfAlgebra v
   BialgEquiv.ofBijective ((C.pdivHom hconn).f v) (C.pdivHom_bijective hconn v)
 
@@ -409,10 +419,10 @@ theorem pdivHomInv_comp_pdivHom :
     exact BialgHom.ext fun a => (C.levelEquiv hconn v).apply_symm_apply a)
 
 /-- **Essential surjectivity of `F ↦ F[p^∞]`, given coordinates** ([Hong, Thm. 2.2.16]): a
-connected `p`-divisible group over `ℤ_p` with coordinates is isomorphic to `F[p^∞]` for a
+connected `p`-divisible group over `R` with coordinates is isomorphic to `F[p^∞]` for a
 `p`-divisible formal group law `F`. -/
 theorem exists_iso (C : Coords H d) (hconn : ∀ v, (H.G v).IsConnected) :
-    ∃ (P : PDivFGL (ZpD p) d p) (φ : PDivGroup.Hom H P.pdivGroup)
+    ∃ (P : PDivFGL R d p) (φ : PDivGroup.Hom H P.pdivGroup)
       (ψ : PDivGroup.Hom P.pdivGroup H),
       φ.comp ψ = PDivGroup.Hom.id _ ∧ ψ.comp φ = PDivGroup.Hom.id _ :=
   ⟨C.pdivFGL hconn, C.pdivHom hconn, C.pdivHomInv hconn, C.pdivHom_comp_pdivHomInv hconn,

@@ -669,6 +669,25 @@ in place of Kähler differentials (all rings of integers here are monogenic), ev
   (`Coords.fgl`), `p`-divisibility by levelwise bijectivity `A_v^{p^h} → A_{v+1}`
   (`Coords.isPDivisible`), levelwise bialgebra isomorphisms (`levelEquiv`). With
   `FGL.Hom.pdivEquiv` this is the Serre–Tate equivalence over `ℤ_p`.
+* **done (15th session) coefficient-ring refactor**: the lifting files are stated over a
+  **coefficient ring** `R` (`SerreTate.CoeffRing`, `SerreTateCompact.lean`: uniformiser `π ≠ 0`
+  with `𝔪 = (π)`, compact companion topology `Cpt R` in which the cosets of `𝔪^w` are open; plus
+  the instances `IsDomain R`, `IsAdicComplete 𝔪 R`); `finite_residueField` (compactness),
+  `isDiscreteValuationRing`. Instances: `ZpD p` (`p`-adic topology) and `OL L`
+  (`OL.instCoeffRing`, subspace topology of `O_{ℂ_p}`; `OL.instIsDomain`,
+  `OL.instIsPrincipalIdealRing`). **`PDivGroup.exists_pdivFGL_iso_of_coeffRing`** (`p ∈ 𝔪_R`;
+  special fibre over the finite, hence perfect, residue field) and
+  **`PDivGroup.exists_connPart_iso_of_coeffRing`**; the `ℤ_p` statements
+  (`exists_pdivFGL_iso`, `exists_connPart_iso`, `isConnected_baseChange`, …) are
+  specialisations with unchanged names. `GroupScheme/SerreTateOL.lean`:
+  **`PDivGroup.exists_pdivFGL_iso_OL`**, **`PDivGroup.exists_connPart_iso_OL`** (Serre–Tate over
+  `O_{K'}`), **`PDivFGL.exists_connPart_dual_iso_height_le_OL`** (`h ≤ d + d'` over `O_{K'}`).
+* **done (15th session) `h ≤ d + d'` over a coefficient ring** (`HeightIneq.lean`,
+  `PDivFGL.height_le_add_of_connPart_iso_of_coeffRing`): `Frobenius.lean` is stated for a
+  **Frobenius exponent** `q` (`FrobExp k q`: `q = ℓ^{n+1}`, `ℓ = char k`; instance for `q = p`),
+  so `frobAlg`, `frobT`, `order_le_frobKer_mul` hold for the `q`-power Frobenius when `c^q = c`
+  on `k`; over the residue field `𝔽_q` of `R` it is applied to `X = F[q] ⊗ 𝔽_q` (killed by `q`,
+  order `q^h`): `q^h ≤ q^d q^{d'}`.
 * **done** `GroupScheme/DualPDivFree.lean`, `FormalGroup/DualPDivFGL.lean`: **the Cartier dual
   `p`-divisible group over the base** ([Hong, Prop. 2.1.7 (2), Def. 2.1.8]) for `G = F[p^∞]`
   over a complete local `R` (e.g. `ℤ_p`): `PDivFGL.dualPDiv` (layers `G_v^∨`, transitions

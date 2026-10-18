@@ -10,7 +10,7 @@ import PadicHodge.GroupScheme.ConnectedPDiv
 import PadicHodge.GroupScheme.DualBaseChange
 
 /-!
-# `h ≤ d + d^∨` for `F[p^∞]` over `ℤ_p`
+# `h ≤ d + d^∨` for `F[p^∞]` over `ℤ_p` and over `O_{K'}`
 
 Let `P` be a `p`-divisible formal group law of dimension `d` and height `h` over `ℤ_p`,
 `G = F[p^∞]` (`PDivFGL.pdivGroup`) and `G^∨` its Cartier dual (`PDivFGL.dualPDiv`). By
@@ -35,6 +35,14 @@ Proof. Let `X = G_1 ⊗ 𝔽_p`, connected and killed by `p`, of order `p^h`. By
 Main results: `PDivFGL.height_le_add_of_connPart_iso` and
 `PDivFGL.exists_connPart_dual_iso_height_le`.
 
+**Over a coefficient ring** `R` (`SerreTate.CoeffRing`, e.g. `O_{K'}`) with `p ∈ 𝔪_R`
+(`PDivFGL.height_le_add_of_connPart_iso_of_coeffRing`,
+`PDivFGL.exists_connPart_dual_iso_height_le_of_coeffRing`): the residue field `k` is finite with
+`q = p^f` elements and `x^p = x` fails on `k`, so we use the `q`-power Frobenius (`k`-linear,
+`FrobExp k q`) on `X = F[q] ⊗ k`, which is killed by `q`; the bounds `|ker φ_X| ≤ q^d`,
+`|ker φ_{X^∨}| ≤ q^{d'}` hold with the same proofs (`R[[T]]/(T_j^q) ⊗ k ↠ O(ker φ_X)`), and
+`q^h = |X| ≤ q^{d + d'}`.
+
 ## References
 
 * [Hong] S. Hong, *Notes on p-adic Hodge theory*, Thm. 2.2.19, Cor. 2.2.18, Cor. 1.5.11,
@@ -53,7 +61,7 @@ universe u
 
 section FrobKer
 
-variable {k : Type*} [Field k] {p : ℕ} [hp : Fact p.Prime]
+variable {k : Type*} [Field k] {p : ℕ} [FrobExp k p]
 
 theorem frobKerIdeal_le_ker_counit (B : Type*) [CommRing B] [Bialgebra k B] :
     frobKerIdeal k B p ≤ RingHom.ker (Bialgebra.counitAlgHom k B) := by
@@ -61,7 +69,7 @@ theorem frobKerIdeal_le_ker_counit (B : Type*) [CommRing B] [Bialgebra k B] :
   rintro _ ⟨a, ha, rfl⟩
   rw [SetLike.mem_coe, RingHom.mem_ker, map_pow]
   change counit (R := k) a ^ p = 0
-  rw [ha, zero_pow hp.out.ne_zero]
+  rw [ha, zero_pow (FrobExp.ne_zero k p)]
 
 /-- The counit of `B` on `O(ker φ_B) = B ⧸ frobKerIdeal`. -/
 def frobKerCounit (B : Type*) [CommRing B] [Bialgebra k B] :
@@ -106,9 +114,9 @@ end FrobKer
 namespace FFGroupScheme
 
 variable {R : Type u} [CommRing R] {k : Type u} [Field k] [Algebra R k] {p : ℕ}
-  [hp : Fact p.Prime]
+  [FrobExp k p]
 
-omit hp in
+omit [FrobExp k p] in
 /-- **`|ker φ_{G ⊗ k}| ≤ p^d`** if `O(G)` is a quotient of `R[[T_1, …, T_d]]` with
 `ε(T_j) = 0`: `O(ker φ) = (k ⊗ O(G)) / (a^p : ε(a) = 0)` is a quotient of
 `k ⊗ R[[T]]/(T_j^p)` ([Hong, Cor. 1.5.11, Cor. 2.2.18]). -/
@@ -200,7 +208,7 @@ theorem finrank_frobKer_dual_baseChange_le [IsLocalRing R]
         change counit (R := k) (G.dualBC (S := k) (1 - e)) = 0
         rw [counit_dualBC]
         exact (congrArg (algebraMap R k) hc).trans (map_zero _))
-    rw [hy.pow_eq hp.out.ne_zero] at h0
+    rw [hy.pow_eq (FrobExp.ne_zero k p)] at h0
     exact Ideal.Quotient.eq_zero_iff_mem.mpr h0
   -- descend to the connected component `(G^∨)⁰`
   let γ₀ : Cartier.Dual R G.A ⧸ Ideal.span {1 - e} →+* Q :=
@@ -330,6 +338,79 @@ theorem exists_connPart_dual_iso_height_le :
       φ.comp ψ = PDivGroup.Hom.id _ ∧ ψ.comp φ = PDivGroup.Hom.id _ ∧ P.height ≤ d + d' := by
   obtain ⟨d', P', φ, ψ, h1, h2⟩ := P.dualPDiv.exists_connPart_iso
   exact ⟨d', P', φ, ψ, h1, h2, P.height_le_add_of_connPart_iso P' φ ψ h2⟩
+
+end PDivFGL
+
+/-! ### `h ≤ d + d'` over a coefficient ring (e.g. `O_{K'}`) -/
+
+namespace PDivFGL
+
+variable {R : Type} [CommRing R] [IsLocalRing R] [IsAdicComplete (IsLocalRing.maximalIdeal R) R]
+  [IsDomain R] [IsPrincipalIdealRing R] [SerreTate.CoeffRing R] {p : ℕ} [hp : Fact p.Prime]
+  (hpm : (p : R) ∈ IsLocalRing.maximalIdeal R) {d : ℕ} (P : PDivFGL R d p)
+
+section
+
+variable {d' : ℕ} (P' : PDivFGL R d' p)
+  (φ : PDivGroup.Hom P.dualPDiv.connPart P'.pdivGroup)
+  (ψ : PDivGroup.Hom P'.pdivGroup P.dualPDiv.connPart)
+
+include hpm in
+/-- **`h ≤ d + d'` over a coefficient ring `R`** with `p ∈ 𝔪_R` ([Hong, Thm. 2.2.19]), e.g. over
+`O_{K'}`: if the connected part of the Cartier dual of `F[p^∞]` is isomorphic to `F'[p^∞]` with
+`F'` of dimension `d'`, then `h ≤ d + d'`. The residue field `k` is finite with `q = p^f`
+elements; the `q`-power Frobenius is `k`-linear (`c^q = c` on `k`), and the argument over `ℤ_p`
+applies to `X = F[q] ⊗ k` (connected, killed by `q`, of order `q^h`) with the `q`-power
+Frobenius in place of the `p`-power one: `q^h ≤ |ker φ_X| · |ker φ_{X^∨}| ≤ q^d · q^{d'}`. -/
+theorem height_le_add_of_connPart_iso_of_coeffRing (hφψ : ψ.comp φ = PDivGroup.Hom.id _) :
+    P.height ≤ d + d' := by
+  classical
+  let k := IsLocalRing.ResidueField R
+  haveI : CharP k p := SerreTate.charP_residueField hpm
+  haveI : Finite k := SerreTate.finite_residueField
+  letI : Fintype k := Fintype.ofFinite k
+  obtain ⟨n, -, hcard⟩ := FiniteField.card k p
+  set f : ℕ := (n : ℕ)
+  set q := p ^ f with hqdef
+  haveI : FrobExp k q := ⟨⟨p, f - 1, hp.out, inferInstance, by rw [Nat.sub_add_cancel n.pos]⟩⟩
+  have hk : ∀ x : k, x ^ q = x := fun x => by
+    have := FiniteField.pow_card x
+    rw [hcard] at this
+    exact this
+  have hsurj : Function.Surjective (algebraMap R k) := IsLocalRing.residue_surjective
+  let X := (P.groupScheme f).baseChange k
+  have hconn : X.IsConnected :=
+    SerreTate.isConnected_baseChange_of_surjective hsurj (H := P.pdivGroup)
+      P.isConnected_groupScheme f
+  have hkill : X.univPt ^ q = 1 := (P.pdivGroup.baseChange k).pow_eq_one f X.A X.univPt
+  have hord : X.order = q ^ P.height := by
+    rw [FFGroupScheme.order_baseChange, P.order_groupScheme f, hqdef, ← pow_mul, mul_comm]
+  have key := X.order_le_frobKer_mul hk hconn hkill
+  rw [hord] at key
+  have h1 : finrank k (X.A ⧸ frobKerIdeal k X.A q) ≤ q ^ d :=
+    (P.groupScheme f).finrank_baseChange_frobKer_le (Ideal.Quotient.mkₐ _ _)
+      Ideal.Quotient.mk_surjective fun j => P.counit_t f j
+  have h2 : finrank k (X.dual.A ⧸ frobKerIdeal k X.dual.A q) ≤ q ^ d' :=
+    ((P.groupScheme f).finrank_frobKer_dual_baseChange_le (k := k) (p := q) (P'.groupScheme f)
+      (φ.f f) fun c => ⟨ψ.f f c, congrArg (fun χ => χ.f f c) hφψ⟩).trans
+    ((P'.groupScheme f).finrank_baseChange_frobKer_le (Ideal.Quotient.mkₐ _ _)
+      Ideal.Quotient.mk_surjective fun j => P'.counit_t f j)
+  have h3 := key.trans (Nat.mul_le_mul h1 h2)
+  rw [← pow_add] at h3
+  exact (pow_le_pow_iff_right₀ (Nat.one_lt_pow n.pos.ne' hp.out.one_lt)).mp h3
+
+end
+
+include hpm in
+/-- **`h ≤ d + d'` over a coefficient ring** ([Hong, Thm. 2.2.19]): for `P` of dimension `d`
+and height `h` over `R` (e.g. `O_{K'}`), the connected part of `(F[p^∞])^∨` is `F'[p^∞]` for
+some `P'` of dimension `d'`, and `h ≤ d + d'`. -/
+theorem exists_connPart_dual_iso_height_le_of_coeffRing :
+    ∃ (d' : ℕ) (P' : PDivFGL R d' p) (φ : PDivGroup.Hom P.dualPDiv.connPart P'.pdivGroup)
+      (ψ : PDivGroup.Hom P'.pdivGroup P.dualPDiv.connPart),
+      φ.comp ψ = PDivGroup.Hom.id _ ∧ ψ.comp φ = PDivGroup.Hom.id _ ∧ P.height ≤ d + d' := by
+  obtain ⟨d', P', φ, ψ, h1, h2⟩ := P.dualPDiv.exists_connPart_iso_of_coeffRing hpm
+  exact ⟨d', P', φ, ψ, h1, h2, P.height_le_add_of_connPart_iso_of_coeffRing hpm P' φ ψ h2⟩
 
 end PDivFGL
 
