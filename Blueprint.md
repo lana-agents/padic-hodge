@@ -626,6 +626,14 @@ in place of Kähler differentials (all rings of integers here are monogenic), ev
   `h^p ∈ 𝔞_{v+1} ⇒ h ∈ 𝔞_v`, then `𝔞_v ⊆ (X_i^{p^w})` for `w ≤ v`** (`le_spanXPow_of_derivStable`,
   `iInf_eq_bot_of_derivStable`); `∂`-stability of `ker ρ` from derivations of the target with an
   invertible matrix of values on `ρ(X_i)` (`derivStable_ker`).
+* **done** `FormalGroup/InvariantsK.lean`, `FormalGroup/AlphaInjK.lean` (base `O_{K'}`, `K'/ℚ_p`
+  finite, as `L : IntermediateField ℚ_p ℚ̄_p`): discreteness `|z| < 1 ⇒ |z| ≤ p^{-1/[L:ℚ_p]}` on
+  `L` (`exists_norm_le_of_mem_cpSubmodule`); [Hong, Lemma 3.4.3] over `L`
+  (`FGL.eq_zero_of_forall_pow_nsmul_mem`); [Hong, Lemma 3.4.2] over `L` (`FGL.coord_mem_of_fixed`);
+  per-`σ` Galois action (`CoeffFixed`, `GalFixedOver p R L`, `galFixedOver_of_mem`); **injectivity
+  of `α` on `G(O_L)` and of `dα` on `t_G(L)` using only `Gal(ℚ̄_p/L)`**
+  (`eq_zero_of_alpha_eq_one_K`, `dalpha_injective_K`; [Hong, Prop. 3.4.9] with `K = L`).
+  Missing: a concrete `O_{K'}` coefficient ring discharging `GalFixedOver`, `hR`, `hC`.
 
 ## Hand-off (2026-10-18, eleventh session)
 

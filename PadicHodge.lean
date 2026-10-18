@@ -25,6 +25,7 @@ import PadicHodge.FormalGroup.AdicPoints
 import PadicHodge.FormalGroup.Alpha
 import PadicHodge.FormalGroup.AlphaGal
 import PadicHodge.FormalGroup.AlphaInj
+import PadicHodge.FormalGroup.AlphaInjK
 import PadicHodge.FormalGroup.AlphaLog
 import PadicHodge.FormalGroup.DAlphaInj
 import PadicHodge.FormalGroup.DerivStable
@@ -46,6 +47,7 @@ import PadicHodge.FormalGroup.GmLog
 import PadicHodge.FormalGroup.GmMu
 import PadicHodge.FormalGroup.InvDeriv
 import PadicHodge.FormalGroup.Invariants
+import PadicHodge.FormalGroup.InvariantsK
 import PadicHodge.FormalGroup.Law
 import PadicHodge.FormalGroup.LayerFree
 import PadicHodge.FormalGroup.LayerHopf
