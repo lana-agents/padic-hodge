@@ -740,7 +740,54 @@ in place of Kähler differentials (all rings of integers here are monogenic), ev
   `ZpD p` vs `ℤ_[p]`: everything is stated over `ZpD p`; `exists_frobenius_period_zpD` transports
   the one `ℤ_[p]`-specific input (Frobenius periodicity) by definitional unfolding.
 
-## Hand-off (2026-10-18, thirteenth session)
+## Hand-off (2026-10-18, fourteenth session)
+
+Scope (unchanged, `~/iut-scratch/multiradial/MR6-scoping.md`, item A2): [LocAn] needs Tate's
+Theorem 4 (full faithfulness of `G ↦ T_p G` over `O_{K'}`) for `p`-divisible groups of Jacobians.
+Lead decision (binding order): (1) non-connected `G` over `ℤ_p`; (2) Serre–Tate over `O_{K'}`,
+then `K'` versions; (3) §3.5; (4) `α_K` bijectivity last.
+
+Done this session (pushed, validated): `4735899` **(1) done**: `FormalGroup/TateNonConn.lean`,
+`dim D_{-1}(V_p G) = dim G⁰` for every `G` over `ℤ_p` (`exists_finrank_DHT_tateRep_neg_one`), by
+the direct Hilbert 90 route (no `G^{et}` as a `p`-divisible group needed); the `ZpD p` / `ℤ_[p]`
+mismatch is handled by stating everything over `ZpD p` and transporting the single `ℤ_[p]` input
+(`exists_frobenius_period_zpD`, definitional). `a325297` **(2), first part**: [Hong,
+Prop. 2.2.13] (special-fibre coordinates, `PDivGroup.exists_coords`) now holds over any perfect
+field (`[PerfectRing k p]` instead of `x^p = x`), in particular over the residue field `𝔽_q` of
+`O_{K'}`: `univPt_pow_apply_eq_zero_of_perfect` (`perfT`, `apply_univPt_pow_perfect`),
+`frob_decomp` with `frobInv` on coefficients.
+
+Next steps, in order:
+
+1. **Serre–Tate essential surjectivity over `O_{K'}`** (`OL L`): generalise the lifting files
+   `SerreTateCompact`, `SerreTateFGL`, `SerreTatePDiv`, `SerreTateLift`, `SerreTateEss` (≈1700
+   lines, almost all generic algebra) from `ZpD p` to a coefficient ring `R` with: `IsLocalRing`,
+   `IsDomain`, `IsPrincipalIdealRing`, `IsAdicComplete`, discrete uniformity (formal group laws),
+   `𝔪 = (π)`, and a **compact companion topology** on the underlying set (for `ZpD` the metric of
+   `ℤ_[p]`; for `OL L` the subspace topology of `OLSub L ⊆ O_{ℂ_p}`, compact since `L` is a
+   finite-dimensional, hence proper, `ℚ_p`-space and `O_L` is its closed unit ball) in which the
+   `𝔪^w` are open (`mem_pow_iff`: for `OL` this is `OL.mem_span_pow_iff`). ZpD-specific places:
+   `ofPi/toPi`, `mem_pow_iff`, `ballSet` (`SerreTateCompact`); `isDomain_zpD`, `p_ne_zero`,
+   "divide by the largest power of `p`" in `eq_zero_of_forall_red` (use `π`); `toZModD`,
+   `algebraZModD` in `SerreTateEss` (use the residue field `𝔪`-quotient, `PerfectRing` from
+   `PerfectRing.ofFiniteOfIsReduced` as it is finite). Suggested shape: a `structure`/class of
+   such data with instances for `ZpD p` and `OL L`, keeping all `ZpD` statements as
+   specialisations. Then `PDivGroup.exists_connPart_iso` over `O_{K'}` is immediate
+   (`ConnectedPDiv` is generic).
+2. `K'` versions: `HeightIneq` uses the relative Frobenius `frob hk` (`k`-linear only for
+   `x^p = x`); over `𝔽_q` either use the `q`-power Frobenius (`k`-linear, kernel killed by `q`,
+   apply to `G_f = G[q]`: `hf ≤ fd + fd'`) or the twisted transpose `perfT` from this session;
+   then `DAlphaHT`, `DAlphaDual`, `HodgeTateFGL`, `TateNonConn`, `EtaleHT` with `L = K'`
+   (`AlphaInjK`/`OK` already give injectivity of `α`, `dα` over `O_{K'}`; `EtaleHT`/Hilbert 90
+   need `Gal(ℚ̄_p/K')` and unramified towers over `K'`).
+3. §3.5: discriminant formula [Hong, Prop. 3.5.1], Lemma 3.5.2 (input
+   `exists_finrank_DHT_tateRep_neg_one` is now available over `ℤ_p`), Prop. 3.5.3,
+   Thm. 3.5.4; plan in hand-off 10.
+4. `α_K` bijective (hand-off 13, item 1), off the critical path.
+
+No WIP branch; nothing unpushed.
+
+## Hand-off (2026-10-18, thirteenth session; superseded)
 
 Scope (unchanged, `~/iut-scratch/multiradial/MR6-scoping.md`, item A2): [LocAn] needs Tate's
 Theorem 4 (full faithfulness of `G ↦ T_p G` over `O_{K'}`) for `p`-divisible groups of Jacobians.
