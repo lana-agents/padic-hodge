@@ -640,6 +640,15 @@ in place of Kähler differentials (all rings of integers here are monogenic), ev
   for `P : PDivFGL (OL L) d p`: `alphaK` (both squares, Galois equivariance for `σ` fixing `L`),
   **`eq_zero_of_alphaK_eq_one`**, **`dalpha_injective_OL`** ([Hong, Prop. 3.4.9] over `O_{K'}`).
   Missing: Tate-module / Hodge–Tate wiring (`tateRep`, `dualPDiv`, `tatePairingZp`) over `K'`.
+* **done** `GroupScheme/SpecialFibre.lean`, `GroupScheme/SerreTateSpecial.lean` (**[Hong,
+  Prop. 2.2.13]** for a connected `p`-divisible group `H` over a field `k` with `x^p = x`, by a
+  derivation argument instead of [Hong]'s order counting): `quot_v^*` injective
+  (`quot_injective_of_isConnected`: Nakayama `|G| ≤ |ker f|·|im f|` and `ker quot_v = G_1`), `a^p = 0 ⇒
+  i_v^*(a) = 0` (`incl_eq_zero_of_pow_eq_zero`, from `f^p(d^p) = f([p]^*d)`), `ker φ ⊆ G[p]`
+  and cotangent stabilisation, compatible coordinates and surjections
+  `ρ_v : k[[t_1..t_d]] ↠ A_v`, invariant derivations `(id ⊗ ℓ_j)∘Δ` making `ker ρ_v` `∂`-stable;
+  **`exists_coords`**: `ker ρ_v ⊆ (t_i^{p^w})` for `w ≤ v`, `⋂ ker ρ_v = 0`
+  (i.e. `lim A_v ≅ k[[t]]` up to surjectivity onto the limit).
 
 ## Hand-off (2026-10-18, eleventh session)
 

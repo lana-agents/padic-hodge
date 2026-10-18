@@ -116,6 +116,8 @@ import PadicHodge.GroupScheme.Mu
 import PadicHodge.GroupScheme.PDivisible
 import PadicHodge.GroupScheme.PDivisibleHom
 import PadicHodge.GroupScheme.PDivisiblePoints
+import PadicHodge.GroupScheme.SerreTateSpecial
+import PadicHodge.GroupScheme.SpecialFibre
 import PadicHodge.GroupScheme.TateDual
 import PadicHodge.GroupScheme.TateDualRep
 import PadicHodge.GroupScheme.TateFree
