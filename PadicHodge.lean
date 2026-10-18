@@ -77,6 +77,7 @@ import PadicHodge.GroupScheme.CartierDualPDiv
 import PadicHodge.GroupScheme.CartierPairing
 import PadicHodge.GroupScheme.CartierPairingBase
 import PadicHodge.GroupScheme.CartierPerfect
+import PadicHodge.GroupScheme.CartierPerfectOC
 import PadicHodge.GroupScheme.Connected
 import PadicHodge.GroupScheme.ConnectedIdempotent
 import PadicHodge.GroupScheme.ConstPDiv
@@ -95,6 +96,7 @@ import PadicHodge.GroupScheme.EtaleQuotientOrder
 import PadicHodge.GroupScheme.EtaleUnramified
 import PadicHodge.GroupScheme.Faithful
 import PadicHodge.GroupScheme.FiniteFlat
+import PadicHodge.GroupScheme.IntegralPoints
 import PadicHodge.GroupScheme.Mu
 import PadicHodge.GroupScheme.PDivisible
 import PadicHodge.GroupScheme.PDivisibleHom

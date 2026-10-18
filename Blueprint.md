@@ -532,6 +532,12 @@ in place of Kähler differentials (all rings of integers here are monogenic), ev
   `σ`, so `σ ∈ Gal(ℚ̄_p/K')` for `R = O_{K'}`), `σ` acts on `O_C` as an `R`-algebra map (`galS`)
   and on `T_p(G^∨)(O_C)` (`galDual`); `U_{σy} = σ(U_y)` (`charSeries_gal`, via `evB_map_gal` and
   the general `AdicEval.ringHom_ext`); **`α(σx)(σy) = σ(α(x)(y))`** (`alpha_gal`).
+* **done** `GroupScheme/IntegralPoints.lean`: **`G(O_{ℂ_p}) ≃* G(ℂ_p)`** for finite flat `G` over
+  `R → O_{ℂ_p}` (`pointsOCEquiv`; [Hong, Lemma 3.4.1] at finite level).
+* **done** `GroupScheme/CartierPerfectOC.lean`: for `G` killed by `n ≠ 0`, `#G^∨(ℂ_p) = |G|`
+  (`card_dual_points_Cp`) and **a point of `G(O_C)` pairing trivially with `G^∨(O_C)` is
+  trivial** (`eq_one_of_pairing_OC`): injectivity of the left vertical map of [Hong,
+  Prop. 3.4.9] at level `v`.
 * **done** `FormalGroup/OCAdicPi.lean`: `O_{ℂ_p}` is `π`-adically complete for every
   `0 < |π| < 1` (`OC.isAdicComplete_span`, `OC.isAdicComplete_of_map_eq_span`): the completeness
   hypothesis of `Alpha.lean` for `R = O_{K'}` with `𝔪_{K'} O_C = (π)`.
@@ -584,9 +590,9 @@ Next steps, in order:
    there is `t ∈ G[p](O_C)` with `α(t) = α(x'')` (`alpha_torsion`), `x' = x'' − t ∈ ker α`,
    `p x' = x`, and `σx' − x' ∈ ker α ∩ G[p] = 0`, so `x' ∈ G(ℤ_p)` (`Invariants.lean`, [Hong,
    Lemma 3.4.2]); hence `x` is infinitely `p`-divisible in `G(ℤ_p)`, `x = 0` ([Hong, Lemma
-   3.4.3]). Missing: (i) perfectness of `G_v(O_C) × G_v^∨(O_C) → μ_{p^v}` (from
-   `CartierPerfect` over `ℚ̄_p` via `G_v(O_C) = G_v(ℚ̄_p)` for finite free `A_v` — integrality
-   of finite `ℤ_p`-algebras — and `baseChangePointsEquiv`), (ii) surjectivity of
+   3.4.3]). Done: (i) injectivity half of the perfectness of `G_v(O_C) × G_v^∨(O_C) → μ_{p^v}`
+   (`eq_one_of_pairing_OC`; the surjectivity half is `pairingHom'_bijective` over `ℂ_p` with
+   `card_points_sepClosed` for `#G_v(ℂ_p)`, transported by `pointsOCEquiv`). Missing: (ii) surjectivity of
    `DualTate → G_v^∨(O_C)` (lifting along `i_v^∨`; over `ℚ̄_p` this is
    `exists_dual_quot_eq_padicAlgCl`), (iii) `x ↦ α(x)` determines torsion: `α(t) = 1 ⇒ t = 0`.
 2. **`d + d^∨ = h`** ([Hong, Thm. 2.2.19]) — sub-project, all in characteristic `p` (special
