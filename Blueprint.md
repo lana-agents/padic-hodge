@@ -775,8 +775,58 @@ in place of Kähler differentials (all rings of integers here are monogenic), ev
   weight `0`), and `0 → D_{-1}(V_p G⁰) → D_{-1}(V_p G) → D_{-1}(V_p G/V_p G⁰) = 0`.
   `ZpD p` vs `ℤ_[p]`: everything is stated over `ZpD p`; `exists_frobenius_period_zpD` transports
   the one `ℤ_[p]`-specific input (Frobenius periodicity) by definitional unfolding.
+* **done (16th session) base field `K'`** (generic fibre over a field `F ⊆ ℚ̄_p`, `G_L` acting
+  through `ι : G_L → G_F` with `ι σ = σ` pointwise and representations given by
+  `ρ(σ)(a ⊗ t) = a ⊗ (ι σ) t`; the `ℤ_p` statements are specialisations with
+  `ι = restrictScalars`, `ρ = tateRep L`, the `O_{K'}` ones with `ι = id`, `ρ = tateRepOver`):
+  `TateDualRep` (`baseChangeDualEquiv_gal` for abstract lattices; `tateRepDualEquiv_galOver`,
+  `tateRepDualEquiv_galVia`, `isHodgeTate_tateRepOver_dualPDiv`), `DAlphaHT` (abstract
+  `dualDualEquiv`, `DHTdualDualMap`, `finrank_DHT_dualDual`; `dalphaKGen`, injective for every
+  `L` with `GalFixedOver` via `dalpha_injective_K`), `DualTateZp`/`DualTateGal`
+  (`dualTateGenEquiv : T_p(G^∨)(O_{ℂ_p}) ≃* T_p(G_F^∨)(ℚ̄_p)` for `R → F` compatible with
+  `R ⊆ O_{ℂ_p}`, `galDualGen`, `dualTateGenEquiv_gal`, `dualTateGenLinearEquiv`; `dU_smul`,
+  `dalpha_zpSmul` over any `R` by a norm estimate), `DualPDivFree`/`DualPDivFGL` (Cartier dual
+  commutes with base change to any `F`), `DAlphaDual` (`dalphaDualGen`, **`tate_dalphaGen`**),
+  `TateCont` (`continuous_tateRep_of`, `continuous_tateRepOver`), `TateRep`
+  (`finrank_tateRep` over any `F`). New: `FormalGroup/DAlphaHTOL.lean` (`OL.toL : O_L →+* L`,
+  algebras `O_L → L → ℚ̄_p`, `OL.algebraMap_qbar_cp`; `genericFibreOL`, `dalphaKOL`,
+  `dalphaKTwistOL`, (3.9) over `K'`) and `FormalGroup/HodgeTateOL.lean`: **[Hong, Thm. 3.4.10]
+  over `K'`** (`tate_dalphaOL`, `dalphaKOL_bijective`), **Cor. 3.4.11** (`finrank_DHT_tateRepOL_neg_one`),
+  **Thm. 3.4.12** (`hodgeTate_decompositionOL`), **Cor. 3.4.14** (`isHodgeTate_tateRepOL`) for
+  `F[p^∞]` over `O_{K'}`, `V_p` as a `Gal(ℚ̄_p/K')`-representation.
 
-## Hand-off (2026-10-18, fifteenth session)
+## Hand-off (2026-10-18, sixteenth session)
+
+Done this session (pushed, validated): `f2d5f87` (Tate duality over `K'`: the `WIP` branch
+`wip-tatedual-over` finished; the slowdown was not one unfolding but every `rw` motive carrying
+the larger generic instance terms, so the equivariance is now proved once for abstract lattices
+(`baseChangeDualEquiv_gal`) and abstract representations (`dualDualEquiv`); no heartbeat
+bumps), `eaad429` (generic fibre over `O_{K'}`: Tate's theorem, Cor. 3.4.11, Thm. 3.4.12,
+Cor. 3.4.14 for `F[p^∞]` over `O_{K'}`; see PH4 "base field `K'`" above).
+
+Elaboration note (`HodgeTateOL`): `obtain pat := f args` and `finrank L (DHT …)` over `L = ↥K'`
+are slow (instance search for `Module L (DHT ρ q)` tries normed-space paths, ~0.3 s each);
+`have h := f args; obtain pat := h` and the local shortcut instances `instModuleDHT`,
+`instAddCommGroupDHT` fix this.
+
+Next steps, in order:
+
+1. Remaining `K'` versions: `TateNonConn` (non-connected `G` over `O_{K'}`) and `EtaleHT` need
+   **Hilbert 90 over `K'`**: generalise `Hilbert90/` from `(ℚ_p, p, GalQp)` to
+   `(K', π_{K'}, Gal(ℚ̄_p/K'))`: `IsUnrStable` relative to `K'` (`|z| < 1 ⇒ |z| ≤ |π|`, stability
+   and rigidity for `Gal(ℚ̄_p/K')`), `exists_trace_one` relative to `K'`
+   (`∑_{e : M →_{K'} ℚ̄_p} e(b) = 1`, Dedekind on `κ_M`), `exists_additive` mod `π`
+   (unchanged proof), `exists_GL_mod_p` over `κ_M/κ_{K'}`, and the approximation in `Main` by
+   powers of `π`. Then `etCoordField` over `K'` (`K'(x(a))`, unramified over `K'` since
+   `A_w^{et}` is finite étale over `O_{K'}`; `exists_frobenius_period` with `q = #κ_{K'}`).
+   Alternative (not chosen): induce from `G_{K'_0}` (`K'_0` maximal unramified) to `G_{ℚ_p}` and use
+   Mackey; needs induced representations.
+2. §3.5 (plan in hand-off 10), written over the general base.
+3. `α_K` bijective (hand-off 13, item 1).
+
+No WIP branch; nothing unpushed.
+
+## Hand-off (2026-10-18, fifteenth session; superseded)
 
 Lead decision (binding): coefficient-ring refactor first, then `exists_connPart_iso` over
 `O_{K'}`, then `K'` versions; §3.5 and `α_K` bijectivity after.
