@@ -47,6 +47,7 @@ import PadicHodge.FormalGroup.GmHeight
 import PadicHodge.FormalGroup.GmHom
 import PadicHodge.FormalGroup.GmLog
 import PadicHodge.FormalGroup.GmMu
+import PadicHodge.FormalGroup.HeightIneq
 import PadicHodge.FormalGroup.InvDeriv
 import PadicHodge.FormalGroup.Invariants
 import PadicHodge.FormalGroup.InvariantsK

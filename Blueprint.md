@@ -690,8 +690,61 @@ in place of Kähler differentials (all rings of integers here are monogenic), ev
   `dalpha_galDualZp`), injective for `L = ℚ_p` (`dalphaK_injective`); twisted version into
   `D_{-1}(V_p G)` via `V_p(G^∨)^∨ ≅ V_p(G)(-1)` (`tateRepDualDualEquiv`, `dalphaKTwist`), and
   **`d ≤ dim D_{-1}(V_p G)`** (`le_finrank_DHT_tateRep`).
+* **done** `FormalGroup/HeightIneq.lean` (**`h ≤ d + d^∨`, [Hong, Thm. 2.2.19]**, the direction
+  used in [Hong, proof of Thm. 3.4.10]): for `P : PDivFGL ℤ_p d p`,
+  **`PDivFGL.exists_connPart_dual_iso_height_le`**: `(G^∨)° ≅ P'.pdivGroup` with `P'` of dimension
+  `d'` and `h ≤ d + d'`. Via `order_le_frobKer_mul` on `X = G_1 ⊗ 𝔽_p`: `|ker φ_X| ≤ p^d`
+  (`finrank_baseChange_frobKer_le`, coordinates `ℤ_p[[T]] ↠ A_1`) and `|ker φ_{X^∨}| ≤ p^{d'}`
+  (`finrank_frobKer_dual_baseChange_le`: Cartier duality and base change, the Frobenius kernel
+  only sees `(G_1^∨)°`, Serre–Tate iso).
 
-## Hand-off (2026-10-18, eleventh session)
+## Hand-off (2026-10-18, twelfth session)
+
+Scope (unchanged, `~/iut-scratch/multiradial/MR6-scoping.md`, item A2): [LocAn] needs Tate's
+Theorem 4 (full faithfulness of `G ↦ T_p G` over `O_{K'}`) for `p`-divisible groups of Jacobians.
+
+Done this session (all pushed with green validation; file-level summaries in PH2–PH4 above):
+`b4ac238` (`Frobenius`: `f^p(d^p) = f([p]^*d)`, Nakayama `|G| ≤ |ker f|·|im f|`,
+`|G| ≤ |ker φ_G|·|ker φ_{G^∨}|`; `DualTateGal`: Galois equivariance and `ℤ_p`-linearity of
+`dualTateZpEquiv`, `dα` `ℤ_p`-linear; `DerivStable`), `3c31409` (`InvariantsK`, `AlphaInjK`:
+Lemmas 3.4.2/3.4.3 and injectivity of `α`, `dα` over `K'`), `06ba89e` (`OK`: concrete
+`O_{K'}`), `5694efa` (`SpecialFibre`, `SerreTateSpecial`: [Hong, Prop. 2.2.13] by
+derivations), `415abe8` (**Serre–Tate essential surjectivity over `ℤ_p`**,
+`exists_pdivFGL_iso`), `d66f85d` (**Cartier dual `p`-divisible group over `ℤ_p`** for
+`F[p^∞]`, `PDivFGL.dualPDiv`), `8a5c3da` (`Orthogonal`: step (3.11)), `a1780c8`
+(`ConnectedPDiv`: **`G°` is a `p`-divisible group**, `G° ≅ F[p^∞]`), `1fb5567` (`DAlphaHT`:
+(3.9), `d ≤ dim D_{-1}(V_p G)`), and the commit adding `HeightIneq` (**`h ≤ d + d'`** with
+`(G^∨)° ≅ P'.pdivGroup`) and this hand-off.
+
+Next steps, in order:
+
+1. **Tate's theorem [Hong, Thm. 3.4.10] for connected `G = F[p^∞]` over `ℤ_p`** — only one
+   input is missing: (3.10), an injective `ℚ_p`-linear map `ℚ_p^{d'} → D_0(V_p(G)^∨)`.
+   Planned route (no double duality, no surjectivity): `P'.dalphaK ⊥ : ℚ_p^{d'} ↪
+   D_0(V_p(P'^∨)^∨)`; `DHTdualTateEquivMap` for `P'` into `D_{-1}(V_p P')`; a twist-0
+   `DHTtwistMap` along the injective Γ-equivariant `ℤ_p`-linear map `V_p(P'_{ℚ_p}) →
+   V_p((G_{ℚ_p})^∨)` from `mapTate` of `connPartHom ∘ ψ` (`exists_connPart_iso`) and the
+   base-change identifications (`baseChangeTateEquiv`, `dualPDivBaseChangeTateEquiv`;
+   injective since `connPartHom_mapPoints_injective` levelwise; Galois-equivariance and
+   `ℤ_p`-linearity still to prove); `DHTtwistMap (-1)` along `rid ∘ tateRepDualEquiv` into
+   `D_0(V_p(G)^∨)`. Then `bijective_of_finrank_le_add_fin` (Orthogonal.lean) with
+   `dalphaKTwist ⊥`, this map and `exists_connPart_dual_iso_height_le` gives **`dα_K`
+   bijective** and **Cor. 3.4.11** (`d = dim D_{-1}(V_p G)`); bijectivity of `α_K` from
+   [Hong]'s snake-lemma diagram (`logGm_alpha`, `exact_logHom`); then **Thm. 3.4.12**
+   (Hodge–Tate decomposition, weights `{0, 1}`; `htWeights`).
+2. **General (non-connected) `G` over `ℤ_p`**: `α` via `G° = F[p^∞]` (`exists_connPart_iso`) as
+   in [Hong, Prop. 3.4.9, proof]; `G^∨` over `ℤ_p` for general `G` (`DualPDivData` for
+   non-connected layers — or via the connected–étale sequence; `G^{et}` as a `p`-divisible
+   group is not yet done); uniqueness of `d` ([Hong, Def. 2.2.17]).
+3. Base `O_{K'}`: `OK.lean` gives `α`, `dα` injectivity; still to generalise to `O_{K'}`:
+   Serre–Tate (`SerreTateEss` uses `ℤ_p` compactness and `𝔽_p` with `x^p = x`; residue field
+   `𝔽_q` needs Frobenius twists or restriction of scalars), `DualPDivFGL` (already general
+   complete local `R`), Tate modules / Hodge–Tate over `K'` (`tateRep L`, `galPoints` over
+   `ℚ_p`).
+4. Discriminant formula and full faithfulness ([Hong, Prop. 3.5.1, Lemma 3.5.2, Prop. 3.5.3,
+   Thm. 3.5.4]): proof plan in hand-off 10.
+
+## Hand-off (2026-10-18, eleventh session; superseded)
 
 Scope (unchanged, `~/iut-scratch/multiradial/MR6-scoping.md`, item A2): [LocAn] needs Tate's
 Theorem 4 (full faithfulness of `G ↦ T_p G` over `O_{K'}`) for `p`-divisible groups of Jacobians.
