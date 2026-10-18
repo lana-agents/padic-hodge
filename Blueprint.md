@@ -776,7 +776,59 @@ in place of Kähler differentials (all rings of integers here are monogenic), ev
   `ZpD p` vs `ℤ_[p]`: everything is stated over `ZpD p`; `exists_frobenius_period_zpD` transports
   the one `ℤ_[p]`-specific input (Frobenius periodicity) by definitional unfolding.
 
-## Hand-off (2026-10-18, fourteenth session)
+## Hand-off (2026-10-18, fifteenth session)
+
+Lead decision (binding): coefficient-ring refactor first, then `exists_connPart_iso` over
+`O_{K'}`, then `K'` versions; §3.5 and `α_K` bijectivity after.
+
+Done this session (pushed, validated):
+
+* `bd553c0` **(1) refactor done**: `SerreTate.CoeffRing R` (`SerreTateCompact.lean`; uniformiser
+  `π ≠ 0`, `𝔪 = (π)`, compact companion topology on `Cpt R` with open cosets of `𝔪^w`; with the
+  instances `IsDomain R`, `IsAdicComplete 𝔪 R`), instances for `ZpD p` and `OL L`
+  (`OLCompact.lean`, also `IsDomain`, `IsPrincipalIdealRing` via
+  `SerreTate.isDiscreteValuationRing`); `finite_residueField` by compactness. `SerreTateFGL`,
+  `SerreTatePDiv`, `SerreTateLift`, `SerreTateEss` are stated over `R`; all `ℤ_p` statements
+  keep their names. **(2) done**: `PDivGroup.exists_pdivFGL_iso_of_coeffRing`,
+  `exists_connPart_iso_of_coeffRing` (`p ∈ 𝔪_R`), and over `O_{K'}`:
+  `GroupScheme/SerreTateOL.lean` (`exists_pdivFGL_iso_OL`, `exists_connPart_iso_OL`).
+  **(3), first item done**: `HeightIneq` over `O_{K'}` with the `q`-power Frobenius
+  (`FrobExp k q` in `Frobenius.lean`, applied to `F[q] ⊗ 𝔽_q`):
+  `PDivFGL.height_le_add_of_connPart_iso_of_coeffRing`,
+  `exists_connPart_dual_iso_height_le_of_coeffRing`, `exists_connPart_dual_iso_height_le_OL`.
+* `53dd832` start of the **generic-fibre base-field refactor** (needed for every remaining
+  `K'` version): the Tate-module machinery for `p`-divisible groups over a field
+  `K ⊆ ℚ̄_p` of characteristic `0` (`galPoints`, `galTate`, `galLin`, `dualPDiv`,
+  `tateEquivZp`, `exists_tateBasis`, `exists_perfect_tatePairing`, `tatePairingZp`,
+  `galDualTate`, `tatePairing_gal`; new `PDivGroup.tateRepOver`, `V_p G` as a
+  `Gal(ℚ̄_p/K)`-representation). Intended use: `K = ↥K'`, `G` the generic fibre of a
+  `p`-divisible group over `O_{K'}`.
+
+WIP (local branch `wip-tatedual-over`, `3c64d60`, not pushed): `tatePairingZp_galOver`,
+`tateDualHom_galOver` (`TateDual` over `K`), `tateRepDualEquiv` over `K` and
+`tateRepDualEquiv_galOver` / `isHodgeTate_tateRepOver_dualPDiv` for `G` over `↥L`. Builds up to
+`TateDualRep` (the `↥L` proof needs `maxHeartbeats 1600000`), but makes
+`DAlphaHT.tateRepDualDualEquiv_symm_gal` (over `ℚ_p`) time out at `whnf`: the generic
+`tateRepDualEquiv`/`tateDualHom` slow down the `ℚ_p` defeq checks. Fix options: keep the `ℚ_p`
+definitions as they were and add separate `…Over` definitions for `G` over `↥L`, or find the
+slow unfolding (likely `LinearMap.congr_fun (H.tateRepDualEquiv_gal L σ⁻¹)` / `rw [he]`).
+
+Next steps, in order:
+
+1. Finish the base-field refactor (WIP above), then `K'` versions on the generic fibre: the
+   generic fibre `O_{K'} → K'` of `PDivFGL (OL L)` (analogue of `ZpD → ℚ_p` in
+   `DualTateZp.lean`/`DualTateGal.lean`: `dualTateZpEquiv` with `OL.galFixedOver`), then
+   `DAlphaHT` (`dalphaK` with `dalpha_injective_OL` in place of `dalpha_injective_Qp`),
+   `DAlphaDual`, `HodgeTateFGL`, `TateNonConn` (needs Hilbert 90 over `K'`), `EtaleHT`
+   (unramified towers over `K'`). `HeightIneq` over `O_{K'}` is done.
+2. §3.5 (plan in hand-off 10), written over the general base.
+3. `α_K` bijective (hand-off 13, item 1).
+
+Note: `.lake/packages/*` of this repo are symlinks into `~/iut/.lake/packages` (pre-existing
+since 2026-10-16; all builds of this and earlier sessions used them; the lead may want to
+replace them by pinned standalone clones when disk allows).
+
+## Hand-off (2026-10-18, fourteenth session; superseded)
 
 Scope (unchanged, `~/iut-scratch/multiradial/MR6-scoping.md`, item A2): [LocAn] needs Tate's
 Theorem 4 (full faithfulness of `G ↦ T_p G` over `O_{K'}`) for `p`-divisible groups of Jacobians.
