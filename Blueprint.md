@@ -512,6 +512,26 @@ in place of Kähler differentials (all rings of integers here are monogenic), ev
   coefficient ring for the points framework; `ev_map`, `ev_mul`; **`ev_add_of_groupLike`**: if
   `U ∈ O_{ℂ_p}[[T]]` satisfies `U(Φ(T,T')) = U(T)U(T')`, then `U(x +_F y) = U(x)U(y)` on
   `F(m_{ℂ_p})` (the homomorphism property of `α(·)(u)` in [Hong, Prop. 3.4.9]).
+* **done** `GroupScheme/CartierChar.lean`: for `ψ ∈ G^∨(S)` the character
+  `χ_ψ = ⟨u, ψ⟩ ∈ S ⊗_R A` (`u` the universal point over `S ⊗ A`): multiplicative in `ψ`,
+  **group-like** (`charOf_comul`), evaluates to the Cartier pairing at points of `G(S)`
+  (`productMap_charOf`), natural in `G` (`charOf_dual`) and in `S` (`charOf_postComp`).
+* **done** `FormalGroup/Alpha.lean` (**[Hong, Prop. 3.4.9, construction of `α`]**), for a
+  `p`-divisible formal group law over a complete local `R` with `p ∈ 𝔪_R` and
+  `O_{ℂ_p}` complete for `𝔪_R O_{ℂ_p}` (instance `OCd.algebraOf`, low priority): for
+  `y ∈ T_p(G^∨)(O_C) = DualTate` the power series `U_y = charSeries` (unique, `U_y(t) = χ_{y_v}`,
+  group-like, `U_{yy'} = U_y U_{y'}`, `U_y(0) = 1`), **`α(x)(y) = U_y(x)`** (`alpha`),
+  `alpha_add`, `alpha_mul`, values in `1 + m_{ℂ_p}` (`norm_alpha_sub_one_lt`), and the **left
+  square**: for `p^v`-torsion `x`, `α(x)(y) = ⟨x_v, y_v⟩` (`alpha_torsion`; via
+  `layerPt_evB`: evaluating `U(t)` at the layer point of `x` is `U(x)`).
+* **done** `FormalGroup/MapFGL.lean`: base change `F.map h` of formal group laws.
+* **done** `FormalGroup/AlphaLog.lean`: `u_y = U_y − 1 : F_{O_C} → Ĝ_m` is a formal homomorphism
+  (`charHom`, (3.7)); **`dα(z)(y) = ∑_j ∂_jU_y(0) z_j`** (`dalpha`, additive in `y`); **right
+  square** `log_{Ĝ_m}(α(x)(y) − 1) = dα(log_F x)(y)` (`logGm_alpha`, from `LogNat`).
+* **done** `FormalGroup/AlphaGal.lean`: for Galois-fixed coefficients, `σ` acts on `O_C` as an
+  `R`-algebra map (`galS`) and on `T_p(G^∨)(O_C)` (`galDual`); `U_{σy} = σ(U_y)`
+  (`charSeries_gal`, via `evB_map_gal` and the general `AdicEval.ringHom_ext`); **`α(σx)(σy) =
+  σ(α(x)(y))`** (`alpha_gal`).
 
 ## Hand-off (2026-10-18, ninth session)
 

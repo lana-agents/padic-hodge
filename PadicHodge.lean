@@ -22,6 +22,9 @@ import PadicHodge.Cyclotomic.Trace
 import PadicHodge.Cyclotomic.Vanishing
 import PadicHodge.FormalGroup.AdicEval
 import PadicHodge.FormalGroup.AdicPoints
+import PadicHodge.FormalGroup.Alpha
+import PadicHodge.FormalGroup.AlphaGal
+import PadicHodge.FormalGroup.AlphaLog
 import PadicHodge.FormalGroup.Divisible
 import PadicHodge.FormalGroup.ExactSeq
 import PadicHodge.FormalGroup.FGLHom
@@ -50,6 +53,7 @@ import PadicHodge.FormalGroup.Lift
 import PadicHodge.FormalGroup.Log
 import PadicHodge.FormalGroup.LogNat
 import PadicHodge.FormalGroup.LogProps
+import PadicHodge.FormalGroup.MapFGL
 import PadicHodge.FormalGroup.Mult
 import PadicHodge.FormalGroup.Neg
 import PadicHodge.FormalGroup.OC
@@ -64,6 +68,7 @@ import PadicHodge.Galois.Basic
 import PadicHodge.Galois.Continuity
 import PadicHodge.GroupScheme.BaseChange
 import PadicHodge.GroupScheme.Cartier
+import PadicHodge.GroupScheme.CartierChar
 import PadicHodge.GroupScheme.CartierDiag
 import PadicHodge.GroupScheme.CartierDouble
 import PadicHodge.GroupScheme.CartierDualPDiv
