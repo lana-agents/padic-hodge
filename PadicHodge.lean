@@ -22,6 +22,9 @@ import PadicHodge.Cyclotomic.Trace
 import PadicHodge.Cyclotomic.Vanishing
 import PadicHodge.FormalGroup.Law
 import PadicHodge.FormalGroup.Log
+import PadicHodge.FormalGroup.LogProps
+import PadicHodge.FormalGroup.Mult
+import PadicHodge.FormalGroup.Neg
 import PadicHodge.FormalGroup.OC
 import PadicHodge.FormalGroup.Points
 import PadicHodge.Galois.Basic

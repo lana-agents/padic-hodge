@@ -20,7 +20,8 @@ Variables are indexed by `Fin n × Fin d` (copy, coordinate); substitutions use 
 `MvPowerSeries.subst`. We also record `Φ_i(0, 0) = 0` (in [Hong] it is part of the continuity of
 `μ : R[[T]] → R[[T, U]]`; it also follows from (ii)).
 
-* `FGL R d`, `FGL.multiplicative` (`Ĝ_m`, [Hong, Ex. 2.2.4]: `Φ(t, u) = t + u + tu`).
+* `FGL R d`; the multiplicative law `Ĝ_m` ([Hong, Ex. 2.2.4]) is `FGL.multiplicative`
+  (`FormalGroup/Mult.lean`).
 -/
 
 noncomputable section
