@@ -178,7 +178,7 @@ theorem range_eq (v : ℕ) (S : Type u) [CommRing S] [Algebra R S]
 
 /-- **The connected `p`-divisible group `F[p^∞]`** of a `p`-divisible formal group law
 ([Hong, Prop. 2.2.10 (2)]). -/
-def pdivGroup : PDivGroup R p where
+abbrev pdivGroup : PDivGroup R p where
   height := P.height
   G := P.groupScheme
   order_eq := P.order_groupScheme

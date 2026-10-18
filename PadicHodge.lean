@@ -34,6 +34,7 @@ import PadicHodge.FormalGroup.LayerHopf
 import PadicHodge.FormalGroup.LayerPDiv
 import PadicHodge.FormalGroup.LayerPoints
 import PadicHodge.FormalGroup.LayerSurj
+import PadicHodge.FormalGroup.LayerTate
 import PadicHodge.FormalGroup.Layers
 import PadicHodge.FormalGroup.Log
 import PadicHodge.FormalGroup.LogProps
