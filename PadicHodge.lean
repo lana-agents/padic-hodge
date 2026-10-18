@@ -74,6 +74,7 @@ import PadicHodge.FormalGroup.OC
 import PadicHodge.FormalGroup.OCAdic
 import PadicHodge.FormalGroup.OCAdicPi
 import PadicHodge.FormalGroup.OK
+import PadicHodge.FormalGroup.OLCompact
 import PadicHodge.FormalGroup.PDeriv
 import PadicHodge.FormalGroup.Points
 import PadicHodge.FormalGroup.PointsOC

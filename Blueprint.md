@@ -645,6 +645,9 @@ in place of Kähler differentials (all rings of integers here are monogenic), ev
   for `P : PDivFGL (OL L) d p`: `alphaK` (both squares, Galois equivariance for `σ` fixing `L`),
   **`eq_zero_of_alphaK_eq_one`**, **`dalpha_injective_OL`** ([Hong, Prop. 3.4.9] over `O_{K'}`).
   Missing: Tate-module / Hodge–Tate wiring (`tateRep`, `dualPDiv`, `tatePairingZp`) over `K'`.
+* **done** `FormalGroup/OLCompact.lean`: `O_L` is compact for the subspace topology of
+  `O_{ℂ_p}` (`OL.isCompact_unitBall`, `OL.compactSpace_OLSub`; `L` is a proper `ℚ_p`-space) — the
+  compact companion topology for Serre–Tate over `O_{K'}` (hand-off 14, item 1).
 * **done** `GroupScheme/SpecialFibre.lean`, `GroupScheme/SerreTateSpecial.lean` (**[Hong,
   Prop. 2.2.13]** for a connected `p`-divisible group `H` over a perfect field `k` (e.g. `𝔽_q`;
   `[PerfectRing k p]` since the fourteenth session, before `x^p = x`), by a
@@ -766,7 +769,8 @@ Next steps, in order:
    `𝔪 = (π)`, and a **compact companion topology** on the underlying set (for `ZpD` the metric of
    `ℤ_[p]`; for `OL L` the subspace topology of `OLSub L ⊆ O_{ℂ_p}`, compact since `L` is a
    finite-dimensional, hence proper, `ℚ_p`-space and `O_L` is its closed unit ball) in which the
-   `𝔪^w` are open (`mem_pow_iff`: for `OL` this is `OL.mem_span_pow_iff`). ZpD-specific places:
+   `𝔪^w` are open (`mem_pow_iff`: for `OL` this is `OL.mem_span_pow_iff`; compactness of
+   `OLSub L` is done: `OL.compactSpace_OLSub`, `FormalGroup/OLCompact.lean`). ZpD-specific places:
    `ofPi/toPi`, `mem_pow_iff`, `ballSet` (`SerreTateCompact`); `isDomain_zpD`, `p_ne_zero`,
    "divide by the largest power of `p`" in `eq_zero_of_forall_red` (use `π`); `toZModD`,
    `algebraZModD` in `SerreTateEss` (use the residue field `𝔪`-quotient, `PerfectRing` from
