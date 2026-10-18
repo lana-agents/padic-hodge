@@ -380,9 +380,11 @@ end PDivGroup
 
 namespace PDivGroup
 
-variable {p : ℕ} [hp : Fact p.Prime] (G : PDivGroup ℚ_[p] p)
+variable {p : ℕ} [hp : Fact p.Prime] {K : Type} [Field K] [CharZero K] [Algebra K (PadicAlgCl p)]
+  (G : PDivGroup K p)
 
-/-- **`T_p G(ℚ̄_p) ≅ ℤ_p^h`** for a `p`-divisible group of height `h` over `ℚ_p`. -/
+/-- **`T_p G(ℚ̄_p) ≅ ℤ_p^h`** for a `p`-divisible group of height `h` over a field `K` of
+characteristic `0` inside `ℚ̄_p` (e.g. `ℚ_p`). -/
 def tateEquivZp : Multiplicative (Fin G.height → ℤ_[p]) ≃* G.TateModule (PadicAlgCl p) :=
   (G.exists_tateEquiv (PadicAlgCl p) G.quot_surjective_padicAlgCl
     G.card_points_padicAlgCl).some

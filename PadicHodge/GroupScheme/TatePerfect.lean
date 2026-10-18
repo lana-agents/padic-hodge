@@ -35,7 +35,8 @@ namespace PDivGroup
 
 open FFGroupScheme
 
-variable {p : ℕ} [hp : Fact p.Prime] (G : PDivGroup ℚ_[p] p)
+variable {p : ℕ} [hp : Fact p.Prime] {K : Type} [Field K] [CharZero K] [Algebra K (PadicAlgCl p)]
+  (G : PDivGroup K p)
 
 local instance : NeZero p := ⟨hp.out.ne_zero⟩
 
@@ -64,7 +65,7 @@ variable (t : Fin G.height → G.TateModule (PadicAlgCl p))
 
 include ht
 
-omit ht in
+omit ht [CharZero K] in
 theorem pairing_phiLevel (v : ℕ) (c : Multiplicative (Fin G.height → ZMod (p ^ v)))
     (y : (G.G v).dual.points (PadicAlgCl p)) :
     (G.G v).pairing _ (G.phiLevel _ t v c) y =
@@ -82,7 +83,7 @@ theorem dual_eq_of_pairing_basis (v : ℕ) {y y' : (G.G v).dual.points (PadicAlg
   rw [pairing_phiLevel t, pairing_phiLevel t]
   simp_rw [h]
 
-omit ht in
+omit ht [CharZero K] in
 /-- `(t_i)_v` is the image of the `i`-th standard basis vector. -/
 theorem phiLevel_single (v : ℕ) (i : Fin G.height) :
     G.phiLevel _ t v (Multiplicative.ofAdd (Pi.single i 1)) = (t i).1 v := by
@@ -129,11 +130,11 @@ def dualTateCoord : G.DualTate (PadicAlgCl p) →* Multiplicative (Fin G.height 
     simp only [toAdd_ofAdd, toAdd_mul, Pi.add_apply]
     exact G.tatePairingZp_add_right (t i) y y'
 
-omit ht in
+omit ht [CharZero K] in
 theorem dualTateCoord_apply (y : G.DualTate (PadicAlgCl p)) (i : Fin G.height) :
     Multiplicative.toAdd (dualTateCoord t y) i = G.tatePairingZp (t i) y := rfl
 
-omit ht in
+omit ht [CharZero K] in
 /-- `tatePairingZp x y = a` iff the level pairings are `ε_v^{a mod p^v}`. -/
 theorem tatePairingZp_eq_iff (x : G.TateModule (PadicAlgCl p)) (y : G.DualTate (PadicAlgCl p))
     (a : ℤ_[p]) : G.tatePairingZp x y = a ↔
@@ -193,14 +194,14 @@ end Basis
 
 /-- **`T_p(G^∨)(ℚ̄_p) ≅ Hom_{ℤ_p}(T_p G(ℚ̄_p), ℤ_p(1))`** in coordinates: there is a `ℤ_p`-basis
 `(t_i)` of `T_p G(ℚ̄_p)` such that `y ↦ (⟨t_i, y⟩)_i` is an isomorphism `T_p(G^∨)(ℚ̄_p) ≅ ℤ_p^h`. -/
-theorem exists_perfect_tatePairing (G : PDivGroup ℚ_[p] p) :
+theorem exists_perfect_tatePairing (G : PDivGroup K p) :
     ∃ t : Fin G.height → G.TateModule (PadicAlgCl p),
       Function.Bijective (G.phi (PadicAlgCl p) t) ∧ Function.Bijective (dualTateCoord t) := by
   obtain ⟨t, ht, hphi⟩ := G.exists_tateBasis
   exact ⟨t, hphi, dualTateCoord_bijective t ht⟩
 
 /-- `T_p(G^∨)(ℚ̄_p) ≅ ℤ_p^h`: the Cartier dual has the same height. -/
-theorem nonempty_dualTate_equiv (G : PDivGroup ℚ_[p] p) :
+theorem nonempty_dualTate_equiv (G : PDivGroup K p) :
     Nonempty (G.dualPDiv.TateModule (PadicAlgCl p) ≃* Multiplicative (Fin G.height → ℤ_[p])) := by
   obtain ⟨t, -, h⟩ := G.exists_perfect_tatePairing
   rw [tateModule_dualPDiv]

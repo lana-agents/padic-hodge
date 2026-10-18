@@ -170,10 +170,12 @@ def tateMuZpEquiv :
 
 /-! ### The Galois action -/
 
-/-- `σ ∈ Gal(ℚ̄_p/ℚ_p)` acting on points: `φ ↦ σ ∘ φ`. -/
-def galPoints (G : FFGroupScheme ℚ_[p]) (σ : PadicAlgCl p ≃ₐ[ℚ_[p]] PadicAlgCl p) :
+/-- `σ ∈ Gal(ℚ̄_p/K)` acting on points: `φ ↦ σ ∘ φ`, for `G` over a field `K ⊆ ℚ̄_p` (e.g.
+`ℚ_p`). -/
+def galPoints {K : Type} [Field K] [Algebra K (PadicAlgCl p)] (G : FFGroupScheme K)
+    (σ : PadicAlgCl p ≃ₐ[K] PadicAlgCl p) :
     G.points (PadicAlgCl p) →* G.points (PadicAlgCl p) where
-  toFun φ := toConv ((σ : PadicAlgCl p →ₐ[ℚ_[p]] PadicAlgCl p).comp (ofConv φ))
+  toFun φ := toConv ((σ : PadicAlgCl p →ₐ[K] PadicAlgCl p).comp (ofConv φ))
   map_one' := by
     apply WithConv.ofConv_injective
     ext a

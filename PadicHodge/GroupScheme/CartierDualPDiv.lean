@@ -143,14 +143,15 @@ namespace PDivGroup
 
 open FFGroupScheme
 
-variable {p : ℕ} [hp : Fact p.Prime] (G : PDivGroup ℚ_[p] p)
+variable {p : ℕ} [hp : Fact p.Prime] {K : Type} [Field K] [CharZero K] [Algebra K (PadicAlgCl p)]
+  (G : PDivGroup K p)
 
 /-- `quot_v^* : A_v → A_{v+1}` is injective. -/
 theorem quot_injective (v : ℕ) : Function.Injective (G.quot v : (G.G v).A → (G.G (v + 1)).A) := by
-  have : Algebra.Etale ℚ_[p] (G.G v).A := G.isEtale_of_isUnit (isUnit_p (p := p)) v
+  have : Algebra.Etale K (G.G v).A := G.isEtale_of_isUnit (isUnit_p_of_charZero (p := p) (K := K)) v
   rw [injective_iff_map_eq_zero]
   intro a ha
-  refine eq_zero_of_forall_algHom (K := ℚ_[p]) (L := PadicAlgCl p) a fun φ => ?_
+  refine eq_zero_of_forall_algHom (K := K) (L := PadicAlgCl p) a fun φ => ?_
   obtain ⟨ψ, hψ⟩ := G.quot_surjective_padicAlgCl v (toConv φ)
   have := congrArg (fun z : (G.G v).points (PadicAlgCl p) => ofConv z a) hψ
   simp only at this
@@ -162,7 +163,7 @@ theorem quot_injective (v : ℕ) : Function.Injective (G.quot v : (G.G v).A → 
 theorem dual_quot_surjective (v : ℕ) : Function.Surjective (G.quot v).dual := by
   intro F
   obtain ⟨F', hF'⟩ := LinearMap.dualMap_surjective_of_injective
-    (f := (G.quot v : (G.G v).A →ₐ[ℚ_[p]] (G.G (v + 1)).A).toLinearMap) (G.quot_injective v)
+    (f := (G.quot v : (G.G v).A →ₐ[K] (G.G (v + 1)).A).toLinearMap) (G.quot_injective v)
     (ofConv F)
   refine ⟨toConv F', WithConv.ofConv_injective ?_⟩
   ext a
@@ -206,9 +207,10 @@ theorem exists_dual_quot_eq_padicAlgCl (v : ℕ) (y : (G.G (v + 1)).dual.points 
 /-- The ideal `J = ([p^v]^*(b) - ε(b))_b` of `O(G_{v+1}^∨)` cutting out `G_{v+1}^∨[p^v]`. -/
 def dualTorsionIdeal (v : ℕ) : Ideal (G.G (v + 1)).dual.A :=
   Ideal.span (Set.range fun b => ofConv ((G.G (v + 1)).dual.univPt ^ (p ^ v)) b -
-    algebraMap ℚ_[p] _ (counit (R := ℚ_[p]) b))
+    algebraMap K _ (counit (R := K) b))
 
-theorem pow_eq_one_iff_le_ker (v : ℕ) {T : Type*} [CommRing T] [Algebra ℚ_[p] T]
+omit hp [CharZero K] [Algebra K (PadicAlgCl p)] in
+theorem pow_eq_one_iff_le_ker (v : ℕ) {T : Type*} [CommRing T] [Algebra K T]
     (z : (G.G (v + 1)).dual.points T) :
     z ^ (p ^ v) = 1 ↔ G.dualTorsionIdeal v ≤ RingHom.ker (ofConv z) := by
   rw [dualTorsionIdeal, Ideal.span_le]
@@ -225,22 +227,22 @@ theorem pow_eq_one_iff_le_ker (v : ℕ) {T : Type*} [CommRing T] [Algebra ℚ_[p
     rw [pow_apply_univPt, this, AlgHom.convOne_apply]
 
 /-- **Kernel condition for `G^∨` over any `ℚ_p`-algebra.** -/
-theorem exists_dual_quot_eq (v : ℕ) {S : Type*} [CommRing S] [Algebra ℚ_[p] S]
+theorem exists_dual_quot_eq (v : ℕ) {S : Type*} [CommRing S] [Algebra K S]
     (y : (G.G (v + 1)).dual.points S) (hy : y ^ (p ^ v) = 1) :
     ∃ x, (G.quot v).dual.mapPoints S x = y := by
-  set π : (G.G (v + 1)).dual.A →ₐ[ℚ_[p]] (G.G v).dual.A :=
-    ((G.quot v).dual : (G.G (v + 1)).dual.A →ₐ[ℚ_[p]] (G.G v).dual.A)
+  set π : (G.G (v + 1)).dual.A →ₐ[K] (G.G v).dual.A :=
+    ((G.quot v).dual : (G.G (v + 1)).dual.A →ₐ[K] (G.G v).dual.A)
   set J := G.dualTorsionIdeal v
-  have : Algebra.Etale ℚ_[p] (G.G (v + 1)).dual.A := G.isEtale_dual (v + 1)
+  have : Algebra.Etale K (G.G (v + 1)).dual.A := G.isEtale_dual (v + 1)
   have hkerJ : RingHom.ker π ≤ J := by
     intro b hb
-    have : Algebra.FormallyUnramified ℚ_[p] ((G.G (v + 1)).dual.A ⧸ J) := inferInstance
-    have : Algebra.FinitePresentation ℚ_[p] ((G.G (v + 1)).dual.A ⧸ J) :=
+    have : Algebra.FormallyUnramified K ((G.G (v + 1)).dual.A ⧸ J) := inferInstance
+    have : Algebra.FinitePresentation K ((G.G (v + 1)).dual.A ⧸ J) :=
       Algebra.FinitePresentation.of_finiteType.mp inferInstance
-    have : Algebra.Etale ℚ_[p] ((G.G (v + 1)).dual.A ⧸ J) :=
+    have : Algebra.Etale K ((G.G (v + 1)).dual.A ⧸ J) :=
       Algebra.Etale.of_formallyUnramified_of_flat
     rw [← Ideal.Quotient.eq_zero_iff_mem]
-    refine eq_zero_of_forall_algHom (K := ℚ_[p]) (L := PadicAlgCl p) _ fun φ => ?_
+    refine eq_zero_of_forall_algHom (K := K) (L := PadicAlgCl p) _ fun φ => ?_
     let z : (G.G (v + 1)).dual.points (PadicAlgCl p) := toConv (φ.comp (Ideal.Quotient.mkₐ _ J))
     have hz : z ^ (p ^ v) = 1 := by
       rw [G.pow_eq_one_iff_le_ker]
@@ -259,7 +261,7 @@ theorem exists_dual_quot_eq (v : ℕ) {S : Type*} [CommRing S] [Algebra ℚ_[p] 
 
 /-- **The Cartier dual `p`-divisible group** `G^∨ = (G_v^∨, quot_v^∨)` of a `p`-divisible group
 over `ℚ_p`. -/
-def dualPDiv : PDivGroup ℚ_[p] p where
+def dualPDiv : PDivGroup K p where
   height := G.height
   G v := (G.G v).dual
   order_eq v := by rw [FFGroupScheme.order_dual, G.order_eq]
@@ -277,7 +279,7 @@ def dualPDiv : PDivGroup ℚ_[p] p where
 
 /-- **`T_p(G^∨) = lim_v G_v^∨` along `i_v^∨`**: the Tate module of the dual `p`-divisible group is
 the second argument `DualTate G` of the Cartier pairing on Tate modules. -/
-theorem tateModule_dualPDiv (S : Type) [CommRing S] [Algebra ℚ_[p] S] :
+theorem tateModule_dualPDiv (S : Type) [CommRing S] [Algebra K S] :
     G.dualPDiv.TateModule S = G.DualTate S := by
   ext y
   constructor

@@ -279,12 +279,13 @@ namespace FFGroupScheme
 
 variable {p : ℕ} [hp : Fact p.Prime]
 
-/-- An étale group scheme over `ℚ_p` has `|G|` points over `ℚ̄_p`. -/
-theorem card_points_padicAlgCl_of_isEtale (G : FFGroupScheme ℚ_[p]) (hG : G.IsEtale) :
+/-- An étale group scheme over a field `K ⊆ ℚ̄_p` (e.g. `ℚ_p`) has `|G|` points over `ℚ̄_p`. -/
+theorem card_points_padicAlgCl_of_isEtale {K : Type} [Field K] [Algebra K (PadicAlgCl p)]
+    (G : FFGroupScheme K) (hG : G.IsEtale) :
     Nat.card (G.points (PadicAlgCl p)) = G.order := by
-  have : Algebra.Etale ℚ_[p] G.A := hG
+  have : Algebra.Etale K G.A := hG
   have hGS : (G.baseChange (PadicAlgCl p)).IsEtale :=
-    (inferInstance : Algebra.Etale (PadicAlgCl p) (PadicAlgCl p ⊗[ℚ_[p]] G.A))
+    (inferInstance : Algebra.Etale (PadicAlgCl p) (PadicAlgCl p ⊗[K] G.A))
   rw [← Nat.card_congr (G.baseChangePointsEquiv (S := PadicAlgCl p) (PadicAlgCl p)).toEquiv,
     FFGroupScheme.card_points_of_isEtale _ hGS, FFGroupScheme.order_baseChange]
 
@@ -292,10 +293,17 @@ end FFGroupScheme
 
 namespace PDivGroup
 
-variable {p : ℕ} [hp : Fact p.Prime] (G : PDivGroup ℚ_[p] p)
+variable {p : ℕ} [hp : Fact p.Prime] {K : Type} [Field K] [CharZero K] [Algebra K (PadicAlgCl p)]
+  (G : PDivGroup K p)
 
 omit hp in
 theorem isUnit_p [hp : Fact p.Prime] : IsUnit (p : ℚ_[p]) := by
+  rw [isUnit_iff_ne_zero]
+  exact_mod_cast hp.out.ne_zero
+
+omit [Algebra K (PadicAlgCl p)] in
+/-- `p` is a unit in a field of characteristic `0`. -/
+theorem isUnit_p_of_charZero : IsUnit (p : K) := by
   rw [isUnit_iff_ne_zero]
   exact_mod_cast hp.out.ne_zero
 
@@ -305,10 +313,12 @@ theorem dual_univPt_pow_eq_one {R : Type u} [CommRing R] (H : PDivGroup R p) (v 
     (H.G v).dual.univPt ^ (p ^ v) = 1 :=
   (H.G v).dual_univPt_pow_eq_one (H.pow_eq_one v _ _)
 
-/-- `G_v^∨` is étale over `ℚ_p`. -/
+omit [Algebra K (PadicAlgCl p)] in
+/-- `G_v^∨` is étale over `K` (e.g. `ℚ_p`). -/
 theorem isEtale_dual (v : ℕ) : (G.G v).dual.IsEtale :=
   (G.G v).dual.isEtale_of_univPt_pow_eq_one (n := p ^ v)
-    (by rw [Nat.cast_pow]; exact (isUnit_p (p := p)).pow v) (G.dual_univPt_pow_eq_one v)
+    (by rw [Nat.cast_pow]; exact (isUnit_p_of_charZero (p := p) (K := K)).pow v)
+    (G.dual_univPt_pow_eq_one v)
 
 /-- **`#G_v^∨(ℚ̄_p) = p^{hv}`.** -/
 theorem card_dual_points_padicAlgCl (v : ℕ) :

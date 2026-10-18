@@ -94,8 +94,10 @@ theorem quot_surjective_of_card (hp : 0 < p)
   rw [← MonoidHom.range_eq_top]
   exact Subgroup.eq_top_of_card_eq _ hr
 
-/-- **`quot_v : G_{v+1}(ℚ̄_p) → G_v(ℚ̄_p)` is surjective** for `G` over `ℚ_p`. -/
-theorem quot_surjective_padicAlgCl {p : ℕ} [hp : Fact p.Prime] (G : PDivGroup ℚ_[p] p) (v : ℕ) :
+/-- **`quot_v : G_{v+1}(ℚ̄_p) → G_v(ℚ̄_p)` is surjective** for `G` over a field `K` of
+characteristic `0` inside `ℚ̄_p` (e.g. `ℚ_p`). -/
+theorem quot_surjective_padicAlgCl {p : ℕ} [hp : Fact p.Prime] {K : Type} [Field K] [CharZero K]
+    [Algebra K (PadicAlgCl p)] (G : PDivGroup K p) (v : ℕ) :
     Function.Surjective ((G.quot v).mapPoints (PadicAlgCl p)) :=
   G.quot_surjective_of_card (PadicAlgCl p) hp.out.pos (G.card_points_padicAlgCl) v
 

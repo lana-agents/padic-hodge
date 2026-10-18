@@ -688,6 +688,20 @@ in place of Kähler differentials (all rings of integers here are monogenic), ev
   so `frobAlg`, `frobT`, `order_le_frobKer_mul` hold for the `q`-power Frobenius when `c^q = c`
   on `k`; over the residue field `𝔽_q` of `R` it is applied to `X = F[q] ⊗ 𝔽_q` (killed by `q`,
   order `q^h`): `q^h ≤ q^d q^{d'}`.
+* **done (15th session) base field of the generic-fibre Tate machinery, first increment**: the
+  following hold for a `p`-divisible group over any field `K` of characteristic `0` with
+  `K → ℚ̄_p` (`{K : Type} [Field K] [CharZero K] [Algebra K (PadicAlgCl p)]`, e.g. `ℚ_p` or
+  `↥K'`) instead of `ℚ_p` only (same names, `ℚ_p` call sites unchanged): `galPoints`,
+  `PDivGroup.galTate`, `galLin` (`σ ∈ Gal(ℚ̄_p/K)`), `card_points_padicAlgCl`,
+  `quot_surjective_padicAlgCl`, `card_points_padicAlgCl_of_isEtale`, `isEtale_dual`,
+  `levelPairingHom_bijective`, the Cartier dual `p`-divisible group `dualPDiv` and
+  `tateModule_dualPDiv` (`CartierDualPDiv.lean`), `tateEquivZp`, `exists_tateBasis`,
+  `exists_perfect_tatePairing`, `nonempty_dualTate_equiv`, `tatePairingZp`, `galDualTate`,
+  `tatePairing_gal`, `nonempty_tateLinearEquiv`, `finrank_tate`; new
+  **`PDivGroup.tateRepOver`**: `V_p G` as a representation of `Gal(ℚ̄_p/K)`. Still over `ℚ_p`
+  only: `tatePairingZp_gal` (`χ` of `σ|_{ℚ_p}`), `tateRep L` (restriction from `ℚ_p`),
+  `TateDual`, `TateDualRep`, `TateCont`, `ConstPDivTate.constTate_charRep`, `DualTateZp`
+  (`ZpD → ℚ_p` generic fibre), `DualTateGal`.
 * **done** `GroupScheme/DualPDivFree.lean`, `FormalGroup/DualPDivFGL.lean`: **the Cartier dual
   `p`-divisible group over the base** ([Hong, Prop. 2.1.7 (2), Def. 2.1.8]) for `G = F[p^∞]`
   over a complete local `R` (e.g. `ℤ_p`): `PDivFGL.dualPDiv` (layers `G_v^∨`, transitions

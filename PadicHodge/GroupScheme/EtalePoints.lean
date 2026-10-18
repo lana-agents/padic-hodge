@@ -97,16 +97,18 @@ namespace PDivGroup
 
 variable {p : ℕ} [hp : Fact p.Prime]
 
-/-- **`#G_v(ℚ̄_p) = p^{hv}`** for a `p`-divisible group of height `h` over `ℚ_p`. -/
-theorem card_points_padicAlgCl (G : PDivGroup ℚ_[p] p) (v : ℕ) :
+/-- **`#G_v(ℚ̄_p) = p^{hv}`** for a `p`-divisible group of height `h` over a field `K` of
+characteristic `0` inside `ℚ̄_p` (e.g. `ℚ_p`, or a finite extension `K'`). -/
+theorem card_points_padicAlgCl {K : Type} [Field K] [CharZero K] [Algebra K (PadicAlgCl p)]
+    (G : PDivGroup K p) (v : ℕ) :
     Nat.card ((G.G v).points (PadicAlgCl p)) = p ^ (G.height * v) := by
-  have hu : IsUnit (p : ℚ_[p]) := by
+  have hu : IsUnit (p : K) := by
     rw [isUnit_iff_ne_zero]
     exact_mod_cast hp.out.ne_zero
   have hG : (G.G v).IsEtale := G.isEtale_of_isUnit hu v
-  have : Algebra.Etale ℚ_[p] (G.G v).A := hG
+  have : Algebra.Etale K (G.G v).A := hG
   have hGS : ((G.G v).baseChange (PadicAlgCl p)).IsEtale :=
-    (inferInstance : Algebra.Etale (PadicAlgCl p) (PadicAlgCl p ⊗[ℚ_[p]] (G.G v).A))
+    (inferInstance : Algebra.Etale (PadicAlgCl p) (PadicAlgCl p ⊗[K] (G.G v).A))
   rw [← Nat.card_congr ((G.G v).baseChangePointsEquiv (S := PadicAlgCl p) (PadicAlgCl p)).toEquiv,
     FFGroupScheme.card_points_of_isEtale _ hGS, FFGroupScheme.order_baseChange, G.order_eq v]
 

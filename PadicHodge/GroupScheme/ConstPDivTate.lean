@@ -146,8 +146,10 @@ def constTateEquiv : (constPDiv R p).TateModule S ≃* Multiplicative ℤ_[p] :=
 
 /-! ### The Galois action -/
 
-/-- The Galois action on the Tate module of a `p`-divisible group over `ℚ_p`. -/
-def PDivGroup.galTate (G : PDivGroup ℚ_[p] p) (σ : PadicAlgCl p ≃ₐ[ℚ_[p]] PadicAlgCl p) :
+/-- The Galois action on the Tate module of a `p`-divisible group over a field `K ⊆ ℚ̄_p`
+(e.g. `ℚ_p`). -/
+def PDivGroup.galTate {K : Type} [Field K] [Algebra K (PadicAlgCl p)] (G : PDivGroup K p)
+    (σ : PadicAlgCl p ≃ₐ[K] PadicAlgCl p) :
     G.TateModule (PadicAlgCl p) →* G.TateModule (PadicAlgCl p) where
   toFun x := ⟨fun v => galPoints (G.G v) σ (x.1 v), by
     intro v

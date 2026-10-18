@@ -106,16 +106,23 @@ namespace PDivGroup
 
 open FFGroupScheme
 
-variable {p : ℕ} [hp : Fact p.Prime] (H : PDivGroup ℚ_[p] p)
+variable {p : ℕ} [hp : Fact p.Prime]
 
-theorem galTate_mul (σ τ : PadicAlgCl p ≃ₐ[ℚ_[p]] PadicAlgCl p)
+section General
+
+variable {K : Type} [Field K] [CharZero K] [Algebra K (PadicAlgCl p)] (H : PDivGroup K p)
+
+omit [CharZero K] in
+theorem galTate_mul (σ τ : PadicAlgCl p ≃ₐ[K] PadicAlgCl p)
     (x : H.TateModule (PadicAlgCl p)) :
     H.galTate (σ * τ) x = H.galTate σ (H.galTate τ x) := rfl
 
+omit [CharZero K] in
 theorem galTate_one (x : H.TateModule (PadicAlgCl p)) : H.galTate 1 x = x := rfl
 
-/-- **The Galois action on `T_p G(ℚ̄_p)` is `ℤ_p`-linear.** -/
-def galLin (σ : PadicAlgCl p ≃ₐ[ℚ_[p]] PadicAlgCl p) :
+/-- **The Galois action on `T_p G(ℚ̄_p)` is `ℤ_p`-linear** (`G` over `K ⊆ ℚ̄_p`, e.g.
+`ℚ_p`). -/
+def galLin (σ : PadicAlgCl p ≃ₐ[K] PadicAlgCl p) :
     Additive (H.TateModule (PadicAlgCl p)) →ₗ[ℤ_[p]] Additive (H.TateModule (PadicAlgCl p)) where
   toFun x := Additive.ofMul (H.galTate σ (Additive.toMul x))
   map_add' x y := by
@@ -150,7 +157,24 @@ theorem finrank_tate :
     Module.finrank ℤ_[p] (Additive (H.TateModule (PadicAlgCl p))) = H.height := by
   rw [← H.nonempty_tateLinearEquiv.some.finrank_eq, Module.finrank_fin_fun]
 
-variable (L : IntermediateField ℚ_[p] (PadicAlgCl p))
+/-- **The Galois representation `V_p G = ℚ_p ⊗_{ℤ_p} T_p G(ℚ̄_p)` of `G_K = Gal(ℚ̄_p/K)`** for
+`G` over a field `K ⊆ ℚ̄_p` (e.g. `K = K'` a finite extension of `ℚ_p`, as `↥K'`). -/
+def tateRepOver : Representation ℚ_[p] (PadicAlgCl p ≃ₐ[K] PadicAlgCl p)
+    (ℚ_[p] ⊗[ℤ_[p]] Additive (H.TateModule (PadicAlgCl p))) where
+  toFun σ := (H.galLin σ).baseChange ℚ_[p]
+  map_one' := by
+    have : H.galLin (1 : PadicAlgCl p ≃ₐ[K] PadicAlgCl p) = LinearMap.id :=
+      LinearMap.ext fun x => rfl
+    rw [this, LinearMap.baseChange_id]
+    rfl
+  map_mul' σ τ := by
+    have : H.galLin (σ * τ) = H.galLin σ ∘ₗ H.galLin τ := LinearMap.ext fun x => rfl
+    rw [this, LinearMap.baseChange_comp]
+    rfl
+
+end General
+
+variable (H : PDivGroup ℚ_[p] p) (L : IntermediateField ℚ_[p] (PadicAlgCl p))
 
 /-- **The Galois representation `V_p G = ℚ_p ⊗_{ℤ_p} T_p G(ℚ̄_p)` of `G_L`.** -/
 def tateRep : Representation ℚ_[p] (PadicAlgCl p ≃ₐ[L] PadicAlgCl p)

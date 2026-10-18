@@ -157,10 +157,10 @@ theorem tatePairing_val (x : G.TateModule S) (y : G.DualTate S) (v : ℕ) :
 
 /-! ### Galois equivariance -/
 
-variable [hp : Fact p.Prime] (H : PDivGroup ℚ_[p] p)
+variable [hp : Fact p.Prime] {K : Type} [Field K] [Algebra K (PadicAlgCl p)] (H : PDivGroup K p)
 
-/-- The Galois action on the dual Tate module. -/
-def galDualTate (σ : PadicAlgCl p ≃ₐ[ℚ_[p]] PadicAlgCl p) :
+/-- The Galois action on the dual Tate module (`G` over a field `K ⊆ ℚ̄_p`, e.g. `ℚ_p`). -/
+def galDualTate (σ : PadicAlgCl p ≃ₐ[K] PadicAlgCl p) :
     H.DualTate (PadicAlgCl p) →* H.DualTate (PadicAlgCl p) where
   toFun y := ⟨fun v => galPoints (H.G v).dual σ (y.1 v), fun v =>
     (congrArg (galPoints (H.G v).dual σ) (y.2 v)).trans rfl⟩
@@ -169,11 +169,11 @@ def galDualTate (σ : PadicAlgCl p ≃ₐ[ℚ_[p]] PadicAlgCl p) :
 
 omit [NeZero p] in
 /-- **Galois equivariance**: `⟨σx, σy⟩_v = σ ⟨x, y⟩_v`. -/
-theorem tatePairing_gal (σ : PadicAlgCl p ≃ₐ[ℚ_[p]] PadicAlgCl p)
+theorem tatePairing_gal (σ : PadicAlgCl p ≃ₐ[K] PadicAlgCl p)
     (x : H.TateModule (PadicAlgCl p)) (y : H.DualTate (PadicAlgCl p)) (v : ℕ) :
     (H.G v).pairing (PadicAlgCl p) ((H.galTate σ x).1 v) ((H.galDualTate σ y).1 v) =
       σ ((H.G v).pairing (PadicAlgCl p) (x.1 v) (y.1 v)) :=
-  (H.G v).pairing_postComp (PadicAlgCl p) (σ : PadicAlgCl p →ₐ[ℚ_[p]] PadicAlgCl p) _ _
+  (H.G v).pairing_postComp (PadicAlgCl p) (σ : PadicAlgCl p →ₐ[K] PadicAlgCl p) _ _
 
 /-- The Cartier pairing with values in `ℤ_p`, via `RootSys p ℚ̄_p ≃ ℤ_p`. -/
 def tatePairingZp (x : H.TateModule (PadicAlgCl p)) (y : H.DualTate (PadicAlgCl p)) : ℤ_[p] :=
@@ -190,7 +190,7 @@ theorem tatePairingZp_add_right (x : H.TateModule (PadicAlgCl p))
   simp [tatePairingZp]
 
 /-- **The Cartier pairing takes values in `ℤ_p(1)`**: `⟨σx, σy⟩ = χ(σ) ⟨x, y⟩`. -/
-theorem tatePairingZp_gal (σ : PadicAlgCl p ≃ₐ[ℚ_[p]] PadicAlgCl p)
+theorem tatePairingZp_gal (H : PDivGroup ℚ_[p] p) (σ : PadicAlgCl p ≃ₐ[ℚ_[p]] PadicAlgCl p)
     (x : H.TateModule (PadicAlgCl p)) (y : H.DualTate (PadicAlgCl p)) :
     H.tatePairingZp (H.galTate σ x) (H.galDualTate σ y) =
       ((chi σ : ℤ_[p]ˣ) : ℤ_[p]) * H.tatePairingZp x y := by
