@@ -84,6 +84,7 @@ import PadicHodge.FormalGroup.PointsOC
 import PadicHodge.FormalGroup.SerreTateHom
 import PadicHodge.FormalGroup.TateModule
 import PadicHodge.FormalGroup.TateNonConn
+import PadicHodge.FormalGroup.TateNonConnOL
 import PadicHodge.FormalGroup.Torsion
 import PadicHodge.FormalGroup.WeierstrassFree
 import PadicHodge.FormalGroup.Zp
