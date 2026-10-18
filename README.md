@@ -94,7 +94,13 @@ Phase PH0 (skeleton), PH1 (Tate's `H⁰` and `H¹` of `ℂ_p(j)`, including almo
   (`GmLog.lean`); `F(m_{ℂ_p})^{G_L} = F(m_L)`, `⋂ p^n F(p ℤ_p) = 0` (`Invariants.lean`); the Tate
   module `T_p F` (`TateModule.lean`); the layers
   `A_v = R[[T]]/[p^v](I)` with `A_{v+1} ↠ A_v`, `A_v → A_{v+1}` and the injective,
-  Galois-equivariant map `F(m)[p^v] → Hom_R(A_v, O_{ℂ_p})` (`Layers.lean`, `LayerPoints.lean`).
+  Galois-equivariant map `F(m)[p^v] → Hom_R(A_v, O_{ℂ_p})` (`Layers.lean`, `LayerPoints.lean`);
+  **[Hong, Prop. 2.2.10]**: for a `p`-divisible formal group law of height `h` over a complete
+  local ring (`PDivFGL`), `A_v` is free of rank `p^{hv}` (`LayerFree.lean`), a cocommutative Hopf
+  algebra (`LayerHopf.lean`, via evaluation of power series in adically complete algebras,
+  `AdicEval.lean`, `AdicPoints.lean`), and `F[p^∞]` is a connected `p`-divisible group
+  (`LayerPDiv.lean`, `PDivFGL.pdivGroup`); `F[p^v](O_{ℂ_p}) = F(m)[p^v]` (`LayerSurj.lean`) and
+  `T_p F ≅ T_p F[p^∞](O_{ℂ_p})` (`LayerTate.lean`); the formal inverse `ι(T)` (`FormalInv.lean`).
 
 No `sorry`, no `axiom`. All builds use `lake build --wfail`.
 

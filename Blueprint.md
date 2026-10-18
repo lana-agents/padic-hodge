@@ -412,8 +412,70 @@ in place of Kähler differentials (all rings of integers here are monogenic), ev
   `mem_span_X` (`ker ε = I`), `layerIdeal` `J_v`, `J_{v+1} ⊆ J_v`, `Layer` `A_v`, `layerIncl`,
   `layerP`; `layerPt : F(m)[p^v] → Hom_R(A_v, O_{ℂ_p})`, injective, compatible with `layerIncl`
   and `layerP`, Galois-equivariant.
+* **done** `FormalGroup/AdicEval.lean`: evaluation `f ↦ f(s)` of power series in an
+  `𝔞`-adically complete algebra (`eval`, via `IsAdicComplete.liftAlgHom` and `truncTotal`),
+  uniqueness of algebra maps out of `R[[X]]` into `𝔞`-separated algebras (`algHom_ext`; no
+  continuity assumed: `f − trunc_n f ∈ (X)^n`, `mem_pow_span_X`); topologically nilpotent
+  families (`TopNil`, `evalT`, `algHom_ext_topNil`); finite free algebras over `𝔪`-adically
+  complete rings are `𝔪S`-adically complete (`isAdicComplete_of_free`).
+* **done** `FormalGroup/AdicPoints.lean`: topologically nilpotent families in such algebras form
+  a commutative monoid under `Φ` (`addE`, `addE_assoc/comm/zero`), algebra maps are
+  homomorphisms (`addE_comp`), `[n]` (`mulE`, `mulE_addE`, `mulE_mulE`).
+* **done** `FormalGroup/LayerFree.lean` ([Hong, Def. 2.2.9, Prop. 2.2.10, (2.1)]):
+  `IsPDivisible F p h` (`A` free of rank `p^h` over itself via `[p]^*`; deviation: the rank is
+  part of the datum instead of [Hong, Prop. 1.5.10]), freeness in towers (`FreeVia.comp`),
+  `[p^v]^* = ([p]^*)^v`; **`A_v` is free of rank `p^{hv}`** (`layerBasis`, `finrank_layer`).
+* **done** `FormalGroup/LayerHopf.lean` ([Hong, Prop. 2.2.10 (1)]): over a complete local `R`
+  (`PDivFGL`): `t_j` topologically nilpotent in `A_v` (`tnf_t`; `A_v/𝔪A_v` artinian local),
+  maps out of `A_v` determined on `t` (`algHom_ext_A`); comultiplication `t ↦ Φ(t⊗1, 1⊗t)`,
+  counit, antipode `t ↦ [p^v − 1](t)` (deviation: no formal inverse needed), Hopf axioms,
+  cocommutativity; `groupScheme v : FFGroupScheme R` of order `p^{hv}`.
+* **done** `FormalGroup/LayerPDiv.lean` ([Hong, Prop. 2.2.10 (2)]): `incl` bialgebra maps,
+  convolution powers `y^n = y ∘ [n]^*` (`pow_eq`), kernel condition (`range_eq`),
+  `isConnected_groupScheme`; **`PDivFGL.pdivGroup : PDivGroup R p`**.
+* **done** `FormalGroup/LayerSurj.lean`: `layerPt` surjective (`|φ(t_j)| < 1` from `tnf_t`;
+  uniqueness via separatedness of `O_{ℂ_p}` for `(x_j)`, `isHausdorff_span`), `layerPtEquiv`.
+* **done** `FormalGroup/LayerTate.lean`: `layerPt ∘ [n]^* = layerPt(n·)`, **`T_p F ≃ T_p
+  F[p^∞](O_{ℂ_p})`** (`tateEquiv`, `R : Type`).
+* **done** `FormalGroup/FormalInv.lean` ([Hong, Lemma 2.2.5 (3)]): `Φ(T,U) − T − U ∈ (T)(U)`
+  (`Φ_sub_mem`, from the unit axioms via `MvPowerSeries.coeff_subst`), `(T)`-adic continuity of
+  substitution, **`formalInv`** as the `(T)`-adic limit of `y_{k+1} = y_k − Φ(T, y_k)`
+  (deviation from [Hong]'s degree-by-degree construction).
 
-## Hand-off (2026-10-18, sixth session)
+## Hand-off (2026-10-18, seventh session)
+
+Done this session (all pushed with green validation): `abc5a8d` (`AdicEval`, `LayerFree`:
+`A_v` free of rank `p^{hv}`), `1887dff` (`AdicPoints`, `LayerHopf`, `LayerPDiv`: Hopf algebras
+`A_v` and the `p`-divisible group `F[p^∞]`), `31b5da2` (`LayerSurj`), `8b69b45` (`FormalInv`),
+`0053520` (`LayerTate`), and the commit carrying this hand-off (`isConnected_groupScheme`). Step 1
+of the sixth-session plan ([Hong, Prop. 2.2.10] (a)–(d)) is complete, with the deviations
+recorded above (height part of the datum; antipode `[p^v − 1]`; Weierstrass preparation not
+used, so no example of a `p`-divisible formal group law (e.g. `Ĝ_m` over `ℤ_p`, height 1) is
+formalised yet). Steps 2–3 were not started.
+
+Next steps, in order:
+
+1. **`Ĝ_m` is `p`-divisible of height 1** over `ℤ_p` (needs: `ℤ_p[[t]]` free over itself via
+   `t ↦ (1+t)^p − 1` with basis `1, …, t^{p−1}`; Mathlib has `PowerSeries` Weierstrass division,
+   `Mathlib/RingTheory/PowerSeries/WeierstrassPreparation.lean`; iterate it and take
+   `(t)`-adic limits as in `FormalInv.lean`); compare `PDivFGL.pdivGroup` with `μ_{p^∞}`.
+2. **[Hong, Prop. 3.2.7]** for `G = F[p^∞]`: `F(m_{ℂ_p})` is `p`-divisible. Plan: for
+   `y ∈ F(m)`, base change the finite free `A`-algebra `A` (via `[p]^*`, `FreeVia` basis) along
+   `ev_y : A → ℂ_p` to a nonzero finite `ℂ_p`-algebra, take a `ℂ_p`-point `χ` (ℂ_p algebraically
+   closed), `x_j = χ(t_j)`: integrality gives `|x_j| ≤ 1`, `t_j^N ∈ 𝔪A + [p]^*(I)A` gives
+   `< 1`, and `ev_x = χ` on `A` by `AdicEval.algHom_ext` with `isHausdorff_span`. Then
+   `logF_surjective_of_divisible` gives [Hong, Prop. 3.4.7] for `G = F[p^∞]` and
+   `exists_tate_of_divisible` the surjectivity `T_p F → F(m)[p^v]`.
+3. **Tate's theorem** ([Stix, Thm. 91], [Hong, Thm. 3.4.10]) and the **Hodge–Tate
+   decomposition** ([Hong, Thm. 3.4.12]): unchanged from the sixth-session plan (formal group of
+   `G°` = Serre–Tate [Hong, Prop. 2.2.13, Thm. 2.2.16]; `G(O_C)` and the connected–étale
+   sequence [Hong, Prop. 3.2.5]; `d + d^∨ = h` [Hong, Thm. 2.2.19]; then `α`, `dα` of
+   [Hong, Prop. 3.4.9] with `logF_galPt`, `tateDualHom`, `sum_finrank_DHT_le`,
+   `isHodgeTate_of_exact_of_disjoint`). For connected `G = F[p^∞]` the identification
+   `T_p G ≅ T_p F` is now available (`tateEquiv`).
+4. **Full faithfulness** [Hong, Thm. 3.5.4]: plan (a)–(d) of the fifth hand-off.
+
+## Hand-off (2026-10-18, sixth session; superseded)
 
 Done this session (all pushed with green validation): the formal-group drafts were moved into
 `PadicHodge/FormalGroup/` and finished (`2742552`), [Hong, Prop. 3.3.6 (1)–(4)] with inverses

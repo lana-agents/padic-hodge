@@ -5,6 +5,7 @@ Authors: Claude (Anthropic)
 -/
 import PadicHodge.FormalGroup.LayerHopf
 import PadicHodge.GroupScheme.PDivisible
+import PadicHodge.GroupScheme.Connected
 
 /-!
 # The connected `p`-divisible group `F[p^∞]` ([Hong, Prop. 2.2.10 (2)])
@@ -16,6 +17,7 @@ immersions `A_{v+1} ↠ A_v` form a `p`-divisible group of height `h` (`PDivFGL.
 * `incl`: `A_{v+1} ↠ A_v` is a bialgebra map (on `t`: `Φ(t ⊗ 1, 1 ⊗ t) ↦ Φ(t ⊗ 1, 1 ⊗ t)`);
 * `pow_eq`: the `n`-th convolution power of a point `y : A_v → S` is `y ∘ [n]^*`, where
   `[n]^* : A_v → A_v`, `t ↦ [n]_F(t)` (`mulMap`), for every `R`-algebra `S`;
+* `isConnected_groupScheme`: each `F[p^v]` is connected (`A_v` is local);
 * `range_eq`: `y ∈ G_{v+1}(S)` factors through `A_{v+1} ↠ A_v` iff `y^{p^v} = 1`
   (`y` kills `[p^v]_F(t)` iff `y ∘ [p^v]^* = ε`).
 -/
@@ -175,6 +177,11 @@ theorem range_eq (v : ℕ) (S : Type u) [CommRing S] [Algebra R S]
     ext f
     simp only [AlgHom.comp_apply, Ideal.Quotient.mkₐ_eq_mk, layerIncl_mk, liftL_mk]
     try rfl
+
+/-- **`F[p^v]` is connected**: `A_v` is a quotient of the local ring `R[[T]]`. -/
+theorem isConnected_groupScheme (v : ℕ) : (P.groupScheme v).IsConnected := by
+  haveI := P.nontrivial_A v
+  exact IsLocalRing.of_surjective' (Ideal.Quotient.mk _) Ideal.Quotient.mk_surjective
 
 /-- **The connected `p`-divisible group `F[p^∞]`** of a `p`-divisible formal group law
 ([Hong, Prop. 2.2.10 (2)]). -/
