@@ -27,7 +27,9 @@ import PadicHodge.FormalGroup.AlphaGal
 import PadicHodge.FormalGroup.AlphaInj
 import PadicHodge.FormalGroup.AlphaLog
 import PadicHodge.FormalGroup.DAlphaInj
+import PadicHodge.FormalGroup.DerivStable
 import PadicHodge.FormalGroup.Divisible
+import PadicHodge.FormalGroup.DualTateGal
 import PadicHodge.FormalGroup.DualTateZp
 import PadicHodge.FormalGroup.ExactSeq
 import PadicHodge.FormalGroup.FGLHom
@@ -105,6 +107,7 @@ import PadicHodge.GroupScheme.EtaleQuotientOrder
 import PadicHodge.GroupScheme.EtaleUnramified
 import PadicHodge.GroupScheme.Faithful
 import PadicHodge.GroupScheme.FiniteFlat
+import PadicHodge.GroupScheme.Frobenius
 import PadicHodge.GroupScheme.IntegralPoints
 import PadicHodge.GroupScheme.Mu
 import PadicHodge.GroupScheme.PDivisible

@@ -601,6 +601,31 @@ in place of Kähler differentials (all rings of integers here are monogenic), ev
   `T^m`, `m_j < N` (`boxBasis`, `finrank_quot_spanXPow = N^d`); **the Frobenius kernel
   `Spec k[[T]]/([p]_F, T^p)` of `F[p]` has order `p^d`** (`finrank_frobKernel`; [Hong,
   Cor. 1.5.11, Cor. 2.2.18]).
+* **done** `GroupScheme/Frobenius.lean` (over a field `k` of char. `p` with `x^p = x`, e.g.
+  `𝔽_p`): relative Frobenius `φ_G = frob` (`a ↦ a^p`, a bialgebra map; [Hong, Def. 1.5.1,
+  Lemma 1.5.2, Cor. 1.5.4]); **`f^p(d^p) = f([p]^* d)`** for `f ∈ A^∨`, `d ∈ A`
+  (`pow_apply_pow`; via `hat(univPt)^p = Σ (e_i^*)^p ⊗ e_i^p` in the char-`p` ring `A^∨ ⊗ A`
+  and the transpose of Frobenius being multiplicative: the `Verschiebung ∘ Frobenius = [p]` half
+  of [Hong, Prop. 1.5.8] in dual form, no symmetric tensors), hence `d^p = 0 ⇒ [p]^* d = 0`;
+  general Nakayama bound **`|G| ≤ |ker f| · |im f|` for connected `G`**
+  (`order_le_finrank_mul_finrank_range`); **`|G| ≤ |ker φ_G| · |ker φ_{G^∨}|` for connected `G`
+  killed by `p`** (`order_le_frobKer_mul`, `frobKerIdeal`): the inequality `h ≤ d + d^∨` of
+  [Hong, Thm. 2.2.19] (the only direction used in [Hong, proof of Thm. 3.4.10]), proved without
+  exact sequences: `Frob(A)` is annihilated by the ideal `(f^p : f(1) = 0)` of `A^∨`.
+* **done** `FormalGroup/DualTateGal.lean`: the Galois action `galDualZp` on `T_p(G^∨)(O_{ℂ_p})`
+  for any `G` over `ℤ_p`; **`dualTateZpEquiv` is Galois-equivariant** (`dualTateZpEquiv_gal`,
+  `dualTateZpEquiv'_gal` into `DualTate` of the generic fibre, where `tatePairingZp` lives);
+  `ℤ_p`-module structure on `DualTate` (`instModuleZpDual`) with `dualTateZpLinearEquiv`;
+  **`dα` is `ℤ_p`-linear in `y`** (`dalpha_zpSmul`, via `y_v = 1 ⇒ y` is a `p^v`-th power over
+  `O_C` and `p`-adic separatedness) — [Hong, Prop. 3.4.9] (“evidently `ℤ_p`-linear and
+  `Γ_K`-equivariant”).
+* **done** `FormalGroup/DerivStable.lean` (generic, `MvPowerSeries` over `k` of char. `p` with
+  `x^p = x`; towards [Hong, Prop. 2.2.13] by a derivation argument instead of order counting):
+  Frobenius decomposition `f = Σ_{m < p} γ_m^p X^m` (`frob_decomp`); for `∂`-stable ideals the
+  `γ_m^p` lie in the ideal (`pow_mem_of_sum_mem`); **if ideals `𝔞_v ⊆ (X)` are `∂`-stable and
+  `h^p ∈ 𝔞_{v+1} ⇒ h ∈ 𝔞_v`, then `𝔞_v ⊆ (X_i^{p^w})` for `w ≤ v`** (`le_spanXPow_of_derivStable`,
+  `iInf_eq_bot_of_derivStable`); `∂`-stability of `ker ρ` from derivations of the target with an
+  invertible matrix of values on `ρ(X_i)` (`derivStable_ker`).
 
 ## Hand-off (2026-10-18, eleventh session)
 
