@@ -452,6 +452,17 @@ in place of Kähler differentials (all rings of integers here are monogenic), ev
   `f = π₂ ∘ ι ∘ (π₁ ∘ ι)⁻¹`, `f_L = f̃` by `Hom.ext_of_mapTate`; uniqueness
   `Hom.ext_of_baseChange`. No use of [Hong, Prop. 2.1.14] (the generic-fibre form of
   Prop. 3.5.3 takes the graph directly).
+* **done** `GroupScheme/GaloisDescent.lean` (20th session): **fullness part of [Hong,
+  Prop. 2.1.14]** (via [Hong, Prop. 1.3.1]) over a field `F` with `ℚ̄_p/F` Galois:
+  `ℚ̄_p ⊗_F O(G) ≅ Map(G(ℚ̄_p), ℚ̄_p)` (`evAll_bijective`, `G` killed by `n ≠ 0`),
+  `exists_eq_of_equivariant` (equivariant functions are evaluations; `σ ⊗ 1`-invariants via a
+  basis and `InfiniteGalois.mem_range_algebraMap_iff_fixed`), `homOfEquivariant` (equivariant
+  group homomorphisms of `ℚ̄_p`-points come from homomorphisms of group schemes),
+  `TateModule.exists_pow_eq_of_val_eq_one` (`ker(T_p → G_v) = p^v T_p`), and
+  **`PDivGroup.exists_hom_of_galTate`** (an equivariant `T_p G → T_p H` comes from `G → H`).
+* **done** `FormalGroup/FullyFaithful.lean`: **[Hong, Cor. 3.5.5] over `O_{K'}`:
+  `PDivGroup.Hom.mapTate_bijective_OL`** (`Hom(G, H) → GalTateHom G H`, the
+  `Γ_L`-equivariant homomorphisms `T_p(G_L)(ℚ̄_p) → T_p(H_L)(ℚ̄_p)`, is bijective).
 * **planned** rest of the connected–étale sequence over `O_K`, formal Lie groups;
   Tate's Hodge–Tate decomposition of `T_p G ⊗ ℂ_p` and full faithfulness ([Tate] §4, Thm. 4;
   [Tate] not available locally, statements as quoted in [LocAn] and [BC]); see the hand-off.

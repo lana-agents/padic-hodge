@@ -7,6 +7,8 @@ import PadicHodge.GroupScheme.SubPDiv
 import PadicHodge.GroupScheme.Product
 import PadicHodge.FormalGroup.GenericIso
 import PadicHodge.FormalGroup.OLFraction
+import PadicHodge.GroupScheme.GaloisDescent
+import PadicHodge.TateSen.Invariants
 
 /-!
 # [Hong, Thm. 3.5.4] (Tate): the generic fibre functor is fully faithful over `O_{K'}`
@@ -25,9 +27,13 @@ generic-fibre form, so
 * `FFGroupScheme.graphBC φ : X_S → (X × Y)_S` for `φ : X_S → Y_S`, `z ↦ (z, φ z)`;
 * `PDivGroup.Hom.graph`, `PDivGroup.Hom.inv` (levelwise bijective homomorphisms are invertible).
 
+**[Hong, Cor. 3.5.5]** (`PDivGroup.Hom.mapTate_bijective_OL`): `Hom(G, H) → Hom_{ℤ_p[Γ_L]}(T_p G,
+T_p H)` is bijective: Thm. 3.5.4 and the fullness of `T_p` over `L` ([Hong, Prop. 2.1.14],
+`exists_hom_of_galTate`, Galois descent in `GaloisDescent.lean`).
+
 ## References
 
-* [Hong] S. Hong, *Notes on p-adic Hodge theory*, Thm. 3.5.4 and its proof.
+* [Hong] S. Hong, *Notes on p-adic Hodge theory*, Thm. 3.5.4 and its proof, Cor. 3.5.5.
 -/
 
 noncomputable section
@@ -217,6 +223,29 @@ theorem Hom.baseChange_bijective_OL {G H : PDivGroup (OL L) p} :
   change ((PDivGroup.snd G H).f v).mapPoints K ((ι.f v).mapPoints K y) = _
   rw [(key v y).2, hey]
   rfl
+
+/-- `Hom_{ℤ_p[Γ_L]}(T_p G, T_p H)`: the `Γ_L`-equivariant homomorphisms of the Tate modules
+`T_p G(ℚ̄_p) = T_p(G_L)(ℚ̄_p)`. -/
+def GalTateHom (G H : PDivGroup (OL L) p) : Type :=
+  {τ : (G.baseChange L).TateModule K →* (H.baseChange L).TateModule K //
+    ∀ (σ : K ≃ₐ[L] K) x, τ ((G.baseChange L).galTate σ x) = (H.baseChange L).galTate σ (τ x)}
+
+/-- **[Hong, Cor. 3.5.5] over `O_L`**: `Hom(G, H) → Hom_{ℤ_p[Γ_L]}(T_p G, T_p H)` is
+bijective. -/
+theorem Hom.mapTate_bijective_OL {G H : PDivGroup (OL L) p} :
+    Function.Bijective (fun f : Hom G H => (⟨(Hom.baseChange (S := L) f).mapTate K,
+      fun σ x => Hom.mapTate_galTate _ σ x⟩ : GalTateHom G H)) := by
+  have hpK : (p : K) ≠ 0 := Nat.cast_ne_zero.mpr hp.out.ne_zero
+  have hLK : Function.Injective (algebraMap L K) := (algebraMap L K).injective
+  refine ⟨fun f g h => Hom.baseChange_bijective_OL.1 ?_, fun τ => ?_⟩
+  · have h' := congrArg Subtype.val h
+    exact Hom.ext_of_mapTate K hpK hLK fun x => DFunLike.congr_fun h' x
+  · obtain ⟨φ, hφ⟩ := exists_hom_of_galTate (F := L) τ.1 τ.2
+    obtain ⟨f, hf⟩ := (Hom.baseChange_bijective_OL (G := G) (H := H)).2 φ
+    refine ⟨f, Subtype.ext (MonoidHom.ext fun x => ?_)⟩
+    change (Hom.baseChange (S := L) f).mapTate K x = τ.1 x
+    have hf' : Hom.baseChange (S := L) f = φ := hf
+    rw [hf', hφ]
 
 end PDivGroup
 

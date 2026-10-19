@@ -135,6 +135,7 @@ import PadicHodge.GroupScheme.EtaleUnramified
 import PadicHodge.GroupScheme.Faithful
 import PadicHodge.GroupScheme.FiniteFlat
 import PadicHodge.GroupScheme.Frobenius
+import PadicHodge.GroupScheme.GaloisDescent
 import PadicHodge.GroupScheme.HaarIntegral
 import PadicHodge.GroupScheme.HopfDisc
 import PadicHodge.GroupScheme.HopfTrace
