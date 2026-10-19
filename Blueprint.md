@@ -991,6 +991,14 @@ MR7 (MR7-plan "What MR7 needs from MR6" (b), (d)). `α_K` bijectivity is deferre
     `ℚ_p`-coefficient Kummer theory only `G⁰(O_{K'}) = F(m_{K'})` matters
     (`exists_connPart_iso_OL`), and [TopSurr] l.2282–2284 passes to a multiple lying in the
     formal group. `H¹` is over `ℤ` (no `ℤ_p`-module structure on `Kummer.Tp` yet).
+* **done (22nd session) (b) follow-ups**: `Cohomology/KummerZp.lean` (`ℤ_p`-module structure on
+  `Kummer.Tp`, continuous, `tpRepZp` `ℤ_p`-linear, `toH1Zp : H¹_ℤ → H¹_{ℤ_p}`);
+  `FormalGroup/KummerTate.lean`: `OL.incOK : O_K̄ → O_{ℂ_p}`, `OL.incQ : O_K̄ → ℚ̄_p` (bijective
+  on points of finite flat `O_{K'}`-group schemes: values integral over `O_{K'}`),
+  `PDivGroup.tateComp`, **`PDivFGL.tpToQbar : T_p F → T_p(F[p^∞]_{K'})(ℚ̄_p)`**, bijective and
+  `G_{K'}`-equivariant (`tpToQbar_tpRep`: `tpRep` ↔ `galTate`). Missing: multiplicativity of
+  `tpToPDiv` (layer points of `x + y` are the convolution product), needed to view it as a
+  group isomorphism.
 * **wip (d) [Fo] integral Hodge–Tate** (MR7-plan A7). Consumer: [LocAn] §9 item (1)
   (l.2669–2697): a `Γ_K`-equivariant `Ω^inv_G ⊗ (p^{n₀}O/p^{n₀+n}O) → H^Ω_G ⊗ ℤ/p^n` with an
   inverse up to `p^{n₀}`, `n₀ = n₀″ + ord_p(g!) + 2`, `p^{n₀″}` bounding the different of `K/ℚ_p`
@@ -1035,7 +1043,8 @@ MR7 (MR7-plan "What MR7 needs from MR6" (b), (d)). `α_K` bijectivity is deferre
      `OL.xi : ℚ̄_p → Ω_{O_K̄/O_L}`, `a ↦ (p^{n+1} a)·dlog ε_{n+1}`; `xi_add`, `xi_smul`
      (`O_K̄`-linear), **`xi_surjective`** (Lemme 5), **`xi_eq_zero_iff`**
      (`ξ(a) = 0 ↔ |a| ‖𝔇_{L/ℚ_p}‖ |ε_1 - 1| ≤ 1`, i.e. kernel `𝔞_L`, `|ε_1 - 1|^{p-1} = p^{-1}`).
-     Missing: `G_L`-equivariance of `ξ` (needs the Galois action on `Ω`).
+     `Fontaine/Galois.lean`: `KaehlerUnion.galΩ σ` (σ-semilinear action of `Aut_R(B)` on
+     `Ω_{B/R}` via `kerTotal`), `OL.galOK`, **`OL.galΩ_xi`** (`σ(ξ(a)) = ξ(χ(σ)σ(a))`).
   4. ~~§4~~ dropped (lead decision 2026-10-19 after MR7-plan "Research: [LocAn] §9(1) minimal
      statement"): [LocAn] §9 (1) needs only (a) the integral forward map `p^{c_a}ρ`,
      (b) rational HT ([Fo] Prop. 9 via §3 Lemmes 2, 4, 5, §5.7 (i)), (c) the lattice/cokernel bound.

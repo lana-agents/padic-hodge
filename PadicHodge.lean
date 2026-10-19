@@ -11,6 +11,7 @@ import PadicHodge.AxSenTate.AxLemma
 import PadicHodge.AxSenTate.Basic
 import PadicHodge.Cohomology.ContH1
 import PadicHodge.Cohomology.Kummer
+import PadicHodge.Cohomology.KummerZp
 import PadicHodge.Cyclotomic.Character
 import PadicHodge.Cyclotomic.Core
 import PadicHodge.Cyclotomic.Decomp
@@ -23,6 +24,7 @@ import PadicHodge.Cyclotomic.Trace
 import PadicHodge.Cyclotomic.Vanishing
 import PadicHodge.Fontaine.Cyclotomic
 import PadicHodge.Fontaine.Differentials
+import PadicHodge.Fontaine.Galois
 import PadicHodge.Fontaine.KaehlerUnion
 import PadicHodge.Fontaine.Monogenic
 import PadicHodge.Fontaine.OLExt
@@ -69,6 +71,7 @@ import PadicHodge.FormalGroup.InvDeriv
 import PadicHodge.FormalGroup.Invariants
 import PadicHodge.FormalGroup.InvariantsK
 import PadicHodge.FormalGroup.Kummer
+import PadicHodge.FormalGroup.KummerTate
 import PadicHodge.FormalGroup.Law
 import PadicHodge.FormalGroup.LayerFree
 import PadicHodge.FormalGroup.LayerHopf
