@@ -23,6 +23,7 @@ import PadicHodge.Cyclotomic.Trace
 import PadicHodge.Cyclotomic.Vanishing
 import PadicHodge.Fontaine.Differentials
 import PadicHodge.Fontaine.Monogenic
+import PadicHodge.Fontaine.OLExt
 import PadicHodge.FormalGroup.AdicEval
 import PadicHodge.FormalGroup.AdicPoints
 import PadicHodge.FormalGroup.Alpha

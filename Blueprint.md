@@ -1012,7 +1012,7 @@ MR7 (MR7-plan "What MR7 needs from MR6" (b), (d)). `α_K` bijectivity is deferre
      domains) and `Fontaine/Monogenic.lean` (**`exists_adjoin_eq_top`**: `B = A[x]` for a DVR
      `B` finite over local `A` with separable residue extension, Serre III §6 Prop. 12;
      **`exists_kaehler_cyclic`**).
-  2. Instances for `OL E` over `OL L` (DVR, `Module.Finite`, `IsIntegralClosure`, fraction
+  2. Instances for `OL E` over `OL L` (DVR: **done**, `Fontaine/OLExt.lean`; `Module.Finite`, `IsIntegralClosure`, fraction
      fields, residue fields finite hence perfect); `𝔇_{E/L}` multiplicative in towers (Mathlib
      `differentIdeal_eq_differentIdeal_mul_differentIdeal`), [Fo] Lemme 2–4 (`Ω_{O_E/O_L} →
      Ω_{O_{E'}/O_L}` injective, annihilators), Lemme 5–6, `Ω = colim_E Ω_{O_E/O_L}`.
@@ -1024,7 +1024,42 @@ MR7 (MR7-plan "What MR7 needs from MR6" (b), (d)). `α_K` bijectivity is deferre
      separate cokernel bound if that suffices for [LocAn]).
   5. §5: `ω_H`, Prop. 10, `ρ_H`, the integral form used by [LocAn] §9 (1) for `H = G[p^∞]`.
 
-## Hand-off (2026-10-19, twentieth session)
+## Hand-off (2026-10-19, twenty-first session)
+
+Lead decision applied: MR6 serves MR7 (order (b), (d), then Hong Prop. 2.1.14 ess. surj. and
+the `TateNonConn` dedup); `α_K` bijectivity deferred.
+
+Done (pushed, validated; see PH5):
+* `ad3ad17`: **(b) Kummer maps** — `Cohomology/Kummer.lean` (general `M^Γ → H¹_cont(Γ, T_p M)`,
+  `ContH1.map`/`comap`, naturality, restriction, `stabHyp_of_finite`) and
+  `FormalGroup/Kummer.lean` (`PDivFGL.kummer`, `kummerOL : F(m_{K'}) → H¹(G_{K'}, T_p F)`,
+  functoriality in `F`, `tpToPDiv_map`, `exists_fglHom_tpToPDiv` (Serre–Tate), base change
+  `comap_kummerOL`). No new axioms/sorries; continuous-kummer-theory not used (would need a pin
+  change).
+* `0f6d1ee`: **(d) step 1**, [Fo] Lemme 1 (i): `Fontaine/Differentials.lean`,
+  `Fontaine/Monogenic.lean` (monogenicity of finite DVR extensions, Serre III §6 Prop. 12;
+  `Ann(Ω_{B/A}) = 𝔇_{B/A}`), and the (d) plan in PH5 with checked [Fo] statements/pages.
+* this commit: `Fontaine/OLExt.lean` (`IsDiscreteValuationRing (OL L)`), hand-off.
+
+Next steps:
+1. (d) step 2: `Algebra (OL L) (OL E)` for `L ≤ E`, `IsIntegralClosure (OL E) (OL L) E`
+   (`x ∈ E` integral over `O_L` iff `|x| ≤ 1`: conjugates have equal norm, `norm_gal_apply`,
+   coefficients of the minimal polynomial are `esymm` of the roots), `Module.Finite`,
+   residue fields finite (`OL.instFiniteResidueField`) hence perfect; then
+   `exists_kaehler_cyclic` applies to `O_E/O_L`. Then [Fo] Lemme 2–6 and `Ω = colim`.
+2. (d) step 3: `v(𝔇_{K₀(ζ_{p^r})/K₀}) = r − 1/(p−1)`, [Fo] Lemme 7, Thm 1′.
+3. (d) steps 4–5 (§4 `φ_J`, Thm 3 + Cor; §5 `ρ_H`, Prop. 10) — large (estimate 5–10k lines
+   with steps 2–3); decide with the MR7 agent the exact integral statement [LocAn] §9 (1) needs
+   (only `H = G[p^∞]` for an `O_K`-semi-abelian `G`; the torus part is `μ_{p^∞}`, covered by
+   Thm 1′ itself).
+4. Optional for (b): a `ℤ_p`-module structure on `Kummer.Tp` (H¹ is over `ℤ` now) and the
+   comparison `Kummer.tpRep` ↔ `galTate` on `T_p(F[p^∞])(ℚ̄_p)` (needed to feed Kummer classes
+   into `GalTateHom` / Tate's theorem with `Ω = ℚ̄_p`).
+5. Unchanged: [Hong, Prop. 2.1.14] essential surjectivity; `TateNonConn`/`TateNonConnOL` dedup.
+
+No WIP branch; nothing unpushed after this commit.
+
+## Hand-off (2026-10-19, twentieth session; superseded)
 
 Lead decisions applied: discriminant chain instead of finiteness of the integral closure;
 Prop. 3.5.3 in generic-fibre form (Galois-descent input `M ↦ H̃` deferred).
