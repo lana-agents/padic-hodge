@@ -27,7 +27,9 @@ import PadicHodge.Fontaine.Differentials
 import PadicHodge.Fontaine.FoIntDecomp
 import PadicHodge.Fontaine.FoIntLattice
 import PadicHodge.Fontaine.FoIntLin
+import PadicHodge.Fontaine.FoIntNonConn
 import PadicHodge.Fontaine.Galois
+import PadicHodge.Fontaine.HomRep
 import PadicHodge.Fontaine.KaehlerUnion
 import PadicHodge.Fontaine.LemmeFour
 import PadicHodge.Fontaine.Monogenic
@@ -111,6 +113,7 @@ import PadicHodge.FormalGroup.PointsOC
 import PadicHodge.FormalGroup.SerreTateHom
 import PadicHodge.FormalGroup.TateModule
 import PadicHodge.FormalGroup.TateNonConn
+import PadicHodge.FormalGroup.TateNonConnGen
 import PadicHodge.FormalGroup.TateNonConnOL
 import PadicHodge.FormalGroup.Torsion
 import PadicHodge.FormalGroup.TpMul
@@ -182,6 +185,7 @@ import PadicHodge.GroupScheme.SerreTatePDiv
 import PadicHodge.GroupScheme.SerreTateSpecial
 import PadicHodge.GroupScheme.SpecialFibre
 import PadicHodge.GroupScheme.SubPDiv
+import PadicHodge.GroupScheme.SummandPDiv
 import PadicHodge.GroupScheme.TateCont
 import PadicHodge.GroupScheme.TateDual
 import PadicHodge.GroupScheme.TateDualRep

@@ -1080,8 +1080,51 @@ MR7 (MR7-plan "What MR7 needs from MR6" (b), (d)). `α_K` bijectivity is deferre
      p^c f ∈ p^N ρ(O_{ℂ_p}^d) + (M ∩ V1)`, `p^N ρ` integral).
      Not done (not needed by the lead's scope): an explicit `c`; identification of `V1` with
      `M ∩ V₁` of a semi-abelian `G` (MR7 glue, B4-lite).
+  8. **done (24th session) (FoInt) for non-connected `H`** (lead decision 2026-10-19: the bridge
+     `T_p F → T_p H` belongs to MR6). `Fontaine/HomRep.lean` (generic: `Hom_{ℤ_p}(T, ℂ_p)` for a
+     `ℤ_p`-lattice with `G_L`-action, `ℂ_p ⊗ V^∨ ≅ W` equivariant (`PhiAL_gal`, `mem_E_iff`,
+     `finrank_E`), `PhiAL_comp` (restriction = transpose), **`eq_zero_of_isTwist`** (no weight-`j`
+     classes, `j ≠ 0`, on a lattice with trivial `ℂ_p ⊗ V`, also over every finite `L' ⊇ L`),
+     `span_isEquiv_eq_top`, generic lattice lemma **`HomRep.exists_lattice`**,
+     `exists_pow_norm_le`; `PDivGroup.galRepZ`). `Fontaine/FoIntNonConn.lean`: for `G` over
+     `O_L` with `G⁰ ≅ F[p^∞]` (`φ`, `ψ`), `ι : T_p F → T_p G(ℚ̄_p)` (`iF`), **`rhoH`** = Fontaine's
+     pairing on `T_p G`: the `G_L`-equivariant (`ℂ_p(1)`-valued) extension of `ρ` (existence by
+     `exists_DHT_lift` on `0 → (V^{et})^∨ → V^∨ → V_F^∨ → 0`, `V^{et}` of weight `0` by
+     `isHodgeTate_etRepOL`; `rhoH_comp_iF`, `rhoH_gal`, **`rhoH_unique`** also for `G_{L'}`, so it is
+     the same map for every tame `K''`), `linearIndependent_rhoH`, `V0H`, `V1H = {f | f ∘ ι ∈ V₁(F)}`,
+     **`isCompl_V0H_V1H`**, `finrank_V0H = d`, `finrank_V1H = h − d`, `isEquiv_mem_V1H`
+     (`ℂ_p(1)`-isotypic part ⊆ `V₁`), `ker_restr_le_V1H`, `ker_restr_le_span_isEquiv` (étale classes
+     are spanned by equivariant maps), **`exists_lattice_H`** (`p^c M ⊆ p^N ρ_H(O^d) + M ∩ V₁`).
+     Not proved: `V1H` = the full `ℂ_p(1)`-isotypic part (Tate's HT decomposition for non-connected
+     `H`; needs `h = d + d^∨` for `H` and the Cartier dual of a non-connected `p`-divisible group over
+     `O_L`, which is not constructed here (`DualPDivData` exists only for `F[p^∞]`)). `V1H` is an
+     extension of `ℂ_p(1)`-isotypic pieces, which suffices for the weight argument of [LocAn] §9.
+     `FoIntDecomp`: the two `maxHeartbeats 400000` removed (`Phi_isEquiv` via `HomRep.mem_E_iff`).
 
-## Hand-off (2026-10-19, twenty-third session)
+## Hand-off (2026-10-19, twenty-fourth session)
+
+Lead decisions: (1) (FoInt) for non-connected `H` in MR6, (2) `TateNonConn` dedup, (3) [Hong,
+Prop. 2.1.14] essential surjectivity, (4) `α_K` bijectivity.
+
+Done (pushed, validated): (1) PH5 item 8 (`HomRep`, `FoIntNonConn`); (2)
+`FormalGroup/TateNonConnGen.lean` (one proof of the étale-quotient part and of
+[Hong, Cor. 3.4.11] for non-connected `G` over an abstract base: coefficient ring `R`, field
+`F` with `R → F → ℚ̄_p`, `G_L` acting through `ι : G_L → G_F`; base-specific inputs are explicit
+hypotheses discharged in the wrappers), `TateNonConn.lean`/`TateNonConnOL.lean` are thin
+specialisations with all old names, no heartbeat options; `FoIntDecomp` without heartbeat
+options; (3) `GroupScheme/SummandPDiv.lean`: `FFGroupScheme.vanIdeal`/`sub` (closed subgroup
+scheme of a `Γ_F`-stable subgroup of `G(ℚ̄_p)`, Galois descent of the indicator function),
+`PDivGroup.tateSub`, **`exists_tateSub_of_isCompl`** ([Hong, Prop. 2.1.14] for `Γ_F`-stable
+direct summands `M ⊆ T_p G`: `ι : H̃ → G`, closed immersions, `T_p(ι)` injective with image `M`)
+and **`exists_pdivGroup_of_isCompl`** ([Hong, Prop. 3.5.3] in its original form over a local PID).
+(`SubPDiv.lean`'s docstring still says the descent step is missing; it is `SummandPDiv`.)
+
+Open / caveats:
+* `FoIntNonConn` has three `maxHeartbeats 1000000` (instance terms of `T_p(H_L)` over `↥L`).
+* `V1H` vs the `ℂ_p(1)`-isotypic part: see PH5 item 8 (needs Cartier duals of non-connected `H`).
+* `SummandPDiv`: height of `H̃` is `log_p #S_1`, not yet identified with `rank M`.
+
+## Hand-off (2026-10-19, twenty-third session; superseded)
 
 Done (pushed, validated): `e6600e5` (TpMul: `tpToPDiv`/`tpToQbar` additive, GalTateHom on Kummer
 classes), `063eb0e` (A7 (a): InvDiff, XiTate, Pullback), `52038ed` (Lemme 4, Prop. 9), and the

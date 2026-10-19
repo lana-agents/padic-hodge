@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Claude (Anthropic)
 -/
 import PadicHodge.Fontaine.FoIntLin
+import PadicHodge.Fontaine.HomRep
 import PadicHodge.FormalGroup.HodgeTateOL
 import PadicHodge.HodgeTate.Dual
 
@@ -28,79 +29,6 @@ noncomputable section
 open Module TensorProduct
 
 namespace PadicHodge
-
-section GenericDual
-
-variable {p : ℕ} [hp : Fact p.Prime] {A : Type*} [AddCommGroup A] [Module ℤ_[p] A]
-  [Module.Finite ℤ_[p] A]
-
-theorem dualEquiv_qsmul {V : Type*} [AddCommGroup V] [Module ℚ_[p] V] [FiniteDimensional ℚ_[p] V]
-    (w : ℂ_[p] ⊗[ℚ_[p]] Dual ℚ_[p] V) (q : ℚ_[p]) (y : ℂ_[p] ⊗[ℚ_[p]] V) :
-    dualEquiv (V := V) w (q • y) = algebraMap ℚ_[p] ℂ_[p] q * dualEquiv (V := V) w y := by
-  rw [← algebraMap_smul ℂ_[p] q y, map_smul, smul_eq_mul]
-
-variable (p) in
-/-- `a ↦ 1 ⊗ 1 ⊗ a ∈ ℂ_p ⊗ (ℚ_p ⊗ A)`. -/
-def yA (a : A) : ℂ_[p] ⊗[ℚ_[p]] (ℚ_[p] ⊗[ℤ_[p]] A) := (1 : ℂ_[p]) ⊗ₜ ((1 : ℚ_[p]) ⊗ₜ a)
-
-omit [Module.Finite ℤ_[p] A] in
-theorem yA_add (a b : A) : yA p (a + b) = yA p a + yA p b := by
-  simp only [yA, tmul_add]
-
-omit [Module.Finite ℤ_[p] A] in
-theorem yA_smul (c : ℤ_[p]) (a : A) :
-    yA p (c • a) = (algebraMap ℤ_[p] ℚ_[p] c) • yA p a := by
-  rw [yA, yA, tmul_smul, ← algebraMap_smul ℚ_[p] c ((1 : ℚ_[p]) ⊗ₜ[ℤ_[p]] a), tmul_smul]
-
-/-- `w ↦ (a ↦ w(1 ⊗ 1 ⊗ a))`, `ℂ_p ⊗ (ℚ_p ⊗ A)^∨ → Hom_{ℤ_p}(A, ℂ_p)`. -/
-def PhiA (w : ℂ_[p] ⊗[ℚ_[p]] Dual ℚ_[p] (ℚ_[p] ⊗[ℤ_[p]] A)) : A →ₗ[ℤ_[p]] ℂ_[p] where
-  toFun a := dualEquiv w (yA p a)
-  map_add' a b := by rw [yA_add, map_add]
-  map_smul' c a := by
-    rw [yA_smul, dualEquiv_qsmul, RingHom.id_apply, Algebra.smul_def,
-      IsScalarTower.algebraMap_apply ℤ_[p] ℚ_[p] ℂ_[p]]
-
-/-- `ℂ_p ⊗ (ℚ_p ⊗ A)^∨ → Hom_{ℤ_p}(A, ℂ_p)`, `ℂ_p`-linear. -/
-def PhiAL : (ℂ_[p] ⊗[ℚ_[p]] Dual ℚ_[p] (ℚ_[p] ⊗[ℤ_[p]] A)) →ₗ[ℂ_[p]] (A →ₗ[ℤ_[p]] ℂ_[p]) where
-  toFun := PhiA
-  map_add' w w' := LinearMap.ext fun a => by
-    change dualEquiv (w + w') _ = dualEquiv w _ + dualEquiv w' _
-    rw [map_add, LinearMap.add_apply]
-  map_smul' c w := LinearMap.ext fun a => by
-    change dualEquiv (c • w) _ = c • dualEquiv w _
-    rw [map_smul, LinearMap.smul_apply]
-
-theorem PhiAL_apply (w : ℂ_[p] ⊗[ℚ_[p]] Dual ℚ_[p] (ℚ_[p] ⊗[ℤ_[p]] A)) (a : A) :
-    PhiAL w a = dualEquiv w (yA p a) := rfl
-
-theorem PhiAL_injective :
-    Function.Injective (PhiAL : (ℂ_[p] ⊗[ℚ_[p]] Dual ℚ_[p] (ℚ_[p] ⊗[ℤ_[p]] A)) →ₗ[ℂ_[p]] _) := by
-  rw [← LinearMap.ker_eq_bot, LinearMap.ker_eq_bot']
-  intro w hw
-  have h1 : ∀ a : A, dualEquiv w ((1 : ℂ_[p]) ⊗ₜ ((1 : ℚ_[p]) ⊗ₜ a)) = 0 := fun a =>
-    LinearMap.congr_fun hw a
-  have h2 : ∀ v : ℚ_[p] ⊗[ℤ_[p]] A, dualEquiv w ((1 : ℂ_[p]) ⊗ₜ v) = 0 := by
-    intro v
-    induction v using TensorProduct.induction_on with
-    | zero => rw [tmul_zero, map_zero]
-    | tmul q a =>
-      have : (q ⊗ₜ[ℤ_[p]] a : ℚ_[p] ⊗[ℤ_[p]] A) = q • ((1 : ℚ_[p]) ⊗ₜ a) := by
-        rw [smul_tmul', smul_eq_mul, mul_one]
-      rw [this, tmul_smul, dualEquiv_qsmul, h1, mul_zero]
-    | add v v' hv hv' => rw [tmul_add, map_add, hv, hv', add_zero]
-  have h3 : dualEquiv w = 0 := by
-    refine LinearMap.ext fun y => ?_
-    rw [LinearMap.zero_apply]
-    induction y using TensorProduct.induction_on with
-    | zero => rw [map_zero]
-    | tmul c v =>
-      have : (c ⊗ₜ[ℚ_[p]] v : ℂ_[p] ⊗[ℚ_[p]] (ℚ_[p] ⊗[ℤ_[p]] A)) = c • ((1 : ℂ_[p]) ⊗ₜ v) := by
-        rw [smul_tmul', smul_eq_mul, mul_one]
-      rw [this, map_smul, h2, smul_zero]
-    | add y y' hy hy' => rw [map_add, hy, hy', add_zero]
-  exact (LinearEquiv.map_eq_zero_iff _).mp h3
-
-end GenericDual
 
 namespace PDivFGL
 
@@ -288,48 +216,18 @@ theorem Phi_injective : Function.Injective P.Phi := by
   rw [PhiAL_apply, LinearMap.zero_apply]
   exact this
 
-theorem tensorAct_yA (σ : L.fixingSubgroup) (x : Kummer.Tp (P.F.Pt p) p) :
-    TensorProduct.map (galCpLin L (IntermediateField.fixingSubgroupEquiv L σ))
-      (P.tateRepOL (IntermediateField.fixingSubgroupEquiv L σ)) (yA p (P.tpLinEquiv x)) =
-      yA p (P.tpLinEquiv (Kummer.tpRep P.galRepOL p σ x)) := by
-  rw [yA, yA, TensorProduct.map_tmul, galCpLin_apply, map_one, P.tpLinEquiv_tpRep]
-  rfl
-
-theorem dualEquiv_gal' (w : ℂ_[p] ⊗[ℚ_[p]] Dual ℚ_[p] P.VT) (σ : L.fixingSubgroup)
-    (y : ℂ_[p] ⊗[ℚ_[p]] P.VT) :
-    dualEquiv (TensorProduct.map (galCpLin L (IntermediateField.fixingSubgroupEquiv L σ))
-        (P.tateRepOL.dual (IntermediateField.fixingSubgroupEquiv L σ)) w)
-      (TensorProduct.map (galCpLin L (IntermediateField.fixingSubgroupEquiv L σ))
-        (P.tateRepOL (IntermediateField.fixingSubgroupEquiv L σ)) y) =
-      galCp L (IntermediateField.fixingSubgroupEquiv L σ) (dualEquiv w y) :=
-  dualEquiv_gal P.tateRepOL _ w y
-
-set_option maxHeartbeats 400000 in
--- the instance paths of `ℂ_p ⊗ (ℚ_p ⊗ T)` coming from `dualEquiv_gal` and from instance search
--- only agree after unfolding the tensor-product instances
-theorem Phi_isEquiv (w : ℂ_[p] ⊗[ℚ_[p]] Dual ℚ_[p] P.VT)
-    (hw : ∀ τ, TensorProduct.map (galCpLin L τ) (P.tateRepOL.dual τ) w = w) :
+/-- `Φ(w)` is `G_L`-equivariant for `w ∈ D_0(V^∨)` (equivariance of `Φ`, `HomRep.mem_E_iff`). -/
+theorem Phi_isEquiv (w : CpTensor P.tateRepOL.dual) (hw : w ∈ DHT P.tateRepOL.dual 0) :
     P.IsEquiv (P.Phi w) := by
+  have h := (HomRep.mem_E_zero_iff _ _).mp
+    ((HomRep.mem_E_iff P.genericFibreOL.galRepZ (ρ := P.tateRepOL) (fun _ => rfl) 0 w).mpr hw)
   intro σ x
-  have h := P.dualEquiv_gal' w σ (yA p (P.tpLinEquiv x))
-  rw [hw, tensorAct_yA] at h
-  rw [Phi_apply, Phi_apply]
-  exact h
-
-set_option maxHeartbeats 400000 in
--- the instance paths of `ℂ_p ⊗ (ℚ_p ⊗ T)` coming from `dualEquiv_gal` and from instance search
--- only agree after unfolding the tensor-product instances
-theorem DHT_zero_fixed (w : CpTensor P.tateRepOL.dual) (hw : w ∈ DHT P.tateRepOL.dual 0)
-    (τ : PadicAlgCl p ≃ₐ[L] PadicAlgCl p) :
-    TensorProduct.map (galCpLin L τ) (P.tateRepOL.dual τ) w = w := by
-  have h := (mem_DHT _).mp hw τ
-  rw [(htSetup L).ψ_zero, one_smul] at h
-  exact h
+  rw [Phi_apply, Phi_apply, P.tpLinEquiv_tpRep]
+  exact h _ _
 
 /-- `D_0(V^∨) → W^{G_L}`, injective. -/
 def PhiL : DHT P.tateRepOL.dual 0 →ₗ[L] P.E 0 where
-  toFun w := ⟨P.ofW (P.Phi w.1), (P.mem_E_zero_iff _).mpr
-    (P.Phi_isEquiv w.1 (P.DHT_zero_fixed w.1 w.2))⟩
+  toFun w := ⟨P.ofW (P.Phi w.1), (P.mem_E_zero_iff _).mpr (P.Phi_isEquiv w.1 w.2)⟩
   map_add' w w' := Subtype.ext (map_add P.Phi w.1 w'.1)
   map_smul' a w := Subtype.ext (map_smul P.Phi (algebraMap L ℂ_[p] a) w.1)
 
