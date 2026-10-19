@@ -403,6 +403,13 @@ in place of Kähler differentials (all rings of integers here are monogenic), ev
   through the dual basis), `(A^K)^{H/K} = A^H` (`mem_invariants_subQuot_iff`) and the **third
   isomorphism theorem on points** (`mapPoints_quotQuot_eq_one_iff`: a point of `G/K` dies in
   `G/H` iff it comes from `H/K`).
+* **done** `GroupScheme/Closure.lean` (19th session): **scheme-theoretic closure** of a closed
+  subgroup `j : H̃ ↪ G_K` of the generic fibre over a PID `R` with fraction field `K`:
+  `closureIdeal = ker(A → C̃)` is a Hopf ideal (`A/I ⊗_R A/I ↪ C̃ ⊗_K C̃` via
+  `IsLocalization.moduleTensorEquiv`), `Hom.closure j` finite free with closed immersion
+  `closureHom`, `closureGeneric : K ⊗_R A/I ≃ₐ[K] C̃` and `order_closure : |H| = |H̃|`.
+* **done** `FormalGroup/OLFraction.lean` (19th session): `IsFractionRing (OL L) L`
+  (`OL.toL_injective`, `z = x / p^n`), so `Closure.lean` applies over `O_{K'}`.
 * **planned** rest of the connected–étale sequence over `O_K`, formal Lie groups;
   Tate's Hodge–Tate decomposition of `T_p G ⊗ ℂ_p` and full faithfulness ([Tate] §4, Thm. 4;
   [Tate] not available locally, statements as quoted in [LocAn] and [BC]); see the hand-off.
@@ -903,7 +910,52 @@ in place of Kähler differentials (all rings of integers here are monogenic), ev
   kernel condition componentwise), `PDivGroup.fst`, `PDivGroup.snd`, **`prodTateEquiv :
   T_p(G × H)(S) ≃* T_p G(S) × T_p H(S)`**.
 
-## Hand-off (2026-10-18, eighteenth session)
+## Hand-off (2026-10-19, nineteenth session)
+
+Lead decision (option (i)): prove [Hong, Thm. 1.1.9] for real. **Done, no debt.**
+
+Done this session (pushed, validated; see PH3 "19th session" entries):
+* `969f316`: `HaarIntegral.lean` (Larson–Sweedler over any ring: integrals `haarProj`, Fourier
+  inversion; `exists_invariant_forms`: `H`-invariant forms `tᵢ` and `Λᵢ` with `∑ tᵢ(Λᵢ x) = ε(x)`),
+  `Quotient.lean` (over any ring: dual basis `a = ∑ xₛ trⱼ(yₛ a)`, `projective_invariants`,
+  `canEquiv : A ⊗_B A ≅ A ⊗_R C`), `QuotientGroup.lean` (**[Hong, Thm. 1.1.9]** over a local PID:
+  `Hom.quotient i = G/H`, `quotientHom`, `nonempty_basis_invariants` (rank `|H|`),
+  `order_eq_mul : |G| = |H| |G/H|`, `ker i = A·B⁺`, exactness of `H(T) → G(T) → (G/H)(T)`).
+  Route (deviation from the hand-off's suggestions): not Stix's characteristic-polynomial proof
+  (needs infinite residue fields) nor Mumford over a field + fibrewise flatness, but the
+  Kreimer–Takeuchi argument via Hopf integrals, which works over any base once `can` is onto.
+  Sources: Farnsteiner's FTHM notes and Böhm arXiv:math/0409513 (statement of KT Thm 1.7) in
+  `~/iut-scratch/lit/dl/quotients/`; Stix §6 (local) for the classical statement.
+* `4c90e20`: `QuotientMap.lean` (`quotientMap` functoriality; `K ⊆ H ⊆ G`: `subQuot : H/K → G/K`
+  closed immersion, `quotQuot : G/K → G/H`, third isomorphism theorem on points).
+* final commit of the session: `Closure.lean` (scheme-theoretic closure of `j : H̃ ↪ G_K` over a
+  PID with fraction field `K`: Hopf ideal, finite free, `closureGeneric`, `order_closure`),
+  `OLFraction.lean` (`IsFractionRing (OL L) L`) and this hand-off.
+
+Next steps for [Hong, Prop. 3.5.3] (generic-fibre form: input `H̃` over `L = K'` with levelwise
+closed immersions `H̃_v ↪ G_{v,L}`; the Galois-descent construction of `H̃` from `M ⊆ T_p G` is a
+separate step, not needed for Thm. 3.5.4 where `H̃_v` is the graph of `f̃_v`):
+1. (done: `IsFractionRing (OL L) L`.)
+2. Closure Hopf compatibility: `closureGeneric` is a bialgebra iso (so `H_{v,L} ≅ H̃_v` as group
+   schemes, `H_v(Ω) ≅ H̃_v(Ω)`); closures `H_v ⊆ H_{v+1}` (closed immersions induced by `i_v`,
+   ideal inclusion from the generic diagram); `[p]`/`quot` maps restrict to closures.
+3. Quotients `Q_v = H_{v+1}/H_v` (order `p^h`), `δ_v : Q_{v+1} → Q_v` from `quot` via
+   `quotientMap`; `[p]` trivial on `Q_v` (check after `⊗ L`, `B ⊆ L ⊗ B`); `δ_v` generic iso ⇒
+   `B_v ↪ B_{v+1}` injective.
+4. **Stabilisation without integral closures**: `disc(B_v) ⊆ disc(B_{v+1})` (inclusion of
+   free orders of equal rank, `disc = det² · disc`), ascending chain in the Noetherian `O_{K'}`
+   stabilises; equal nonzero discriminants ⇒ `δ_v` bijective (`bijective_of_discIdeal_eq`,
+   already used for Lemma 3.5.2). Deviation from [Hong] (integral closure, [AM, Prop. 5.17]):
+   the lead's item "finiteness of the integral closure" is then not needed.
+5. `H'_v = H_{v₀+v}/H_{v₀}`: inclusions via `subQuot`; orders by `order_eq_mul`; `range_eq` from
+   `[p^v] = j ∘ (iso) ∘ (H_{v₀+v+1}/H_{v₀} → H_{v₀+v+1}/H_{v₀+v})` and
+   `mapPoints_quotQuot_eq_one_iff`; `ι_v = [p^{v₀}] : H'_v → G_v`; `T_p H' ≅ T_p H̃`.
+6. Thm. 3.5.4 (graph `H̃_v = Γ(f̃_v) ⊆ G_v × H_v`, `PDivGroup.prod`, Lemma 3.5.2 points form),
+   Cor. 3.5.5, then `α_K`.
+
+No WIP branch.
+
+## Hand-off (2026-10-18, eighteenth session; superseded)
 
 Done this session (pushed, validated): `65de82d` (**[Hong, Prop. 3.5.1]** over `O_{K'}`,
 `PDivGroup.discIdeal_eq_of_iso_OL` / `exists_discIdeal_eq_OL`, proved for real via Hopf

@@ -80,6 +80,7 @@ import PadicHodge.FormalGroup.OCAdic
 import PadicHodge.FormalGroup.OCAdicPi
 import PadicHodge.FormalGroup.OK
 import PadicHodge.FormalGroup.OLCompact
+import PadicHodge.FormalGroup.OLFraction
 import PadicHodge.FormalGroup.OLFrob
 import PadicHodge.FormalGroup.PDeriv
 import PadicHodge.FormalGroup.Points
@@ -103,6 +104,7 @@ import PadicHodge.GroupScheme.CartierPairing
 import PadicHodge.GroupScheme.CartierPairingBase
 import PadicHodge.GroupScheme.CartierPerfect
 import PadicHodge.GroupScheme.CartierPerfectOC
+import PadicHodge.GroupScheme.Closure
 import PadicHodge.GroupScheme.Connected
 import PadicHodge.GroupScheme.ConnectedIdempotent
 import PadicHodge.GroupScheme.ConnectedPDiv
