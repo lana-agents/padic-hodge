@@ -105,6 +105,7 @@ import PadicHodge.FormalGroup.TateModule
 import PadicHodge.FormalGroup.TateNonConn
 import PadicHodge.FormalGroup.TateNonConnOL
 import PadicHodge.FormalGroup.Torsion
+import PadicHodge.FormalGroup.TpMul
 import PadicHodge.FormalGroup.WeierstrassFree
 import PadicHodge.FormalGroup.Zp
 import PadicHodge.Galois.Basic
