@@ -1132,7 +1132,36 @@ MR7 (MR7-plan "What MR7 needs from MR6" (b), (d)). `α_K` bijectivity is deferre
      PH3 `HeightDualOL`; `HomRep.finrank_E_zero_le_finrank_span_isEquiv`).
      `FoIntDecomp`: the two `maxHeartbeats 400000` removed (`Phi_isEquiv` via `HomRep.mem_E_iff`).
 
-## Hand-off (2026-10-19, twenty-fourth session)
+## Hand-off (2026-10-19, twenty-fifth session)
+
+Lead decision: Cartier dual of non-connected `p`-divisible groups instead of the extension form.
+
+Done (pushed, validated): `ce30296` — `GroupScheme/QuotientEpi.lean` (`Hom.range_eq_invariants`:
+`f : G → X` with kernel `H` on all points gives `f^*(O(X)) = O(G)^H`; finite injective ring
+epimorphisms are surjective), `GroupScheme/CartierDualGen.lean` (**`PDivGroup.dualPDivGen`**, the
+Cartier dual of any `p`-divisible group over a local PID, via `dualPDivDataGen`),
+`FormalGroup/CartierDualOL.lean` (compatibility `PDivFGL.dualPDiv = dualPDivGen` over `O_L` and
+`ℤ_p`; `T_p((G^∨)_L) ≅ T_p((G_L)^∨)` equivariantly; **[Hong, Prop. 3.4.6] over `O_{K'}`**
+`dualTateHomOL(_bijective, _gal)`; `tateRepDualEquivOL(_gal)`); SubPDiv docstring. `023426b` —
+`FormalGroup/HeightDualOL.lean` (**`height_eq_add_OL`**: `h = d + d^∨` for non-connected `G`,
+`≤` from integrals of `G_1`, `G_1^∨` and the trace formula, `≥` by orthogonality;
+**`hodgeTate_decomposition_nonconn_OL`**: `V^∨`, `V` Hodge–Tate, `dim D_0(V^∨) = h - d`,
+`dim D_1(V^∨) = d`); `FoIntNonConn`: **`V1H_eq_V1Iso`**, `isCompl_V0H_V1Iso` (`V₁` is the
+`ℂ_p(1)`-isotypic part; old names kept); `HomRep.finrank_E_zero_le_finrank_span_isEquiv`.
+
+Not done: optional item "`ℤ_p`-linear ⇒ continuous" for the `α_K` codomain (`AlphaKBij`,
+`IsContPrincipalChar`): needs a `ℤ_p`-power structure on `1 + m_{ℂ_p}` (not in the repo) to even
+state `ℤ_p`-linearity; with it, `f(y) = ∏ f(e_i)^{a_i}` gives the uniform bound. Over `ℤ_p` only the
+`ZpD` specialisation of `dualPDivGen` is stated (`dualPDivGen_height_zp`); the `ℤ_p` analogues of
+`CartierDualOL`/`HeightDualOL` (via `TateNonConn`, base field `ℚ_p`) are not written.
+
+Elaboration note: in `HeightDualOL`, `rw` with `finrank L (DHT …)` equations across files times
+out (instance paths of `V_p(G_L)`); bridge with `omega` or generic helper lemmas
+(`finrank_DHT_dual_one_of_add_eq`) instead.
+
+No WIP branch.
+
+## Hand-off (2026-10-19, twenty-fourth session; superseded)
 
 Lead decisions: (1) (FoInt) for non-connected `H` in MR6, (2) `TateNonConn` dedup, (3) [Hong,
 Prop. 2.1.14] essential surjectivity, (4) `α_K` bijectivity.
