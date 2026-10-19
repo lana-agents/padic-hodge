@@ -1012,17 +1012,27 @@ MR7 (MR7-plan "What MR7 needs from MR6" (b), (d)). `α_K` bijectivity is deferre
      domains) and `Fontaine/Monogenic.lean` (**`exists_adjoin_eq_top`**: `B = A[x]` for a DVR
      `B` finite over local `A` with separable residue extension, Serre III §6 Prop. 12;
      **`exists_kaehler_cyclic`**).
-  2. Instances for `OL E` over `OL L` (DVR: **done**, `Fontaine/OLExt.lean`; `Module.Finite`, `IsIntegralClosure`, fraction
-     fields, residue fields finite hence perfect); `𝔇_{E/L}` multiplicative in towers (Mathlib
-     `differentIdeal_eq_differentIdeal_mul_differentIdeal`), [Fo] Lemme 2–4 (`Ω_{O_E/O_L} →
-     Ω_{O_{E'}/O_L}` injective, annihilators), Lemme 5–6, `Ω = colim_E Ω_{O_E/O_L}`.
+  2. **done (22nd session)** `Fontaine/OLTower.lean`: `Algebra (OL L) (OL E)` for `[Fact (L ≤ E)]`,
+     **`OL.isIntegralClosure`** (`|z| ≤ 1` ⇒ integral over `O_L`: coefficients of `minpoly L z` are
+     elementary symmetric functions of `G_L`-conjugates), `Module.Finite`, residue separability,
+     **`OL.exists_kaehler_cyclic'`** (Lemme 1 (i) for `O_E/O_L`). `Fontaine/OmegaTower.lean`:
+     `OL.dnorm L E = ‖𝔇_{E/L}‖`, `smul_D_eq_zero_iff` (`x·db = 0 ↔ |x| ≤ ‖𝔇‖`), `dnorm_tower`
+     (Lemme 1 (iii)), **`smul_map_smul_D_eq_zero_iff`** (Lemme 4, via the exact sequence
+     `O_{E'} ⊗ Ω_{O_E/O_L} → Ω_{O_{E'}/O_L} → Ω_{O_{E'}/O_E} → 0` instead of Fontaine's dévissage),
+     `map_injective`. `Fontaine/KaehlerUnion.lean`: `Ω_{B/R} = colim` (kernel form,
+     `exists_finset_map_eq_zero`, via `kerTotal`). `Fontaine/OmegaLimit.lean`: `OKbar p = O_{ℚ̄_p}`,
+     **`smul_mapOK_smul_D_eq_zero_iff`** (§2.5: `y·(x·db) = 0` in `Ω_{O_K̄/O_L}` iff
+     `|y||x| ≤ ‖𝔇_{E/L}‖`), `mapOK_injective`, `exists_finset_mapOK_eq` (every element comes from a
+     finite level), **`exists_smul_eq_of_annihilator_le`** (Lemme 5). Lemmes 2/6 (change of base)
+     reduce to `dnorm_tower` with the same generator `b` (used in step 3).
   3. [Fo] Lemme 7 for `Ĝ_m` (§1.7): `v(Ann(dε_r/ε_r)) = r − 1/(p−1)` over `K₀`, i.e.
      `v(𝔇_{K₀(ζ_{p^r})/K₀}) = r − 1/(p−1)` (`Φ_{p^r}'(ζ)`, `v(ζ_p − 1) = 1/(p−1)`; repo
      `Cyclotomic/`); then Thm 1′ (§2.8).
-  4. §4: invariant differentials `ω_J ≅ t*_J(O_K)` of a finite flat group scheme (§4.3),
-     `φ_J`, Prop. 6–8, Thm 3, Corollaire (or only the kernel bound, Remarque 4.11, plus a
-     separate cokernel bound if that suffices for [LocAn]).
-  5. §5: `ω_H`, Prop. 10, `ρ_H`, the integral form used by [LocAn] §9 (1) for `H = G[p^∞]`.
+  4. ~~§4~~ dropped (lead decision 2026-10-19 after MR7-plan "Research: [LocAn] §9(1) minimal
+     statement"): [LocAn] §9 (1) needs only (a) the integral forward map `p^{c_a}ρ`,
+     (b) rational HT ([Fo] Prop. 9 via §3 Lemmes 2, 4, 5, §5.7 (i)), (c) the lattice/cokernel bound.
+  5. §3 Lemmes 4–5 + Prop. 9 for `PDivFGL` over `O_{K'}`, `ρ` (`u ↦ u^*ω`), (b) from
+     `hodgeTate_decompositionOL`/`TateNonConnOL`, lattice lemma (c).
 
 ## Hand-off (2026-10-19, twenty-first session)
 

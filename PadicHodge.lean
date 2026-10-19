@@ -22,8 +22,12 @@ import PadicHodge.Cyclotomic.Tower
 import PadicHodge.Cyclotomic.Trace
 import PadicHodge.Cyclotomic.Vanishing
 import PadicHodge.Fontaine.Differentials
+import PadicHodge.Fontaine.KaehlerUnion
 import PadicHodge.Fontaine.Monogenic
 import PadicHodge.Fontaine.OLExt
+import PadicHodge.Fontaine.OLTower
+import PadicHodge.Fontaine.OmegaLimit
+import PadicHodge.Fontaine.OmegaTower
 import PadicHodge.FormalGroup.AdicEval
 import PadicHodge.FormalGroup.AdicPoints
 import PadicHodge.FormalGroup.Alpha
