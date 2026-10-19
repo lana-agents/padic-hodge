@@ -991,7 +991,38 @@ MR7 (MR7-plan "What MR7 needs from MR6" (b), (d)). `α_K` bijectivity is deferre
     `ℚ_p`-coefficient Kummer theory only `G⁰(O_{K'}) = F(m_{K'})` matters
     (`exists_connPart_iso_OL`), and [TopSurr] l.2282–2284 passes to a multiple lying in the
     formal group. `H¹` is over `ℤ` (no `ℤ_p`-module structure on `Kummer.Tp` yet).
-* **todo (d) [Fo] integral Hodge–Tate** (MR7-plan A7; [LocAn] §9 item (1), l.2669–2697).
+* **wip (d) [Fo] integral Hodge–Tate** (MR7-plan A7). Consumer: [LocAn] §9 item (1)
+  (l.2669–2697): a `Γ_K`-equivariant `Ω^inv_G ⊗ (p^{n₀}O/p^{n₀+n}O) → H^Ω_G ⊗ ℤ/p^n` with an
+  inverse up to `p^{n₀}`, `n₀ = n₀″ + ord_p(g!) + 2`, `p^{n₀″}` bounding the different of `K/ℚ_p`
+  (l.2669–2672), the "`1/(p−1)`" and "`(e−1)/e`" being [Fo] Thm 1′. Statements checked in the
+  scan `~/iut-scratch/lit/dl/mr7-d5/fontaine-varab-1982.pdf` (pages rendered; the OCR is
+  garbled): [Fo] §1.1 setting (complete discretely valued `K`, perfect residue field); Thm 1′
+  (p. 383): `ξ : K̄(1) → Ω = Ω_{O_K̄/O_K}`, `p^{-r}a ⊗ (ε_n) ↦ a · dε_r/ε_r`, is
+  `O_K`-linear, `G`-equivariant, surjective with kernel `𝔞_K(1)`,
+  `𝔞_K = {v(a) ≥ −v(𝔇_{K/K₀}) − 1/(p−1)}` (`v(p) = 1`, `K₀ = Frac W(k)`); §4.5–4.8 (pp. 395–398):
+  `φ_J = (φ⁰_J, φ¹_J) : O_K̄ ⊗_{ℤ_p} J(O_K̄) → t*_{J'}(O_K̄) ⊕ t_J(Ω)` for finite flat
+  commutative `J` (`J'` the Cartier dual, `t_J(M) = Hom(ω_J, M)`, `φ¹_J(u)(ω) = u*ω`
+  (Prop. 6)); Thm 3 + Corollaire (p. 400–401): kernel and cokernel of `φ_J` are killed by `a`
+  with `v(a) = 1/(p−1) + v(𝔇_{K/K₀})`; §5.6 Prop. 9 (p. 404): `ρ_H : K ⊗ ω_H →
+  Hom_{ℤ_p[G]}(T_p H, V_p(Ω))` injective, §5.7: `V_p(Ω) ≅ C(1)`, `ρ_H` an isomorphism onto
+  `t*_H(K) ≅ Hom_G(T_p H, C(1))`; §5.8 Prop. 10: `0 → t*_H(O_K) →p^n→ t*_H(O_K) → t*_{H_n}(O_K)
+  → 0`. Plan (Lean steps, MLF base `K' = L`, `O_E = OL E` for `L ⊆ E ⊆ ℚ̄_p` finite):
+  1. **done (21st session)** [Fo] Lemme 1 (i) for DVRs: `Fontaine/Differentials.lean`
+     (`Ω_{B/R}` of `B = R[b]` cyclic with annihilator `(P'(b))`; `= 𝔇_{B/A}` for Dedekind
+     domains) and `Fontaine/Monogenic.lean` (**`exists_adjoin_eq_top`**: `B = A[x]` for a DVR
+     `B` finite over local `A` with separable residue extension, Serre III §6 Prop. 12;
+     **`exists_kaehler_cyclic`**).
+  2. Instances for `OL E` over `OL L` (DVR, `Module.Finite`, `IsIntegralClosure`, fraction
+     fields, residue fields finite hence perfect); `𝔇_{E/L}` multiplicative in towers (Mathlib
+     `differentIdeal_eq_differentIdeal_mul_differentIdeal`), [Fo] Lemme 2–4 (`Ω_{O_E/O_L} →
+     Ω_{O_{E'}/O_L}` injective, annihilators), Lemme 5–6, `Ω = colim_E Ω_{O_E/O_L}`.
+  3. [Fo] Lemme 7 for `Ĝ_m` (§1.7): `v(Ann(dε_r/ε_r)) = r − 1/(p−1)` over `K₀`, i.e.
+     `v(𝔇_{K₀(ζ_{p^r})/K₀}) = r − 1/(p−1)` (`Φ_{p^r}'(ζ)`, `v(ζ_p − 1) = 1/(p−1)`; repo
+     `Cyclotomic/`); then Thm 1′ (§2.8).
+  4. §4: invariant differentials `ω_J ≅ t*_J(O_K)` of a finite flat group scheme (§4.3),
+     `φ_J`, Prop. 6–8, Thm 3, Corollaire (or only the kernel bound, Remarque 4.11, plus a
+     separate cokernel bound if that suffices for [LocAn]).
+  5. §5: `ω_H`, Prop. 10, `ρ_H`, the integral form used by [LocAn] §9 (1) for `H = G[p^∞]`.
 
 ## Hand-off (2026-10-19, twentieth session)
 

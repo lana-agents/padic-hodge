@@ -21,6 +21,8 @@ import PadicHodge.Cyclotomic.Solve
 import PadicHodge.Cyclotomic.Tower
 import PadicHodge.Cyclotomic.Trace
 import PadicHodge.Cyclotomic.Vanishing
+import PadicHodge.Fontaine.Differentials
+import PadicHodge.Fontaine.Monogenic
 import PadicHodge.FormalGroup.AdicEval
 import PadicHodge.FormalGroup.AdicPoints
 import PadicHodge.FormalGroup.Alpha
