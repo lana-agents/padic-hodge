@@ -397,6 +397,12 @@ in place of Kähler differentials (all rings of integers here are monogenic), ev
   **`Hom.order_eq_mul : |G| = |H| · |G/H|`**, `ker i = A · B⁺` (`mem_span_of_apply_eq_zero`),
   **exactness of `H(T) → G(T) → (G/H)(T)`** for every `R`-algebra `T`
   (`mapPoints_quotientHom_eq_one_iff`, `mapPoints_injective_of_surjective`). No debt.
+* **done** `GroupScheme/QuotientMap.lean` (19th session): functoriality `Hom.quotientMap`
+  (`f : G → G'`, `f(H) ⊆ H'` gives `G/H → G'/H'`); for `K ⊆ H ⊆ G`: `H/K → G/K` is a closed
+  immersion (`surjective_subQuot`; retraction `A → A^K` by Nakayama, `exists_retraction`, written
+  through the dual basis), `(A^K)^{H/K} = A^H` (`mem_invariants_subQuot_iff`) and the **third
+  isomorphism theorem on points** (`mapPoints_quotQuot_eq_one_iff`: a point of `G/K` dies in
+  `G/H` iff it comes from `H/K`).
 * **planned** rest of the connected–étale sequence over `O_K`, formal Lie groups;
   Tate's Hodge–Tate decomposition of `T_p G ⊗ ℂ_p` and full faithfulness ([Tate] §4, Thm. 4;
   [Tate] not available locally, statements as quoted in [LocAn] and [BC]); see the hand-off.

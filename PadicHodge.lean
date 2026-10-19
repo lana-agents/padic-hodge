@@ -141,6 +141,7 @@ import PadicHodge.GroupScheme.PDivisiblePoints
 import PadicHodge.GroupScheme.Product
 import PadicHodge.GroupScheme.Quotient
 import PadicHodge.GroupScheme.QuotientGroup
+import PadicHodge.GroupScheme.QuotientMap
 import PadicHodge.GroupScheme.SerreTateCompact
 import PadicHodge.GroupScheme.SerreTateEss
 import PadicHodge.GroupScheme.SerreTateFGL
