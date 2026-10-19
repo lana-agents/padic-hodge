@@ -1025,9 +1025,17 @@ MR7 (MR7-plan "What MR7 needs from MR6" (b), (d)). `α_K` bijectivity is deferre
      `|y||x| ≤ ‖𝔇_{E/L}‖`), `mapOK_injective`, `exists_finset_mapOK_eq` (every element comes from a
      finite level), **`exists_smul_eq_of_annihilator_le`** (Lemme 5). Lemmes 2/6 (change of base)
      reduce to `dnorm_tower` with the same generator `b` (used in step 3).
-  3. [Fo] Lemme 7 for `Ĝ_m` (§1.7): `v(Ann(dε_r/ε_r)) = r − 1/(p−1)` over `K₀`, i.e.
-     `v(𝔇_{K₀(ζ_{p^r})/K₀}) = r − 1/(p−1)` (`Φ_{p^r}'(ζ)`, `v(ζ_p − 1) = 1/(p−1)`; repo
-     `Cyclotomic/`); then Thm 1′ (§2.8).
+  3. **done (22nd session)** `Fontaine/Cyclotomic.lean`: orthogonality of `π`-adic expansions
+     (`|π|^D = p^{-1}`), **`OL.adjoin_zetaO_eq_top`** (`O_{ℚ_p(ζ)} = ℤ_p[ζ]`), `minpoly_zetaO`
+     (`= Φ_{p^{m+1}}`), **`dnorm_bot_cyc`** (`‖𝔇_{ℚ_p(ζ)/ℚ_p}‖ · |ζ^{p^m} - 1| = |p|^{m+1}`),
+     `smul_D_zeta_eq_zero_iff_bot`. `Fontaine/ThmOne.lean`: **`OL.smul_D_zeta_eq_zero_iff`**
+     ([Fo, Lemme 7] for `Ĝ_m` over any finite `L`: `y·dζ = 0 ↔ |y| ‖𝔇_{L/ℚ_p}‖ ≤ ‖𝔇_{ℚ_p(ζ)/ℚ_p}‖`;
+     Lemme 6 replaced by `dnorm_tower` with a common generator over `ℤ_p` and `O_L`), and
+     **[Fo, Thm 1′]** for a fixed compatible system `ε` of `p`-power roots of unity:
+     `OL.xi : ℚ̄_p → Ω_{O_K̄/O_L}`, `a ↦ (p^{n+1} a)·dlog ε_{n+1}`; `xi_add`, `xi_smul`
+     (`O_K̄`-linear), **`xi_surjective`** (Lemme 5), **`xi_eq_zero_iff`**
+     (`ξ(a) = 0 ↔ |a| ‖𝔇_{L/ℚ_p}‖ |ε_1 - 1| ≤ 1`, i.e. kernel `𝔞_L`, `|ε_1 - 1|^{p-1} = p^{-1}`).
+     Missing: `G_L`-equivariance of `ξ` (needs the Galois action on `Ω`).
   4. ~~§4~~ dropped (lead decision 2026-10-19 after MR7-plan "Research: [LocAn] §9(1) minimal
      statement"): [LocAn] §9 (1) needs only (a) the integral forward map `p^{c_a}ρ`,
      (b) rational HT ([Fo] Prop. 9 via §3 Lemmes 2, 4, 5, §5.7 (i)), (c) the lattice/cokernel bound.
