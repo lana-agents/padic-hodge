@@ -963,7 +963,7 @@ in place of Kähler differentials (all rings of integers here are monogenic), ev
   kernel condition componentwise), `PDivGroup.fst`, `PDivGroup.snd`, **`prodTateEquiv :
   T_p(G × H)(S) ≃* T_p G(S) × T_p H(S)`**.
 
-## PH5. Inputs for MR7 ([LocAn] / [TopSurr] Thm 4.12) — wip (21st session on)
+## PH5. Inputs for MR7 ([LocAn] / [TopSurr] Thm 4.12) — wip (21st session on; 22nd: Thm 1′ done)
 
 Lead decision (2026-10-19): Tate's Theorem 4 over `O_{K'}` is done (PH3/PH4); MR6 now serves
 MR7 (MR7-plan "What MR7 needs from MR6" (b), (d)). `α_K` bijectivity is deferred.
@@ -1051,7 +1051,46 @@ MR7 (MR7-plan "What MR7 needs from MR6" (b), (d)). `α_K` bijectivity is deferre
   5. §3 Lemmes 4–5 + Prop. 9 for `PDivFGL` over `O_{K'}`, `ρ` (`u ↦ u^*ω`), (b) from
      `hodgeTate_decompositionOL`/`TateNonConnOL`, lattice lemma (c).
 
-## Hand-off (2026-10-19, twenty-first session)
+## Hand-off (2026-10-19, twenty-second session)
+
+Lead decision applied (MR7-plan "Research: [LocAn] §9(1) minimal statement"): [Fo] §4 and §5
+Prop. 10/§5.9/§5.11 dropped; A7 = (a) integral forward map `p^{c_a}ρ`, (b) rational HT,
+(c) cokernel/lattice bound.
+
+Done (pushed, validated; see PH5):
+* `0c89af8`: (d) step 2 — `Fontaine/OLTower.lean` (`O_E` = integral closure of `O_L`, finite,
+  `exists_kaehler_cyclic'`), `Fontaine/OmegaTower.lean` (`dnorm`, Lemme 1 (i)/(iii), Lemme 4),
+  `Fontaine/KaehlerUnion.lean` (`Ω = colim`, kernel form), `Fontaine/OmegaLimit.lean`
+  (`OKbar`, §2.5, Lemme 5).
+* `5c203a4`: (d) step 3 — `Fontaine/Cyclotomic.lean` (`O_{ℚ_p(ζ)} = ℤ_p[ζ]`, different of
+  `ℚ_p(ζ_{p^{m+1}})/ℚ_p`), `Fontaine/ThmOne.lean` (Lemme 7 for `Ĝ_m` over any finite `L`,
+  Thm 1′: `xi` surjective, `O_K̄`-linear, kernel `𝔞_L`).
+* `0e8697a`: `Fontaine/Galois.lean` (Galois action `galΩ` on Kähler differentials, `galΩ_xi`:
+  `ξ` is `G_L`-equivariant with the cyclotomic twist); (b) follow-ups `Cohomology/KummerZp.lean`
+  (`ℤ_p`-module on `Kummer.Tp`, `H¹` over `ℤ_p`) and `FormalGroup/KummerTate.lean`
+  (`tpToQbar : T_p F ≃ T_p(F[p^∞]_{K'})(ℚ̄_p)` as sets, `G_{K'}`-equivariant).
+
+Next steps:
+1. (b) leftover: `tpToPDiv (x + y) = tpToPDiv x * tpToPDiv y` (layer point of `x + y` is the
+   convolution `(layerPt x ⊗ layerPt y) ∘ comul`; `comul t = Φ(t⊗1, 1⊗t)`, evaluate with
+   `ev_subst`-type lemmas as in `FGLHomPoints.layerPt_subst`), then `tpToQbar` as a
+   `G_{K'}`-equivariant group isomorphism (to feed `kummerOL` classes into `GalTateHom`).
+2. A7 (a): `ρ(ω)(u) = (u_k^*ω)_k ∈ T_p(Ω_{O_K̄/O_{K'}})` for `ω` an invariant differential of a
+   `PDivFGL` over `O_{K'}` and `u_k ∈ F(m_K̄)[p^k]`. Design: `Ω` is torsion (every element is
+   `x·db` at a finite level, killed by `δ_{E/L}`), so `u^*(∑ f_i dX_i) = ∑ f_i(u) du_i` only needs
+   `f_i(u)` modulo `p^N` — a polynomial truncation of `f_i`; prove independence of the
+   truncation. Identify `T_p(Ω)` with `𝔞̂_{K'}(1)` via `xi` (Thm 1′) and get the integral map
+   `p^{c_a}ρ : ω_H ⊗ O_{K'} → Hom(T_p H, Ô(1))`, equivariant (`galΩ_xi`).
+3. A7 (b): [Fo] §3 Lemmes 4–5 (one-variable nonvanishing `u^*ω ≠ 0` via `Ann(dx) = 𝔇`, i.e.
+   `smul_D_eq_zero_iff`; reduction to one variable) + Prop. 9 (`ρ_H` injective), then the
+   dimension count from `hodgeTate_decompositionOL`/`TateNonConnOL`.
+4. A7 (c): the lattice lemma (finitely generated `M`, `M ⊗ ℚ = V₀ ⊕ V₁` ⇒ `p^c M ⊆ p^{c_a}ρ(…)
+   + M ∩ V₁`).
+5. Unchanged: [Hong, Prop. 2.1.14] essential surjectivity; `TateNonConn` dedup.
+
+No WIP branch; nothing unpushed after this commit.
+
+## Hand-off (2026-10-19, twenty-first session; superseded)
 
 Lead decision applied: MR6 serves MR7 (order (b), (d), then Hong Prop. 2.1.14 ess. surj. and
 the `TateNonConn` dedup); `α_K` bijectivity deferred.
