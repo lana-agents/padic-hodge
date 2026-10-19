@@ -24,6 +24,9 @@ import PadicHodge.Cyclotomic.Trace
 import PadicHodge.Cyclotomic.Vanishing
 import PadicHodge.Fontaine.Cyclotomic
 import PadicHodge.Fontaine.Differentials
+import PadicHodge.Fontaine.FoIntDecomp
+import PadicHodge.Fontaine.FoIntLattice
+import PadicHodge.Fontaine.FoIntLin
 import PadicHodge.Fontaine.Galois
 import PadicHodge.Fontaine.KaehlerUnion
 import PadicHodge.Fontaine.LemmeFour

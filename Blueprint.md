@@ -963,7 +963,7 @@ in place of Kähler differentials (all rings of integers here are monogenic), ev
   kernel condition componentwise), `PDivGroup.fst`, `PDivGroup.snd`, **`prodTateEquiv :
   T_p(G × H)(S) ≃* T_p G(S) × T_p H(S)`**.
 
-## PH5. Inputs for MR7 ([LocAn] / [TopSurr] Thm 4.12) — wip (21st session on; 22nd: Thm 1′ done)
+## PH5. Inputs for MR7 ([LocAn] / [TopSurr] Thm 4.12) — A7 done (23rd session)
 
 Lead decision (2026-10-19): Tate's Theorem 4 over `O_{K'}` is done (PH3/PH4); MR6 now serves
 MR7 (MR7-plan "What MR7 needs from MR6" (b), (d)). `α_K` bijectivity is deferred.
@@ -996,9 +996,11 @@ MR7 (MR7-plan "What MR7 needs from MR6" (b), (d)). `α_K` bijectivity is deferre
   `FormalGroup/KummerTate.lean`: `OL.incOK : O_K̄ → O_{ℂ_p}`, `OL.incQ : O_K̄ → ℚ̄_p` (bijective
   on points of finite flat `O_{K'}`-group schemes: values integral over `O_{K'}`),
   `PDivGroup.tateComp`, **`PDivFGL.tpToQbar : T_p F → T_p(F[p^∞]_{K'})(ℚ̄_p)`**, bijective and
-  `G_{K'}`-equivariant (`tpToQbar_tpRep`: `tpRep` ↔ `galTate`). Missing: multiplicativity of
-  `tpToPDiv` (layer points of `x + y` are the convolution product), needed to view it as a
-  group isomorphism.
+  `G_{K'}`-equivariant (`tpToQbar_tpRep`: `tpRep` ↔ `galTate`).
+  **done (23rd session)** `FormalGroup/TpMul.lean`: `layerPt_add` (layer point of `x + y` is the
+  convolution), `tpToPDiv_add`, `tpToPDivEquiv`, `tpToQbarEquiv` (additive, `G_{K'}`-equivariant),
+  **`exists_fglHom_of_galTate`** (every `τ ∈ GalTateHom` is `T_p(φ)` for an FGL hom `φ`, which
+  carries `κ_F(x)` to `κ_{F'}(φ x)`); `Fontaine/FoIntLin.lean`: `tpLinEquiv` (`ℤ_p`-linear).
 * **wip (d) [Fo] integral Hodge–Tate** (MR7-plan A7). Consumer: [LocAn] §9 item (1)
   (l.2669–2697): a `Γ_K`-equivariant `Ω^inv_G ⊗ (p^{n₀}O/p^{n₀+n}O) → H^Ω_G ⊗ ℤ/p^n` with an
   inverse up to `p^{n₀}`, `n₀ = n₀″ + ord_p(g!) + 2`, `p^{n₀″}` bounding the different of `K/ℚ_p`
@@ -1049,9 +1051,56 @@ MR7 (MR7-plan "What MR7 needs from MR6" (b), (d)). `α_K` bijectivity is deferre
      statement"): [LocAn] §9 (1) needs only (a) the integral forward map `p^{c_a}ρ`,
      (b) rational HT ([Fo] Prop. 9 via §3 Lemmes 2, 4, 5, §5.7 (i)), (c) the lattice/cokernel bound.
   5. §3 Lemmes 4–5 + Prop. 9 for `PDivFGL` over `O_{K'}`, `ρ` (`u ↦ u^*ω`), (b) from
-     `hodgeTate_decompositionOL`/`TateNonConnOL`, lattice lemma (c).
+     `hodgeTate_decompositionOL`/`TateNonConnOL`, lattice lemma (c): see 6, 7.
+  6. **done (23rd session) A7 (a)** ([Fo] §3.3–3.4, §5.6, Thm 1′; MR7-plan (FoInt)(a)):
+     `FormalGroup/InvDiff.lean` (`FGL.invDiff = invMat⁻¹`, the invariant differentials
+     `ω_l = ∑_j invDiff l j dX_j`, `constantCoeff_invDiff`, **translation invariance**
+     `sum_invDiff_subst_Φ_mul_pderiv_zero/one` (`Φ^*ω = pr₁^*ω + pr₂^*ω`), `[n]^*ω = nω`);
+     `Fontaine/XiTate.lean` (**`OL.tau : V_p(Ω) → ℂ_p`**, `τ z = lim p^k a_k`, `ξ(a_k) = z_k`;
+     additive, `O_K̄`-linear, `norm_tau_le` (`‖τ z‖ ≤ (‖𝔇_{L/ℚ_p}‖ |ε_1-1|)⁻¹` on `T_p`),
+     injective, `tau_galΩ` (`τ(σz) = χ(σ)σ(τz)`), `map_xi`/`tau_map` (base change `L ⊆ E`));
+     `Fontaine/Pullback.lean` (`OL.evK` (values at algebraic points, Ax–Sen–Tate),
+     `exists_pow_smul_D_eq_zero`, **`OL.D_evK`** (chain rule in `Ω_{O_K̄/O_L}` via truncation),
+     `FGL.pullback`/`pairing` (`u^*ω_l`), **`pullback_addK`**, `galΩ_pullback`,
+     `PDivFGL.isAlg_of_mem_torsionBy`, `rhoSeq` (`∈ T_p(Ω)`), **`rho`** `= τ ∘ rhoSeq`,
+     `rho_add`, **`norm_rho_le`**, **`rho_tpRep`**, `rhoLin` (ℂ_p-linear extension),
+     **`exists_pow_mul_rhoLin_le`** (`p^{c_a}ρ` integral), **`tau_map_rhoSeq`** (same map over every
+     finite `K' ⊇ L`, so `c_a` is uniform in tame `K'`)).
+  7. **done (23rd session) A7 (b), (c)** (MR7-plan (FoInt)(b), (c)): `Fontaine/LemmeFour.lean`
+     (**`FGL.exists_pairing_ne_zero`**: [Fo, §3 Lemme 4] for invariant differentials, at the point
+     `p^k(ε_{m+1} − 1) e_j`; Lemme 5 is not needed since `ω_c` has linear part `∑ c_l dX_l`);
+     `Fontaine/PropNine.lean` (`FGL.isAlg_of_isOpen_stab`, **`exists_rho_ne_zero`** ([Fo, §3.5
+     Lemme 2]: divisible sequence + Tate's `ℂ_p(1)^{G_E} = 0`), **`exists_rho_ne_zero_of_ne_zero`**
+     ([Fo, Prop. 9])); `Fontaine/FoIntLin.lean` (`rhoZp` (`ℤ_p`-linear, bounded ⇒ continuous),
+     `eq_zero_of_relation_descent` (Artin), **`rhoLin_injective`** (`ρ ⊗ ℂ_p` injective));
+     `Fontaine/FoIntDecomp.lean` (`WT = Hom_{ℤ_p}(T_p F, ℂ_p) = M ⊗ ℚ`, `V0 = span ρ(ω_l)`,
+     `V1 = span Hom_{G_L}(T_p F, ℂ_p)` (the `ℂ_p(1)`-isotypic part in the twisted action),
+     **`isCompl_V0_V1`**, `finrank_V0 = d`, `finrank_V1 = h − d`, via `hodgeTate_decompositionOL`);
+     `Fontaine/FoIntLattice.lean` (**`exists_lattice`/`exists_lattice'`**: `∃ N c, ∀ f ∈ M,
+     p^c f ∈ p^N ρ(O_{ℂ_p}^d) + (M ∩ V1)`, `p^N ρ` integral).
+     Not done (not needed by the lead's scope): an explicit `c`; identification of `V1` with
+     `M ∩ V₁` of a semi-abelian `G` (MR7 glue, B4-lite).
 
-## Hand-off (2026-10-19, twenty-second session)
+## Hand-off (2026-10-19, twenty-third session)
+
+Done (pushed, validated): `e6600e5` (TpMul: `tpToPDiv`/`tpToQbar` additive, GalTateHom on Kummer
+classes), `063eb0e` (A7 (a): InvDiff, XiTate, Pullback), `52038ed` (Lemme 4, Prop. 9), and the
+final commit of this session (A7 (b), (c): FoIntLin, FoIntDecomp, FoIntLattice; this hand-off).
+A7 = MR7-plan (FoInt) is complete for `F[p^∞]`, `F` a `p`-divisible formal group law over `O_L`
+(PH5 items 6, 7). Form of the result: `T = Kummer.Tp (F(m_{ℂ_p})) ≅ T_p(F[p^∞])` (`tpLinEquiv`),
+`ρ_l = rhoZp l : T →ₗ[ℤ_p] ℂ_p` (`ℂ_p(1)` trivialised by `ε`), (a) `exists_pow_mul_rhoLin_le`,
+`rho_tpRep`, `tau_map_rhoSeq`; (b) `rhoLin_injective`, `isCompl_V0_V1`; (c) `exists_lattice'`.
+
+Next steps:
+1. MR7 glue: `G` semi-abelian over `O_K` with `H = G[p^∞]`; non-connected `H` (only `Ĥ = F`
+   enters `ρ`; `V1`, `M` for `T_p H` vs `T_p F` via `TateNonConnOL`) — lead/MR7 decision.
+2. Optional: remove the two `maxHeartbeats 400000` bumps in FoIntDecomp (instance paths of
+   `ℂ_p ⊗ (ℚ_p ⊗ T)`); explicit `c` in (c).
+3. Unchanged: [Hong, Prop. 2.1.14] essential surjectivity; `TateNonConn` dedup.
+
+No WIP branch.
+
+## Hand-off (2026-10-19, twenty-second session; superseded)
 
 Lead decision applied (MR7-plan "Research: [LocAn] §9(1) minimal statement"): [Fo] §4 and §5
 Prop. 10/§5.9/§5.11 dropped; A7 = (a) integral forward map `p^{c_a}ρ`, (b) rational HT,
