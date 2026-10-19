@@ -963,6 +963,36 @@ in place of Kähler differentials (all rings of integers here are monogenic), ev
   kernel condition componentwise), `PDivGroup.fst`, `PDivGroup.snd`, **`prodTateEquiv :
   T_p(G × H)(S) ≃* T_p G(S) × T_p H(S)`**.
 
+## PH5. Inputs for MR7 ([LocAn] / [TopSurr] Thm 4.12) — wip (21st session on)
+
+Lead decision (2026-10-19): Tate's Theorem 4 over `O_{K'}` is done (PH3/PH4); MR6 now serves
+MR7 (MR7-plan "What MR7 needs from MR6" (b), (d)). `α_K` bijectivity is deferred.
+
+* **done (21st session) (b) Kummer maps** (needed by [TopSurr] l.2269–2287: Kummer classes of
+  points of the formal group of `J`, compared via Tate's theorem):
+  - `Cohomology/Kummer.lean` (general): `Kummer.Tp M p = lim M[p^n]` with the inverse limit
+    topology of the discrete `M[p^n]` (`IsTopologicalAddGroup`), `Kummer.tpRep`;
+    `ContH1.map` (coefficients), `ContH1.comap` (pull-back along continuous `Γ' → Γ`);
+    **`Kummer.kummer : M^Γ → H¹_cont(Γ, T_p M)`** for `p`-divisible `M` with `StabHyp`
+    (`p`-th roots of points with open stabiliser have open stabiliser), `kummer_eq` (any
+    compatible system of roots), **`map_kummer`** (naturality in `M`), **`comap_kummer`**
+    (restriction), `stabHyp_of_finite` (compact `Γ`, closed stabilisers, `M[p]` finite;
+    orbit–stabiliser in `Stab(p z)` plus "closed of finite index ⇒ open").
+  - `FormalGroup/Kummer.lean`: `FGL.galRep` (action of a subgroup `Γ ⊆ Gal(ℚ̄_p/ℚ_p)` fixing
+    the coefficients on `F(m_{ℂ_p})`), `FGL.isClosed_stab`, `PDivFGL.finite_torsion`
+    (`F(m_{ℂ_p})[p] ↪ F[p](ℂ_p)`), **`PDivFGL.kummer`**, **`PDivFGL.map_kummer`**
+    (functoriality in `F`), **`PDivFGL.comap_kummer`**, `tpToPDiv` (+ `tpToPDiv_bijective`):
+    `T_p F ≅ T_p(F[p^∞])(O_{ℂ_p})`, **`tpToPDiv_map`** (`T_p(f) = T_p(f[p^∞])`),
+    **`exists_fglHom_tpToPDiv`** (every `ψ : F[p^∞] → F'[p^∞]` is `f[p^∞]`, Serre–Tate);
+    over `O_{K'}`: **`kummerOL : F(m_{K'}) → H¹_cont(G_{K'}, T_p F)`**,
+    `mem_invariants_galRepOL_iff` (invariants = points with coordinates in `K'`),
+    **`comap_kummerOL`** (base change `K' ⊆ K''`).
+  - Scope note: `G(O_{K'})` for a non-connected `p`-divisible group is not defined; for
+    `ℚ_p`-coefficient Kummer theory only `G⁰(O_{K'}) = F(m_{K'})` matters
+    (`exists_connPart_iso_OL`), and [TopSurr] l.2282–2284 passes to a multiple lying in the
+    formal group. `H¹` is over `ℤ` (no `ℤ_p`-module structure on `Kummer.Tp` yet).
+* **todo (d) [Fo] integral Hodge–Tate** (MR7-plan A7; [LocAn] §9 item (1), l.2669–2697).
+
 ## Hand-off (2026-10-19, twentieth session)
 
 Lead decisions applied: discriminant chain instead of finiteness of the integral closure;

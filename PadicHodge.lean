@@ -10,6 +10,7 @@ import PadicHodge.AxSenTate.Ax
 import PadicHodge.AxSenTate.AxLemma
 import PadicHodge.AxSenTate.Basic
 import PadicHodge.Cohomology.ContH1
+import PadicHodge.Cohomology.Kummer
 import PadicHodge.Cyclotomic.Character
 import PadicHodge.Cyclotomic.Core
 import PadicHodge.Cyclotomic.Decomp
@@ -58,6 +59,7 @@ import PadicHodge.FormalGroup.HodgeTateOL
 import PadicHodge.FormalGroup.InvDeriv
 import PadicHodge.FormalGroup.Invariants
 import PadicHodge.FormalGroup.InvariantsK
+import PadicHodge.FormalGroup.Kummer
 import PadicHodge.FormalGroup.Law
 import PadicHodge.FormalGroup.LayerFree
 import PadicHodge.FormalGroup.LayerHopf
