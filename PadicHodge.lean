@@ -31,7 +31,9 @@ import PadicHodge.Fontaine.OLExt
 import PadicHodge.Fontaine.OLTower
 import PadicHodge.Fontaine.OmegaLimit
 import PadicHodge.Fontaine.OmegaTower
+import PadicHodge.Fontaine.Pullback
 import PadicHodge.Fontaine.ThmOne
+import PadicHodge.Fontaine.XiTate
 import PadicHodge.FormalGroup.AdicEval
 import PadicHodge.FormalGroup.AdicPoints
 import PadicHodge.FormalGroup.Alpha
@@ -68,6 +70,7 @@ import PadicHodge.FormalGroup.HeightIneq
 import PadicHodge.FormalGroup.HodgeTateFGL
 import PadicHodge.FormalGroup.HodgeTateOL
 import PadicHodge.FormalGroup.InvDeriv
+import PadicHodge.FormalGroup.InvDiff
 import PadicHodge.FormalGroup.Invariants
 import PadicHodge.FormalGroup.InvariantsK
 import PadicHodge.FormalGroup.Kummer
