@@ -27,8 +27,9 @@ quotients `Q_v = H_{v+1}/H_v` and `v₀` such that `δ_v : Q_{v+1} → Q_v` is a
   `Ω`-points at every level, through isomorphisms `H'_v(Ω) ≅ H̃_v(Ω)`.
 
 In [Hong] the input is a `Γ_K`-stable direct summand `M ⊆ T_p G`, turned into `H̃` by
-[Hong, Prop. 2.1.14]; that Galois-descent step is not done here (not needed for
-[Hong, Thm. 3.5.4], where `H̃_v` is the graph of `f̃_v`).
+[Hong, Prop. 2.1.14]; that Galois-descent step is in `GroupScheme/SummandPDiv.lean`
+(`exists_tateSub_of_isCompl`, and `exists_pdivGroup_of_isCompl` for Prop. 3.5.3 in its original
+form). It is not needed for [Hong, Thm. 3.5.4], where `H̃_v` is the graph of `f̃_v`.
 
 ## References
 

@@ -49,6 +49,7 @@ import PadicHodge.FormalGroup.AlphaInj
 import PadicHodge.FormalGroup.AlphaInjK
 import PadicHodge.FormalGroup.AlphaKBij
 import PadicHodge.FormalGroup.AlphaLog
+import PadicHodge.FormalGroup.CartierDualOL
 import PadicHodge.FormalGroup.DAlphaDual
 import PadicHodge.FormalGroup.DAlphaHT
 import PadicHodge.FormalGroup.DAlphaHTOL
@@ -127,6 +128,7 @@ import PadicHodge.GroupScheme.Cartier
 import PadicHodge.GroupScheme.CartierChar
 import PadicHodge.GroupScheme.CartierDiag
 import PadicHodge.GroupScheme.CartierDouble
+import PadicHodge.GroupScheme.CartierDualGen
 import PadicHodge.GroupScheme.CartierDualPDiv
 import PadicHodge.GroupScheme.CartierPairing
 import PadicHodge.GroupScheme.CartierPairingBase
@@ -174,6 +176,7 @@ import PadicHodge.GroupScheme.PDivisibleHom
 import PadicHodge.GroupScheme.PDivisiblePoints
 import PadicHodge.GroupScheme.Product
 import PadicHodge.GroupScheme.Quotient
+import PadicHodge.GroupScheme.QuotientEpi
 import PadicHodge.GroupScheme.QuotientGroup
 import PadicHodge.GroupScheme.QuotientMap
 import PadicHodge.GroupScheme.QuotientPoints

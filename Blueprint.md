@@ -463,6 +463,26 @@ in place of Kähler differentials (all rings of integers here are monogenic), ev
 * **done** `FormalGroup/FullyFaithful.lean`: **[Hong, Cor. 3.5.5] over `O_{K'}`:
   `PDivGroup.Hom.mapTate_bijective_OL`** (`Hom(G, H) → GalTateHom G H`, the
   `Γ_L`-equivariant homomorphisms `T_p(G_L)(ℚ̄_p) → T_p(H_L)(ℚ̄_p)`, is bijective).
+* **done** `GroupScheme/QuotientEpi.lean` (25th session; [Hong, proof of Lemma 2.1.5 (iii)],
+  [Stacks, 04VM]): for a closed immersion `i : H → G` and `f : G → X` with kernel `H` on points
+  with values in every algebra, over a local PID: **`Hom.range_eq_invariants`**
+  (`f^*(O(X)) = O(G)^H`, i.e. `G/H ↪ X`). Proof: `b ⊗ 1 = 1 ⊗ b` in `A ⊗_C A` for invariants
+  `b` (`C = f^*(O(X))`, the two factor points differ by a point of `H`), a `B`-linear retraction
+  `A → B` with `r(1) = 1` (`Module.Basis.exists_retraction_one`), and **finite injective ring
+  epimorphisms are surjective** (`algebraMap_surjective_of_tmul_eq`, support/residue fields).
+* **done** `GroupScheme/CartierDualGen.lean` (25th session; [Hong, Prop. 2.1.7, Def. 2.1.8]):
+  **the Cartier dual of an arbitrary (non-connected) `p`-divisible group over a local PID**
+  (`O_{K'}`, `ℤ_p`), `PDivGroup.dualPDivGen = dualPDivOf dualPDivDataGen`: `incl1`/`quot1`
+  (iterated `i`/`quot`, `incl1 ∘ quot1 = [p^v]`), `ker(quot_v) = G_1` on points
+  (`exists_incl1_eq_of_quot`), `quot_v^*(A_v) = A_{v+1}^{G_1}` (`range_quot_eq_invariants`),
+  `quot_v^* : A_v ≅ B` (Orzech, `quotInv_bijective`), the `DualPDivData` (retraction from the
+  `B`-basis of `A_{v+1}`, `ker(A_{v+1} → A_1) = A_{v+1} quot^*(A_v⁺)`, `quot1^*` split).
+  `dualPDivOf` does not depend on the data (`dualPDivOf_eq`).
+* **done** `FormalGroup/CartierDualOL.lean` (25th session): `PDivFGL.dualPDiv_eq_dualPDivGen`
+  (over `O_L` and `ℤ_p`, `rfl`); `dualGenTateEquivOL : T_p((G^∨)_L) ≅ T_p((G_L)^∨)`
+  (`ℤ_p`-linear, `G_L`-equivariant); **[Hong, Prop. 3.4.6] over `O_{K'}`** (`dualTateHomOL`,
+  bijective, `dualTateHomOL_gal`: `T_p(G^∨) ≅ Hom_{ℤ_p}(T_p G, ℤ_p(1))`), `tateRepDualEquivOL(_gal)`
+  (`V_p(G^∨) ≅ V_p(G)^∨ ⊗ ℚ_p(1)` as `G_L`-representations).
 * **planned** rest of the connected–étale sequence over `O_K`, formal Lie groups;
   Tate's Hodge–Tate decomposition of `T_p G ⊗ ℂ_p` and full faithfulness ([Tate] §4, Thm. 4;
   [Tate] not available locally, statements as quoted in [LocAn] and [BC]); see the hand-off.
