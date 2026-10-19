@@ -105,6 +105,8 @@ import PadicHodge.GroupScheme.CartierPairingBase
 import PadicHodge.GroupScheme.CartierPerfect
 import PadicHodge.GroupScheme.CartierPerfectOC
 import PadicHodge.GroupScheme.Closure
+import PadicHodge.GroupScheme.ClosureMap
+import PadicHodge.GroupScheme.ClosurePDiv
 import PadicHodge.GroupScheme.Connected
 import PadicHodge.GroupScheme.ConnectedIdempotent
 import PadicHodge.GroupScheme.ConnectedPDiv
@@ -113,6 +115,7 @@ import PadicHodge.GroupScheme.ConstPDivMap
 import PadicHodge.GroupScheme.ConstPDivTate
 import PadicHodge.GroupScheme.Constant
 import PadicHodge.GroupScheme.Discriminant
+import PadicHodge.GroupScheme.DiscriminantChain
 import PadicHodge.GroupScheme.DualBaseChange
 import PadicHodge.GroupScheme.DualPDivFree
 import PadicHodge.GroupScheme.DualTateField
@@ -144,6 +147,7 @@ import PadicHodge.GroupScheme.Product
 import PadicHodge.GroupScheme.Quotient
 import PadicHodge.GroupScheme.QuotientGroup
 import PadicHodge.GroupScheme.QuotientMap
+import PadicHodge.GroupScheme.QuotientPoints
 import PadicHodge.GroupScheme.SerreTateCompact
 import PadicHodge.GroupScheme.SerreTateEss
 import PadicHodge.GroupScheme.SerreTateFGL
@@ -152,6 +156,7 @@ import PadicHodge.GroupScheme.SerreTateOL
 import PadicHodge.GroupScheme.SerreTatePDiv
 import PadicHodge.GroupScheme.SerreTateSpecial
 import PadicHodge.GroupScheme.SpecialFibre
+import PadicHodge.GroupScheme.SubPDiv
 import PadicHodge.GroupScheme.TateCont
 import PadicHodge.GroupScheme.TateDual
 import PadicHodge.GroupScheme.TateDualRep

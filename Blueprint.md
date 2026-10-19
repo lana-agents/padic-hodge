@@ -410,6 +410,39 @@ in place of Kähler differentials (all rings of integers here are monogenic), ev
   `closureHom`, `closureGeneric : K ⊗_R A/I ≃ₐ[K] C̃` and `order_closure : |H| = |H̃|`.
 * **done** `FormalGroup/OLFraction.lean` (19th session): `IsFractionRing (OL L) L`
   (`OL.toL_injective`, `z = x / p^n`), so `Closure.lean` applies over `O_{K'}`.
+* **done** `GroupScheme/ClosureMap.lean` (20th session): functoriality of closures
+  (`Hom.closureInduced`: `f : G → G'` with `j ∘ f_K = g ∘ j'` restricts to `H → H'`;
+  `mapPoints_closureInduced`, surjective for closed immersions) and **points over the generic
+  fibre** (`closurePtEquiv : H̃(Ω) ≃* H(Ω)` for a `K`-algebra `Ω`, `y ↦ y ∘ (A/I ↪ C̃)`;
+  compatible with `closureHom`/`j` and with `closureInduced`). The bialgebra iso
+  `K ⊗ O(H) ≅ O(H̃)` (hand-off 19, item 2) is not needed: every comparison is made on points.
+* **done** `GroupScheme/QuotientPoints.lean` (20th session): `Hom.ext_univPt`, `Hom.ext_points`,
+  `KilledBy G n` (`univPt^n = 1`; inherited by closed subgroups, quotients and base changes;
+  `G_Ω` étale and `#G(Ω) = |G|` over a separably closed `Ω` with `n ≠ 0`), `Hom.quotientLift`
+  (`G → X` trivial on `H` factors through `G/H`), `ext_quotient` (`G → G/H` is an epimorphism),
+  `surjective_quotientMap_of_comp`, **`quotientHom_mapPoints_surjective`** (`G(Ω) ↠ (G/H)(Ω)`
+  by counting, from exactness).
+* **done** `GroupScheme/DiscriminantChain.lean` (20th session):
+  `discIdeal_le_of_bijective_baseChange` (`disc(B) = det(α)² disc(A) ⊆ disc(A)` for an order
+  `B ↪ A` of the same rank), `traceForm_nondegenerate_of_etale`, `discIdeal_ne_bot_of_etale`.
+* **done** `GroupScheme/ClosurePDiv.lean` (20th session; [Hong, proof of Prop. 3.5.3], first
+  half): for `ι : H̃ → G_K` (`p`-divisible groups, levelwise closed immersions) over a local PID
+  `R` with fraction field `K`: closures `clo v = H_v`, `cloIncl`, `cloQuot` (restrictions of
+  `i_v`, `quot_v`; `cloIncl ∘ cloQuot = [p] = cloQuot ∘ cloIncl` on points), `|H_v| = p^{hv}`,
+  `#H_v(Ω) = p^{hv}`; `Q v = H_{v+1}/H_v` of order `p^h`, killed by `p^{v+1}`;
+  `delta v : Q_{v+1} → Q_v` from `quot` (`quotientMap`; [Hong] uses `[p]`), bijective on
+  `Ω`-points and after `Ω ⊗ -`; **`exists_delta_bijective`** (stabilisation through the
+  ascending chain `disc(Q_v) ⊆ disc(Q_{v+1})` in the noetherian `R` and
+  `bijective_of_discIdeal_eq`; replaces [AM, Prop. 5.17], lead decision 2026-10-19).
+* **done** `GroupScheme/SubPDiv.lean` (20th session): `H'_v = H_{v₀+v}/H_{v₀}` (`Hp`), closed
+  immersions `inclH` (`subQuot`), `[p^v] = j ∘ Δ ∘ quotQuot` on `H'_{v+1}` (`pow_eq_jj_Delta`,
+  with `Δ = δ_{v₀} ∘ ⋯` bijective and `j : Q_{v₀} ↪ H'_{v+1}`), kernel condition
+  `Hp_range_eq`; `subPDiv` (height `h(H̃)`), `subPDivHom : H' → G` (`[p^{v₀}]` via
+  `quotientLift` and `cloQuotLE`, then `H_v → G_v`); **[Hong, Prop. 3.5.3], generic-fibre form:
+  `PDivGroup.Hom.exists_pdivGroup_closure`**: `H'` of height `h(H̃)` and `ι' : H' → G` equal to
+  `ι` on `Ω`-points at every level through isomorphisms `H'_v(Ω) ≅ H̃_v(Ω)`. **Still to do
+  (lead decision, separate later step, only if needed downstream):** the Galois-descent input
+  `M ⊆ T_p G` Γ-stable direct summand `↦ H̃` ([Hong, Prop. 2.1.14]).
 * **planned** rest of the connected–étale sequence over `O_K`, formal Lie groups;
   Tate's Hodge–Tate decomposition of `T_p G ⊗ ℂ_p` and full faithfulness ([Tate] §4, Thm. 4;
   [Tate] not available locally, statements as quoted in [LocAn] and [BC]); see the hand-off.
