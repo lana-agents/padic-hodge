@@ -26,11 +26,13 @@ import PadicHodge.Fontaine.Cyclotomic
 import PadicHodge.Fontaine.Differentials
 import PadicHodge.Fontaine.Galois
 import PadicHodge.Fontaine.KaehlerUnion
+import PadicHodge.Fontaine.LemmeFour
 import PadicHodge.Fontaine.Monogenic
 import PadicHodge.Fontaine.OLExt
 import PadicHodge.Fontaine.OLTower
 import PadicHodge.Fontaine.OmegaLimit
 import PadicHodge.Fontaine.OmegaTower
+import PadicHodge.Fontaine.PropNine
 import PadicHodge.Fontaine.Pullback
 import PadicHodge.Fontaine.ThmOne
 import PadicHodge.Fontaine.XiTate
