@@ -32,6 +32,8 @@ Over a field `F` with `ℚ̄_p / F` Galois (`Ω = ℚ̄_p`):
 * **`PDivGroup.exists_pdivGroup_of_isCompl`** ([Hong, Prop. 3.5.3]): over a local PID `R` with
   fraction field `K`, a `Γ_K`-stable `ℤ_p`-direct summand `M ⊆ T_p G(ℚ̄_p)` is `T_p H` for a
   `p`-divisible group `H` over `R` with `ι : H → G` (via `Hom.exists_pdivGroup_closure`).
+* `subHeight_summandSub`, `exists_tateSub_of_isCompl_height`, `exists_pdivGroup_of_isCompl_height`:
+  the height of `H̃` (resp. `H`) is `rank_{ℤ_p} M` (`S_1 ≅ M / pM`).
 
 ## References
 
@@ -796,6 +798,181 @@ theorem exists_pdivGroup_of_isCompl {R K : Type} [CommRing R] [IsDomain R] [IsPr
   · exact (MulEquiv.eq_symm_apply _).2 ((he v y).symm.trans hy)
   · rw [he, MulEquiv.apply_symm_apply, hz]
     exact MulEquiv.apply_symm_apply _ _
+
+/-! ### The height of `tateSub`: `h(H̃) = rank_{ℤ_p} M` -/
+
+section SummandHeight
+
+variable {F : Type} [Field F] [Algebra F (PadicAlgCl p)] (G : PDivGroup F p)
+  {M N : Submodule ℤ_[p] (Additive (G.TateModule (PadicAlgCl p)))}
+
+/-- The reduction `M → G_1(Ω)`, `m ↦ m_1`. -/
+def summandRed (M : Submodule ℤ_[p] (Additive (G.TateModule Ω))) :
+    M →+ Additive ((G.G 1).points Ω) :=
+  (MonoidHom.toAdditive (TateModule.proj G Ω 1)).comp M.subtype.toAddMonoidHom
+
+theorem summandRed_apply (m : M) :
+    G.summandRed M m = Additive.ofMul ((Additive.toMul (m : Additive (G.TateModule Ω))).1 1) :=
+  rfl
+
+/-- **`ker(M → G_1(Ω)) = pM`** for a direct summand `M` (`M ∩ p T_p G = p M`). -/
+theorem mem_ker_summandRed_iff (hMN : IsCompl M N) (m : M) :
+    m ∈ (G.summandRed M).ker ↔ ∃ m' : M, p • m' = m := by
+  have hpΩ : (p : Ω) ≠ 0 := Nat.cast_ne_zero.mpr hp.out.ne_zero
+  rw [AddMonoidHom.mem_ker, summandRed_apply]
+  change Additive.ofMul _ = Additive.ofMul 1 ↔ _
+  rw [EmbeddingLike.apply_eq_iff_eq]
+  constructor
+  · intro h
+    obtain ⟨y, hy⟩ := TateModule.exists_pow_eq_of_val_eq_one G Ω
+      (G.quot_surjective_sepClosed Ω hpΩ) (G.card_points_sepClosed Ω hpΩ) _ 1 h
+    rw [pow_one] at hy
+    have hyM : y ∈ G.summandSub M := G.summandSub_sat hMN y (by
+      rw [hy]
+      exact m.2)
+    refine ⟨⟨Additive.ofMul y, hyM⟩, Subtype.ext ?_⟩
+    change p • Additive.ofMul y = (m : Additive (G.TateModule Ω))
+    rw [← ofMul_pow, hy]
+    rfl
+  · rintro ⟨m', rfl⟩
+    change (Additive.toMul (p • (m' : Additive (G.TateModule Ω)))).1 1 = 1
+    rw [toMul_nsmul, tate_pow_val]
+    have := G.pow_eq_one 1 Ω ((Additive.toMul (m' : Additive (G.TateModule Ω))).1 1)
+    rwa [pow_one] at this
+
+/-- `#S_1 = #(M / ker(M → G_1(Ω)))`. -/
+theorem card_levelSub_one_eq_card_quotient :
+    Nat.card (G.levelSub (G.summandSub M) 1) = Nat.card (M ⧸ (G.summandRed M).ker) := by
+  rw [Nat.card_congr (QuotientAddGroup.quotientKerEquivRange (G.summandRed M)).toEquiv]
+  refine Nat.card_congr
+    { toFun := fun y => ⟨Additive.ofMul y.1, ?_⟩
+      invFun := fun y => ⟨Additive.toMul y.1, ?_⟩
+      left_inv := fun _ => rfl
+      right_inv := fun _ => rfl }
+  · obtain ⟨x, hx, hxy⟩ := mem_levelSub.1 y.2
+    exact ⟨⟨Additive.ofMul x, hx⟩, by rw [summandRed_apply, ← hxy]; rfl⟩
+  · obtain ⟨⟨x, hx⟩, hxy⟩ := y.2
+    exact mem_levelSub.2 ⟨Additive.toMul x, hx, by rw [← hxy, summandRed_apply]; rfl⟩
+
+section Basis
+
+variable {ι : Type} [Fintype ι] (b : Module.Basis ι ℤ_[p] M)
+
+/-- Reduction mod `p` of the coordinates in a basis: `M → 𝔽_p^ι`. -/
+def basisRed : M →+ (ι → ZMod p) where
+  toFun m i := PadicInt.toZMod (b.equivFun m i)
+  map_zero' := by
+    funext i
+    simp
+  map_add' x y := by
+    funext i
+    simp
+
+theorem basisRed_surjective : Function.Surjective (G.basisRed b) := by
+  intro z
+  choose c hc using fun i => ZMod.ringHom_surjective (PadicInt.toZMod (p := p)) (z i)
+  refine ⟨b.equivFun.symm c, funext fun i => ?_⟩
+  change PadicInt.toZMod (b.equivFun (b.equivFun.symm c) i) = z i
+  rw [LinearEquiv.apply_symm_apply, hc]
+
+theorem mem_ker_basisRed_iff (m : M) : m ∈ (G.basisRed b).ker ↔ ∃ m' : M, p • m' = m := by
+  rw [AddMonoidHom.mem_ker]
+  constructor
+  · intro h
+    have hm : ∀ i, ∃ c : ℤ_[p], c * p = b.equivFun m i := fun i => by
+      have h1 : b.equivFun m i ∈ RingHom.ker (PadicInt.toZMod (p := p)) :=
+        congrFun h i
+      rw [PadicInt.ker_toZMod, PadicInt.maximalIdeal_eq_span_p] at h1
+      exact Ideal.mem_span_singleton'.1 h1
+    choose c hc using hm
+    refine ⟨b.equivFun.symm c, b.equivFun.injective ?_⟩
+    rw [map_nsmul, LinearEquiv.apply_symm_apply]
+    funext i
+    rw [Pi.smul_apply, nsmul_eq_mul, ← hc, mul_comm]
+  · rintro ⟨m', rfl⟩
+    funext i
+    change PadicInt.toZMod (b.equivFun (p • m') i) = 0
+    rw [map_nsmul, Pi.smul_apply, nsmul_eq_mul, map_mul, map_natCast, ZMod.natCast_self,
+      zero_mul]
+
+end Basis
+
+/-- **`#S_1 = p^{rank M}`** for a `ℤ_p`-direct summand `M` of `T_p G(Ω)`. -/
+theorem card_levelSub_one_summandSub (hMN : IsCompl M N) :
+    Nat.card (G.levelSub (G.summandSub M) 1) = p ^ Module.finrank ℤ_[p] M := by
+  haveI : CharZero F := RingHom.charZero (algebraMap F Ω)
+  let b := Module.finBasis ℤ_[p] M
+  have hker : (G.summandRed M).ker = (G.basisRed b).ker := by
+    ext m
+    rw [G.mem_ker_summandRed_iff hMN, mem_ker_basisRed_iff]
+  rw [card_levelSub_one_eq_card_quotient, hker,
+    Nat.card_congr
+      (QuotientAddGroup.quotientKerEquivOfSurjective _ (G.basisRed_surjective b)).toEquiv,
+    Nat.card_fun, Nat.card_zmod, Nat.card_eq_fintype_card, Fintype.card_fin]
+
+/-- **The height of `tateSub` is `rank_{ℤ_p} M`.** -/
+theorem subHeight_summandSub (hMN : IsCompl M N) :
+    G.subHeight (G.summandSub M) = Module.finrank ℤ_[p] M := by
+  have h := (G.card_levelSub_one (G.summandSub M)).symm.trans (G.card_levelSub_one_summandSub hMN)
+  exact Nat.pow_right_injective hp.out.two_le h
+
+variable [IsGalois F (PadicAlgCl p)]
+
+theorem tateSub_summandSub_height (hMN : IsCompl M N)
+    (hM : ∀ (σ : Ω ≃ₐ[F] Ω) (x : G.TateModule Ω), Additive.ofMul x ∈ M →
+      Additive.ofMul (G.galTate σ x) ∈ M) :
+    (G.tateSub (G.summandSub M) hM (G.summandSub_sat hMN)).height = Module.finrank ℤ_[p] M :=
+  G.subHeight_summandSub hMN
+
+/-- **[Hong, Prop. 2.1.14] with the height**: `exists_tateSub_of_isCompl`, and moreover
+`h(H̃) = rank_{ℤ_p} M`. -/
+theorem exists_tateSub_of_isCompl_height (hMN : IsCompl M N)
+    (hM : ∀ (σ : Ω ≃ₐ[F] Ω) (x : G.TateModule Ω), Additive.ofMul x ∈ M →
+      Additive.ofMul (G.galTate σ x) ∈ M) :
+    ∃ (H : PDivGroup F p) (ι : Hom H G), H.height = Module.finrank ℤ_[p] M ∧
+      (∀ v, Function.Surjective (ι.f v)) ∧
+      (∀ v, Function.Injective ((ι.f v).mapPoints Ω)) ∧ Function.Injective (ι.mapTate Ω) ∧
+      ∀ x, (∃ t, ι.mapTate Ω t = x) ↔ Additive.ofMul x ∈ M :=
+  ⟨G.tateSub (G.summandSub M) hM (G.summandSub_sat hMN),
+    G.tateSubHom (G.summandSub M) hM (G.summandSub_sat hMN),
+    G.tateSub_summandSub_height hMN hM,
+    G.tateSubHom_surjective _ hM (G.summandSub_sat hMN),
+    fun v => G.tateSubHom_mapPoints_injective _ hM (G.summandSub_sat hMN) v Ω,
+    G.tateSubHom_mapTate_injective _ hM (G.summandSub_sat hMN),
+    G.mem_range_tateSubHom_mapTate_iff _ hM (G.summandSub_sat hMN)
+      (G.summandSub_closed hMN)⟩
+
+end SummandHeight
+
+/-- **[Hong, Prop. 3.5.3] with the height**: `exists_pdivGroup_of_isCompl`, and moreover
+`h(H) = rank_{ℤ_p} M`. -/
+theorem exists_pdivGroup_of_isCompl_height {R K : Type} [CommRing R] [IsDomain R]
+    [IsPrincipalIdealRing R] [IsLocalRing R] [Field K] [Algebra R K] [IsFractionRing R K]
+    [Algebra K Ω] [IsGalois K Ω] [Algebra R Ω] [IsScalarTower R K Ω] (G : PDivGroup R p)
+    {M N : Submodule ℤ_[p] (Additive ((G.baseChange K).TateModule Ω))} (hMN : IsCompl M N)
+    (hM : ∀ (σ : Ω ≃ₐ[K] Ω) (x : (G.baseChange K).TateModule Ω), Additive.ofMul x ∈ M →
+      Additive.ofMul ((G.baseChange K).galTate σ x) ∈ M) :
+    ∃ (H : PDivGroup R p) (ι : Hom H G), H.height = Module.finrank ℤ_[p] M ∧
+      Function.Injective (ι.mapTate Ω) ∧
+      ∀ x : G.TateModule Ω,
+        (∃ t, ι.mapTate Ω t = x) ↔
+          Additive.ofMul ((G.baseChangeTateEquiv (S := K) Ω).symm x) ∈ M := by
+  have hpΩ : (p : Ω) ≠ 0 := Nat.cast_ne_zero.mpr hp.out.ne_zero
+  obtain ⟨H₀, ι₀, hH₀, hsurj, hinj₀, -, hrange⟩ :=
+    (G.baseChange K).exists_tateSub_of_isCompl_height hMN hM
+  obtain ⟨H, ι, hH, he⟩ := ι₀.exists_pdivGroup_closure hsurj Ω hpΩ
+  choose e he using he
+  have hinj : ∀ v, Function.Injective ((ι.f v).mapPoints Ω) := fun v y y' h =>
+    (e v).injective (hinj₀ v (((G.G v).baseChangePointsEquiv Ω).injective
+      (by rw [← he, ← he]; exact h)))
+  refine ⟨H, ι, hH.trans hH₀, Hom.mapTate_injective_of_levels ι Ω hinj, fun x => ?_⟩
+  rw [Hom.mem_range_mapTate_iff_levels ι Ω hinj, ← hrange,
+    Hom.mem_range_mapTate_iff_levels ι₀ Ω hinj₀]
+  refine forall_congr' fun v => ⟨fun ⟨y, hy⟩ => ⟨e v y, ?_⟩, fun ⟨z, hz⟩ => ⟨(e v).symm z, ?_⟩⟩
+  · exact (MulEquiv.eq_symm_apply _).2 ((he v y).symm.trans hy)
+  · rw [he, MulEquiv.apply_symm_apply, hz]
+    exact MulEquiv.apply_symm_apply _ _
+
 
 end PDivGroup
 

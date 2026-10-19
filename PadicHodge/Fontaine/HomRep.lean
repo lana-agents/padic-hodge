@@ -6,6 +6,7 @@ Authors: Claude (Anthropic)
 import PadicHodge.HodgeTate.Dual
 import PadicHodge.HodgeTate.Orthogonal
 import PadicHodge.FormalGroup.DAlphaHT
+import PadicHodge.HodgeTate.Splitting
 
 /-!
 # `Hom_{ℤ_p}(T, ℂ_p)` for a `ℤ_p`-lattice `T` with a `G_L`-action
@@ -352,6 +353,79 @@ instance : FiniteDimensional ℂ_[p] (HomT act) :=
 
 instance (q : ℤ) : FiniteDimensional L (E act q) :=
   SerreTate.finiteDimensional_eigen (htSetup L) (smul_distrib_homT act) q
+
+/-! ### Lifting weight-`1` classes along an extension -/
+
+section Lift
+
+variable {T' T'' : Type*} [AddCommGroup T'] [Module ℤ_[p] T'] [Module.Finite ℤ_[p] T']
+  [Module.Free ℤ_[p] T'] [AddCommGroup T''] [Module ℤ_[p] T''] [Module.Finite ℤ_[p] T'']
+  (act' : Representation ℤ_[p] (PadicAlgCl p ≃ₐ[L] PadicAlgCl p) T')
+  (act'' : Representation ℤ_[p] (PadicAlgCl p ≃ₐ[L] PadicAlgCl p) T'')
+  {ρ' : Representation ℚ_[p] (PadicAlgCl p ≃ₐ[L] PadicAlgCl p) (ℚ_[p] ⊗[ℤ_[p]] T')}
+  {ρ'' : Representation ℚ_[p] (PadicAlgCl p ≃ₐ[L] PadicAlgCl p) (ℚ_[p] ⊗[ℤ_[p]] T'')}
+  (hρ' : ∀ σ, ρ' σ = (act' σ).baseChange ℚ_[p]) (hρ'' : ∀ σ, ρ'' σ = (act'' σ).baseChange ℚ_[p])
+
+omit [Module.Free ℤ_[p] T] in
+include hρ hρ' hρ'' in
+/-- **Lifting weight-`1` classes**: for an equivariant exact sequence `0 → T' → T → T'' → 0` of
+`ℤ_p`-lattices with `ℂ_p ⊗ V''^∨` without weight `1`, every `f' : T' → ℂ_p` with
+`f'(σ x) = χ(σ) σ(f' x)` extends to such an `f : T → ℂ_p` (Tate's `H¹(G_L, ℂ_p(j)) = 0`,
+`exists_DHT_lift` applied to `0 → V''^∨ → V^∨ → V'^∨ → 0`). -/
+theorem exists_lift_E_one (u : T' →ₗ[ℤ_[p]] T) (v : T →ₗ[ℤ_[p]] T'')
+    (hu : Function.Injective u) (hv : Function.Surjective v) (huv : Function.Exact u v)
+    (hue : ∀ σ x, u (act' σ x) = act σ (u x)) (hve : ∀ σ x, v (act σ x) = act'' σ (v x))
+    (hcont : ∀ (φ : Dual ℚ_[p] (Dual ℚ_[p] (ℚ_[p] ⊗[ℤ_[p]] T))) (w : Dual ℚ_[p] (ℚ_[p] ⊗[ℤ_[p]] T)),
+      Continuous fun σ => φ (ρ.dual σ w))
+    (hHT : IsHodgeTate ρ''.dual) (hq : DHT ρ''.dual 1 = ⊥)
+    (f' : T' →ₗ[ℤ_[p]] ℂ_[p]) (hf' : ofW act' f' ∈ E act' 1) :
+    ∃ f : T →ₗ[ℤ_[p]] ℂ_[p], ofW act f ∈ E act 1 ∧ f ∘ₗ u = f' := by
+  haveI : Module.Flat ℤ_[p] ℚ_[p] := IsLocalization.flat ℚ_[p] (nonZeroDivisors ℤ_[p])
+  let uQ := u.baseChange ℚ_[p]
+  let vQ := v.baseChange ℚ_[p]
+  have huQ : ∀ σ, uQ ∘ₗ ρ' σ = ρ σ ∘ₗ uQ := fun σ => by
+    rw [hρ', hρ, ← LinearMap.baseChange_comp, ← LinearMap.baseChange_comp]
+    congr 1
+    exact LinearMap.ext fun x => hue σ x
+  have hvQ : ∀ σ, vQ ∘ₗ ρ σ = ρ'' σ ∘ₗ vQ := fun σ => by
+    rw [hρ'', hρ, ← LinearMap.baseChange_comp, ← LinearMap.baseChange_comp]
+    congr 1
+    exact LinearMap.ext fun x => hve σ x
+  have huQi : Function.Injective uQ := by
+    change Function.Injective (u.baseChange ℚ_[p])
+    rw [LinearMap.baseChange_eq_ltensor]
+    exact Module.Flat.lTensor_preserves_injective_linearMap _ hu
+  have hvQs : Function.Surjective vQ := by
+    change Function.Surjective (v.baseChange ℚ_[p])
+    rw [LinearMap.baseChange_eq_ltensor]
+    exact LinearMap.lTensor_surjective _ hv
+  have hex : Function.Exact uQ vQ := by
+    change Function.Exact (u.baseChange ℚ_[p]) (v.baseChange ℚ_[p])
+    rw [LinearMap.baseChange_eq_ltensor, LinearMap.baseChange_eq_ltensor]
+    exact _root_.lTensor_exact ℚ_[p] huv hv
+  have hf'' : ∀ σ, vQ.dualMap ∘ₗ ρ''.dual σ = ρ.dual σ ∘ₗ vQ.dualMap :=
+    fun σ => LinearMap.ext fun χ => LinearMap.ext fun w => by
+      simp only [LinearMap.comp_apply, Representation.dual_apply, Module.Dual.transpose_apply,
+        LinearMap.dualMap_apply]
+      exact congrArg χ (LinearMap.congr_fun (hvQ σ⁻¹) w).symm
+  have hg'' : ∀ σ, uQ.dualMap ∘ₗ ρ.dual σ = ρ'.dual σ ∘ₗ uQ.dualMap :=
+    fun σ => LinearMap.ext fun χ => LinearMap.ext fun w => by
+      simp only [LinearMap.comp_apply, Representation.dual_apply, Module.Dual.transpose_apply,
+        LinearMap.dualMap_apply]
+      exact congrArg χ (LinearMap.congr_fun (huQ σ⁻¹) w).symm
+  have hfi : Function.Injective vQ.dualMap := LinearMap.dualMap_injective_of_surjective hvQs
+  have hgs : Function.Surjective uQ.dualMap := LinearMap.dualMap_surjective_of_injective huQi
+  have hex' : Function.Exact vQ.dualMap uQ.dualMap := by
+    rw [LinearMap.exact_iff, LinearMap.ker_dualMap_eq_dualAnnihilator_range,
+      LinearMap.range_dualMap_eq_dualAnnihilator_ker, LinearMap.exact_iff.mp hex]
+  obtain ⟨w, hw⟩ := (PhiAL_bijective (p := p) (A := T')).2 f'
+  have hwD : w ∈ DHT ρ'.dual 1 := (mem_E_iff act' hρ' 1 w).mp (by rw [hw]; exact hf')
+  obtain ⟨wH, hwH, hwH'⟩ := exists_DHT_lift hf'' hg'' hfi hgs hex' hcont hHT hq hwD
+  refine ⟨PhiAL wH, (mem_E_iff act hρ 1 wH).mpr hwH, ?_⟩
+  rw [PhiAL_comp]
+  exact (congrArg PhiAL hwH').trans hw
+
+end Lift
 
 /-! ### Weight vanishing -/
 

@@ -89,12 +89,8 @@ theorem finrank_DHT_etRepOL_dual (q : ℤ) (hq : q ≠ 0) : finrank L (DHT G.etR
   have h := finrank_DHT_add_finrank_DHT_dual_le G.etRepOL (q := 0) (q' := q) (by simpa using hq)
   omega
 
-set_option maxHeartbeats 1000000 in
--- unifying the instance terms of `T_p(H_L)` and `T / T⁰` over `↥L` unfolds `PDivGroup.G` and the
--- coercion `↥L` many times (see `TateNonConnGen`)
-theorem finrank_E_etRepZ_zero : finrank ℤ_[p] G.EtTateOL ≤ finrank L (HomRep.E G.etRepZ 0) := by
-  classical
-  rw [HomRep.finrank_E G.etRepZ (ρ := G.etRepOL) (fun _ => rfl)]
+theorem finrank_dual_etRepOL_le : finrank ℚ_[p] (Dual ℚ_[p] (ℚ_[p] ⊗[ℤ_[p]] G.EtTateOL)) ≤
+    finrank L (DHT G.etRepOL.dual 0) := by
   have hHT := isHodgeTate_dual _ G.isHodgeTate_etRepOL.1
   have hS : Function.support (fun q => finrank L (DHT G.etRepOL.dual q)) ⊆ ({0} : Finset ℤ) := by
     intro q hq
@@ -103,8 +99,13 @@ theorem finrank_E_etRepZ_zero : finrank ℤ_[p] G.EtTateOL ≤ finrank L (HomRep
   have h1 := htDim_eq_sum G.etRepOL.dual hS
   rw [Finset.sum_singleton] at h1
   unfold IsHodgeTate at hHT
-  rw [h1, Subspace.dual_finrank_eq, Module.finrank_baseChange] at hHT
+  rw [h1] at hHT
   exact hHT.ge
+
+theorem finrank_E_etRepZ_zero : finrank ℤ_[p] G.EtTateOL ≤ finrank L (HomRep.E G.etRepZ 0) := by
+  rw [HomRep.finrank_E G.etRepZ (ρ := G.etRepOL) (fun _ => rfl)]
+  refine le_trans ?_ G.finrank_dual_etRepOL_le
+  rw [Subspace.dual_finrank_eq, Module.finrank_baseChange]
 
 variable {G} {d : ℕ} (P : PDivFGL (OL L) d p) (φ : Hom G.connPart P.pdivGroup)
   (ψ : Hom P.pdivGroup G.connPart)
@@ -180,84 +181,25 @@ theorem rhoZp_symm_mem_E_one (l : Fin d) :
 
 /-! ### Existence of `ρ_H` -/
 
-set_option maxHeartbeats 1000000 in
--- unifying the instance terms of `T_p(H_L)` and `T / T⁰` over `↥L` unfolds `PDivGroup.G` and the
--- coercion `↥L` many times (see `TateNonConnGen`)
 include φ in
-/-- The dual sequence `0 → (V^{et})^∨ → V^∨ → V_F^∨ → 0` and the lift of `ρ(ω_l)`. -/
+/-- The lift of `ρ(ω_l)` along `0 → T_p(F[p^∞]_L) → T_p H → T / T⁰ → 0`
+(`HomRep.exists_lift_E_one`; `V^{et}` is Hodge–Tate of weight `0`). -/
 theorem exists_rhoH (hφψ : φ.comp ψ = Hom.id _) (hψφ : ψ.comp φ = Hom.id _) (l : Fin d) :
     ∃ f : Additive ((G.baseChange L).TateModule K) →ₗ[ℤ_[p]] ℂ_[p],
       HomRep.ofW (G.baseChange L).galRepZ f ∈ HomRep.E (G.baseChange L).galRepZ 1 ∧
       f ∘ₗ fP P ψ = P.rhoZp hε hεp l ∘ₗ P.tpLinEquiv.symm.toLinearMap := by
-  haveI : Module.Flat ℤ_[p] ℚ_[p] := IsLocalization.flat ℚ_[p] (nonZeroDivisors ℤ_[p])
-  -- the integral sequence and its base change to `ℚ_p`
-  let fQ := (fP P ψ).baseChange ℚ_[p]
-  let gQ := G.connTateOL.mkQ.baseChange ℚ_[p]
-  have hfQ : ∀ σ, fQ ∘ₗ P.tateRepOL σ = (G.baseChange L).tateRepOver σ ∘ₗ fQ := fun σ => by
-    change (fP P ψ).baseChange ℚ_[p] ∘ₗ (P.genericFibreOL.galLin _).baseChange ℚ_[p] =
-      ((G.baseChange L).galLin _).baseChange ℚ_[p] ∘ₗ (fP P ψ).baseChange ℚ_[p]
-    rw [← LinearMap.baseChange_comp, ← LinearMap.baseChange_comp]
-    congr 1
-  have hgQ : ∀ σ, gQ ∘ₗ (G.baseChange L).tateRepOver σ = G.etRepOL σ ∘ₗ gQ := fun σ => by
-    change G.connTateOL.mkQ.baseChange ℚ_[p] ∘ₗ ((G.baseChange L).galLin _).baseChange ℚ_[p] =
-      (G.galQOL _).baseChange ℚ_[p] ∘ₗ G.connTateOL.mkQ.baseChange ℚ_[p]
-    rw [← LinearMap.baseChange_comp, ← LinearMap.baseChange_comp]
-    congr 1
-  have hfQi : Function.Injective fQ := by
-    change Function.Injective ((fP P ψ).baseChange ℚ_[p])
-    rw [LinearMap.baseChange_eq_ltensor]
-    exact Module.Flat.lTensor_preserves_injective_linearMap _ (fP_injective P φ ψ hφψ)
-  have hgQs : Function.Surjective gQ := by
-    change Function.Surjective (G.connTateOL.mkQ.baseChange ℚ_[p])
-    rw [LinearMap.baseChange_eq_ltensor]
-    exact LinearMap.lTensor_surjective _ (Submodule.mkQ_surjective _)
-  have hex : Function.Exact fQ gQ := by
-    have hex0 : Function.Exact (fP P ψ) G.connTateOL.mkQ := by
-      rw [LinearMap.exact_iff, Submodule.ker_mkQ, range_fP P φ ψ hψφ]
-    change Function.Exact ((fP P ψ).baseChange ℚ_[p]) (G.connTateOL.mkQ.baseChange ℚ_[p])
-    rw [LinearMap.baseChange_eq_ltensor, LinearMap.baseChange_eq_ltensor]
-    exact _root_.lTensor_exact ℚ_[p] hex0 (Submodule.mkQ_surjective _)
-  -- the transposed sequence
-  let f' := gQ.dualMap
-  let g' := fQ.dualMap
-  have hf' : ∀ σ, f' ∘ₗ G.etRepOL.dual σ = (G.baseChange L).tateRepOver.dual σ ∘ₗ f' :=
-    fun σ => LinearMap.ext fun χ => LinearMap.ext fun v => by
-      simp only [f', LinearMap.comp_apply, Representation.dual_apply,
-        Module.Dual.transpose_apply, LinearMap.dualMap_apply]
-      exact congrArg χ (LinearMap.congr_fun (hgQ σ⁻¹) v).symm
-  have hg' : ∀ σ, g' ∘ₗ (G.baseChange L).tateRepOver.dual σ = P.tateRepOL.dual σ ∘ₗ g' :=
-    fun σ => LinearMap.ext fun χ => LinearMap.ext fun v => by
-      simp only [g', LinearMap.comp_apply, Representation.dual_apply,
-        Module.Dual.transpose_apply, LinearMap.dualMap_apply]
-      exact congrArg χ (LinearMap.congr_fun (hfQ σ⁻¹) v).symm
-  have hf'i : Function.Injective f' := LinearMap.dualMap_injective_of_surjective hgQs
-  have hg's : Function.Surjective g' := LinearMap.dualMap_surjective_of_injective hfQi
-  have hex' : Function.Exact f' g' := by
-    rw [LinearMap.exact_iff]
-    change LinearMap.ker fQ.dualMap = LinearMap.range gQ.dualMap
-    rw [LinearMap.ker_dualMap_eq_dualAnnihilator_range,
-      LinearMap.range_dualMap_eq_dualAnnihilator_ker,
-      (LinearMap.exact_iff.mp hex)]
-  -- `ρ(ω_l)` as an element of `D_1(V_F^∨)`
-  let ρF := P.rhoZp hε hεp l ∘ₗ P.tpLinEquiv.symm.toLinearMap
-  obtain ⟨w, hw⟩ := (PhiAL_bijective (p := p)
-    (A := Additive (P.genericFibreOL.TateModule K))).2 ρF
-  have hwD : w ∈ DHT P.tateRepOL.dual 1 := by
-    have := (HomRep.mem_E_iff P.genericFibreOL.galRepZ (ρ := P.tateRepOL) (fun _ => rfl) 1
-      w).mp (by
-      rw [hw]
-      exact rhoZp_symm_mem_E_one P hε hεp l)
-    exact this
-  -- lift it
-  have hcont := continuous_dual (fun φ v => (G.baseChange L).continuous_tateRepOver φ v)
-  have hHT : IsHodgeTate G.etRepOL.dual := isHodgeTate_dual _ G.isHodgeTate_etRepOL.1
-  have hq : DHT G.etRepOL.dual 1 = ⊥ :=
-    Submodule.finrank_eq_zero.mp (G.finrank_DHT_etRepOL_dual 1 one_ne_zero)
-  obtain ⟨wH, hwH, hwH'⟩ := exists_DHT_lift hf' hg' hf'i hg's hex' hcont hHT hq hwD
-  refine ⟨PhiAL wH, (HomRep.mem_E_iff (G.baseChange L).galRepZ
-    (ρ := (G.baseChange L).tateRepOver) (fun _ => rfl) 1 wH).mpr hwH, ?_⟩
-  rw [PhiAL_comp]
-  exact (congrArg PhiAL hwH').trans hw
+  have hex0 : Function.Exact (fP P ψ) G.connTateOL.mkQ := by
+    rw [LinearMap.exact_iff, Submodule.ker_mkQ, range_fP P φ ψ hψφ]
+  exact HomRep.exists_lift_E_one (act := (G.baseChange L).galRepZ)
+    (act' := P.genericFibreOL.galRepZ) (act'' := G.etRepZ)
+    (ρ := (G.baseChange L).tateRepOver) (ρ' := P.tateRepOL) (ρ'' := G.etRepOL)
+    (hρ := fun _ => rfl) (hρ' := fun _ => rfl) (hρ'' := fun _ => rfl) (fP P ψ) G.connTateOL.mkQ
+    (fP_injective P φ ψ hφψ) (Submodule.mkQ_surjective _) hex0 (fun σ x => fP_galLin P ψ σ x)
+    (fun σ x => (galQ_mkOL G σ x).symm)
+    (continuous_dual (fun φ v => (G.baseChange L).continuous_tateRepOver φ v))
+    (isHodgeTate_dual _ G.isHodgeTate_etRepOL.1)
+    (Submodule.finrank_eq_zero.mp (G.finrank_DHT_etRepOL_dual 1 one_ne_zero))
+    _ (rhoZp_symm_mem_E_one P hε hεp l)
 
 variable (hφψ : φ.comp ψ = Hom.id _) (hψφ : ψ.comp φ = Hom.id _)
 
@@ -398,24 +340,24 @@ theorem isCompl_V0H_V1H : IsCompl (V0H P φ ψ hε hεp hφψ hψφ) (V1H P ψ) 
     rw [this]
     exact Submodule.add_mem_sup hmem0 hmem
 
+omit [FiniteDimensional ℚ_[p] L] in
+variable (G) in
+/-- `dim_{ℂ_p} Hom_{ℤ_p}(T_p H, ℂ_p) = h`. -/
+theorem finrank_hom_tate :
+    finrank ℂ_[p] (Additive ((G.baseChange L).TateModule K) →ₗ[ℤ_[p]] ℂ_[p]) = G.height := by
+  rw [finrank_hom_cp]
+  exact (G.baseChange L).finrank_tate
+
 /-- `dim V₀ = d`. -/
 theorem finrank_V0H : finrank ℂ_[p] (V0H P φ ψ hε hεp hφψ hψφ) = d := by
   rw [V0H, finrank_span_eq_card (linearIndependent_rhoH P φ ψ hε hεp hφψ hψφ), Fintype.card_fin]
 
-set_option maxHeartbeats 1000000 in
--- unifying the instance terms of `T_p(H_L)` and `T / T⁰` over `↥L` unfolds `PDivGroup.G` and the
--- coercion `↥L` many times (see `TateNonConnGen`)
 include φ hε hεp hφψ hψφ in
 /-- `dim V₁ = h - d`. -/
 theorem finrank_V1H : finrank ℂ_[p] (V1H P ψ) = G.height - d := by
-  have h1 := Submodule.finrank_sup_add_finrank_inf_eq (V0H P φ ψ hε hεp hφψ hψφ) (V1H P ψ)
-  have hW : finrank ℂ_[p] (Additive ((G.baseChange L).TateModule K) →ₗ[ℤ_[p]] ℂ_[p]) =
-      G.height := by
-    rw [finrank_hom_cp]
-    exact (G.baseChange L).finrank_tate
-  rw [(isCompl_V0H_V1H P φ ψ hε hεp hφψ hψφ).sup_eq_top,
-    (isCompl_V0H_V1H P φ ψ hε hεp hφψ hψφ).inf_eq_bot, finrank_bot, add_zero, finrank_top,
-    finrank_V0H] at h1
+  have h1 := Submodule.finrank_add_eq_of_isCompl (isCompl_V0H_V1H P φ ψ hε hεp hφψ hψφ)
+  have hW := finrank_hom_tate G
+  have h0 := finrank_V0H P φ ψ hε hεp hφψ hψφ
   omega
 
 /-- The `ℂ_p(1)`-isotypic part of `W` lies in `V₁`. -/

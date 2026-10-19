@@ -1085,7 +1085,8 @@ MR7 (MR7-plan "What MR7 needs from MR6" (b), (d)). `α_K` bijectivity is deferre
      `ℤ_p`-lattice with `G_L`-action, `ℂ_p ⊗ V^∨ ≅ W` equivariant (`PhiAL_gal`, `mem_E_iff`,
      `finrank_E`), `PhiAL_comp` (restriction = transpose), **`eq_zero_of_isTwist`** (no weight-`j`
      classes, `j ≠ 0`, on a lattice with trivial `ℂ_p ⊗ V`, also over every finite `L' ⊇ L`),
-     `span_isEquiv_eq_top`, generic lattice lemma **`HomRep.exists_lattice`**,
+     `span_isEquiv_eq_top`, `exists_lift_E_one` (weight-`1` classes lift along an extension by a
+     weight-`0` lattice), generic lattice lemma **`HomRep.exists_lattice`**,
      `exists_pow_norm_le`; `PDivGroup.galRepZ`). `Fontaine/FoIntNonConn.lean`: for `G` over
      `O_L` with `G⁰ ≅ F[p^∞]` (`φ`, `ψ`), `ι : T_p F → T_p G(ℚ̄_p)` (`iF`), **`rhoH`** = Fontaine's
      pairing on `T_p G`: the `G_L`-equivariant (`ℂ_p(1)`-valued) extension of `ρ` (existence by
@@ -1117,12 +1118,13 @@ scheme of a `Γ_F`-stable subgroup of `G(ℚ̄_p)`, Galois descent of the indica
 `PDivGroup.tateSub`, **`exists_tateSub_of_isCompl`** ([Hong, Prop. 2.1.14] for `Γ_F`-stable
 direct summands `M ⊆ T_p G`: `ι : H̃ → G`, closed immersions, `T_p(ι)` injective with image `M`)
 and **`exists_pdivGroup_of_isCompl`** ([Hong, Prop. 3.5.3] in its original form over a local PID).
-(`SubPDiv.lean`'s docstring still says the descent step is missing; it is `SummandPDiv`.)
+Heights: `subHeight_summandSub`, `exists_tateSub_of_isCompl_height`,
+`exists_pdivGroup_of_isCompl_height` (`h(H̃) = rank M`). (`SubPDiv.lean`'s docstring still says
+the descent step is missing; it is `SummandPDiv`.) `FoIntNonConn` has no heartbeat options (the
+lift is the generic `HomRep.exists_lift_E_one`).
 
 Open / caveats:
-* `FoIntNonConn` has three `maxHeartbeats 1000000` (instance terms of `T_p(H_L)` over `↥L`).
 * `V1H` vs the `ℂ_p(1)`-isotypic part: see PH5 item 8 (needs Cartier duals of non-connected `H`).
-* `SummandPDiv`: height of `H̃` is `log_p #S_1`, not yet identified with `rank M`.
 
 ## Hand-off (2026-10-19, twenty-third session; superseded)
 
