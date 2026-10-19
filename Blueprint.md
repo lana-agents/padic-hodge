@@ -379,6 +379,24 @@ in place of Kähler differentials (all rings of integers here are monogenic), ev
   homomorphism `G → H` over `R` is determined by `T_p G(Ω) → T_p H(Ω)`) and
   **`Hom.ext_of_baseChange`** (faithfulness of the generic fibre functor: uniqueness part of
   [Hong, Thm. 3.5.4, proof], faithfulness part of [Hong, Prop. 2.1.14]).
+* **done** `GroupScheme/HaarIntegral.lean` (19th session; [Farnsteiner, *Hopf modules and
+  integrals: the fundamental theorem*, Theorem = Larson–Sweedler Prop. 1], local copy
+  `~/iut-scratch/lit/dl/quotients/`): over **any** commutative ring, for `K = Spec E` finite
+  flat, `haarProj b f = ∑ₖ bₖ^* ⇀ (bₖ f)` is an integral (`mul_haarProj`) and
+  `∑ⱼ (bⱼ^* ∘ S) ⇀ haarProj b (bⱼ) = 1` (`sum_hit_haarProj`); applied to `H^∨`:
+  **`exists_invariant_forms`**: `H`-invariant forms `tᵢ` on `O(H)` and `Λᵢ` with
+  `∑ tᵢ(Λᵢ x) = ε(x)`.
+* **done** `GroupScheme/Quotient.lean` (19th session; Kreimer–Takeuchi argument via integrals,
+  [Böhm, arXiv:math/0409513, Intro/§4]): for a closed immersion `i : H → G` (`O(G) ↠ O(H)`) over
+  **any** commutative ring: coaction `Hom.coact`, invariants `B = Hom.invariants`, `B`-linear
+  traces, dual basis `a = ∑ xₛ trⱼ(yₛ a)`, **`Hom.projective_invariants`** (`A` f.g. projective
+  over `B`) and **`Hom.canEquiv : A ⊗_B A ≃ₐ[A] A ⊗_R C`** (`G ×_{G/H} G ≅ G × H`).
+* **done** `GroupScheme/QuotientGroup.lean` (19th session): **[Hong, Thm. 1.1.9]** over a local
+  PID (`O_{K'}`, `ℤ_p`, fields): `B` a finite free sub-Hopf algebra, **`Hom.quotient i = G/H`**,
+  `Hom.quotientHom : G → G/H`, `A` free of rank `|H|` over `B` (`nonempty_basis_invariants`),
+  **`Hom.order_eq_mul : |G| = |H| · |G/H|`**, `ker i = A · B⁺` (`mem_span_of_apply_eq_zero`),
+  **exactness of `H(T) → G(T) → (G/H)(T)`** for every `R`-algebra `T`
+  (`mapPoints_quotientHom_eq_one_iff`, `mapPoints_injective_of_surjective`). No debt.
 * **planned** rest of the connected–étale sequence over `O_K`, formal Lie groups;
   Tate's Hodge–Tate decomposition of `T_p G ⊗ ℂ_p` and full faithfulness ([Tate] §4, Thm. 4;
   [Tate] not available locally, statements as quoted in [LocAn] and [BC]); see the hand-off.

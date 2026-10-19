@@ -129,6 +129,7 @@ import PadicHodge.GroupScheme.EtaleUnramified
 import PadicHodge.GroupScheme.Faithful
 import PadicHodge.GroupScheme.FiniteFlat
 import PadicHodge.GroupScheme.Frobenius
+import PadicHodge.GroupScheme.HaarIntegral
 import PadicHodge.GroupScheme.HopfDisc
 import PadicHodge.GroupScheme.HopfTrace
 import PadicHodge.GroupScheme.IntegralConn
@@ -138,6 +139,8 @@ import PadicHodge.GroupScheme.PDivisible
 import PadicHodge.GroupScheme.PDivisibleHom
 import PadicHodge.GroupScheme.PDivisiblePoints
 import PadicHodge.GroupScheme.Product
+import PadicHodge.GroupScheme.Quotient
+import PadicHodge.GroupScheme.QuotientGroup
 import PadicHodge.GroupScheme.SerreTateCompact
 import PadicHodge.GroupScheme.SerreTateEss
 import PadicHodge.GroupScheme.SerreTateFGL
