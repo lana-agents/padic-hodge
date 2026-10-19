@@ -1123,6 +1123,15 @@ Heights: `subHeight_summandSub`, `exists_tateSub_of_isCompl_height`,
 the descent step is missing; it is `SummandPDiv`.) `FoIntNonConn` has no heartbeat options (the
 lift is the generic `HomRep.exists_lift_E_one`).
 
+(4) `FormalGroup/AlphaKBij.lean`: **[Hong, Thm. 3.4.10], `α_K` half**:
+`alphaKCharOL_bijective` (over `O_{K'}`), `alphaKCharZp_bijective` (over `ℤ_p`), general
+`alphaKChar_bijective` (given surjectivity of `dalphaKGen`). Codomain `GalCharK`: `G_L`-equivariant
+characters `T_p(G^∨) → 1 + m_{ℂ_p}` that are continuous (`IsContPrincipalChar`; this replaces Hong's
+`Hom_{ℤ_p}`, since abstract homomorphisms need not be `ℤ_p`-linear; `smul_of_bounded`); domain the
+`G_L`-fixed points of `F(m_{ℂ_p})` (`FixedPtK`). Route: `log ∘ f = dα(z)`, a small fixed `x₀` with
+`α(x₀) = f^{p^n}`, division with `exists_torsion_alpha_eq_char` (`p^v`-torsion characters are
+`α(t)`), Galois invariance via injectivity of `α` on torsion. (Hand-offs 13/20 item 1 done.)
+
 Open / caveats:
 * `V1H` vs the `ℂ_p(1)`-isotypic part: see PH5 item 8 (needs Cartier duals of non-connected `H`).
 

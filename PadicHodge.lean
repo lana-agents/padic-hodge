@@ -47,6 +47,7 @@ import PadicHodge.FormalGroup.Alpha
 import PadicHodge.FormalGroup.AlphaGal
 import PadicHodge.FormalGroup.AlphaInj
 import PadicHodge.FormalGroup.AlphaInjK
+import PadicHodge.FormalGroup.AlphaKBij
 import PadicHodge.FormalGroup.AlphaLog
 import PadicHodge.FormalGroup.DAlphaDual
 import PadicHodge.FormalGroup.DAlphaHT
