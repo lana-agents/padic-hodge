@@ -963,7 +963,58 @@ in place of Kähler differentials (all rings of integers here are monogenic), ev
   kernel condition componentwise), `PDivGroup.fst`, `PDivGroup.snd`, **`prodTateEquiv :
   T_p(G × H)(S) ≃* T_p G(S) × T_p H(S)`**.
 
-## Hand-off (2026-10-19, nineteenth session)
+## Hand-off (2026-10-19, twentieth session)
+
+Lead decisions applied: discriminant chain instead of finiteness of the integral closure;
+Prop. 3.5.3 in generic-fibre form (Galois-descent input `M ↦ H̃` deferred).
+
+Done this session (pushed, validated; see PH3 "20th session" entries):
+* `7725c7e`: **[Hong, Prop. 3.5.3], generic-fibre form** (`PDivGroup.Hom.exists_pdivGroup_closure`,
+  over any local PID `R` with fraction field `K` and separably closed `Ω ⊇ K`, `p ≠ 0` in `Ω`):
+  `ClosureMap.lean` (functoriality of closures, `H̃(Ω) ≃* H(Ω)`), `QuotientPoints.lean`
+  (`KilledBy`, `quotientLift`, `ext_quotient`, `G(Ω) ↠ (G/H)(Ω)`), `DiscriminantChain.lean`
+  (`disc(B) ⊆ disc(A)` for orders, `disc ≠ 0` for étale generic fibre), `ClosurePDiv.lean`
+  (closures `H_v`, `Q_v = H_{v+1}/H_v`, `δ_v`, **stabilisation `exists_delta_bijective`**),
+  `SubPDiv.lean` (`H'_v = H_{v₀+v}/H_{v₀}`, kernel condition via `[p^v] = j ∘ Δ ∘ quotQuot`,
+  `ι' : H' → G` through `[p^{v₀}]`). Deviations from the 19th hand-off: the bialgebra iso
+  `K ⊗ O(H_v) ≅ O(H̃_v)` (item 2) is not needed (all comparisons on points via
+  `closurePtEquiv`); `δ_v` is induced by `quot` (not `[p]`), so "`[p]` trivial on `Q_v`" is not
+  needed either.
+* `868f870`: **[Hong, Thm. 3.5.4] over `O_{K'}`** (`PDivGroup.Hom.baseChange_bijective_OL`),
+  `FullyFaithful.lean` (graph `Hom.graph`, inverse `Hom.inv`).
+* `9e1fa4d`: **[Hong, Cor. 3.5.5] over `O_{K'}`** (`PDivGroup.Hom.mapTate_bijective_OL`:
+  `Hom(G, H) ≅ GalTateHom G H`, the `Γ_L`-equivariant homomorphisms of Tate modules) and
+  `GaloisDescent.lean` (**fullness of [Hong, Prop. 2.1.14] over `L`**:
+  `PDivGroup.exists_hom_of_galTate`, via `homOfEquivariant` / `exists_eq_of_equivariant`,
+  `ker(T_p → G_v) = p^v T_p`). This is Tate's Theorem 4 over `O_{K'}` (MR6 scope item A2).
+* this commit: hand-off only.
+
+Still to do / next steps:
+1. **`α_K` bijective** ([Hong, Thm. 3.4.10], first half; off the critical path). Available:
+   `dalphaK_bijective` (over `ℤ_p`, `ZpD p`, only injectivity over `O_L`: `dalphaKOL_injective`),
+   `exact_logHom` (`log_F` onto, kernel = torsion), `alpha_gal`/`alphaK_gal`, `alpha_torsion`,
+   `exists_torsion_alpha_eq` (`p`-torsion characters only), `eq_zero_of_alpha_eq_one_K`
+   (injectivity of `α` on `Γ`-fixed points). Plan (hand-off 13, item 1, refined): decide the
+   codomain (`ℤ_p`-linear Γ-equivariant `T_p(G^∨)(O_C) → 1 + m_C`); `log ∘ f = dα(z)` by
+   `dalphaK_bijective`; `x` with `log_F x = z`; `g = α(x)/f` is `μ_{p^∞}`-valued and
+   `ℤ_p`-linear, hence factors through `T_p/p^v` (finite generation) and is a Cartier pairing
+   with `t ∈ F[p^v]` (generalise `exists_torsion_alpha_eq` from `p` to `p^v`, perfectness
+   `levelPairingHom_bijective`); `x - t` is Γ-fixed since `α(σ(x - t)) = α(x - t)` — this needs
+   injectivity of `α` on all of `F(m_C)` ([Hong, Prop. 3.4.9]; the repo only has it on
+   Γ-fixed points, `eq_zero_of_alpha_eq_one_K`). Over `O_{K'}` it additionally needs `dα_K`
+   surjective over `L`.
+2. Galois-descent input for Prop. 3.5.3 (`M ⊆ T_p G` Γ-stable direct summand `↦ H̃` over `K'`,
+   [Hong, Prop. 2.1.14] essential surjectivity): not needed by Thm. 3.5.4 / Cor. 3.5.5; only if a
+   downstream user wants Prop. 3.5.3 in Hong's form. `GaloisDescent.lean` has the fullness half.
+3. Cleanup (unchanged): `TateNonConn`/`TateNonConnOL` duplication.
+
+MR7 compatibility: Prop. 3.5.3 and the descent lemmas are stated over a general local PID
+(resp. a general field `F ⊆ ℚ̄_p` with `ℚ̄_p/F` Galois); Thm. 3.5.4 and Cor. 3.5.5 over `OL L`
+with `Ω = ℚ̄_p` (Lemma 3.5.2 / Prop. 3.5.1 are only available over `OL L`).
+
+No WIP branch; nothing unpushed after the final commit.
+
+## Hand-off (2026-10-19, nineteenth session; superseded)
 
 Lead decision (option (i)): prove [Hong, Thm. 1.1.9] for real. **Done, no debt.**
 
