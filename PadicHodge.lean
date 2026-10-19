@@ -44,6 +44,7 @@ import PadicHodge.FormalGroup.Filtration
 import PadicHodge.FormalGroup.Formal
 import PadicHodge.FormalGroup.FormalInv
 import PadicHodge.FormalGroup.FrobKernel
+import PadicHodge.FormalGroup.FullyFaithful
 import PadicHodge.FormalGroup.GaloisAction
 import PadicHodge.FormalGroup.GenericIso
 import PadicHodge.FormalGroup.Gm

@@ -443,6 +443,15 @@ in place of Kähler differentials (all rings of integers here are monogenic), ev
   `ι` on `Ω`-points at every level through isomorphisms `H'_v(Ω) ≅ H̃_v(Ω)`. **Still to do
   (lead decision, separate later step, only if needed downstream):** the Galois-descent input
   `M ⊆ T_p G` Γ-stable direct summand `↦ H̃` ([Hong, Prop. 2.1.14]).
+* **done** `FormalGroup/FullyFaithful.lean` (20th session): **[Hong, Thm. 3.5.4] (Tate) over
+  `O_{K'}`: `PDivGroup.Hom.baseChange_bijective_OL`** (`Hom(G, H) → Hom(G_L, H_L)` bijective).
+  Graph `FFGroupScheme.graphBC` / `PDivGroup.Hom.graph : G_L → (G × H)_L` (`z ↦ (z, f̃ z)`,
+  levelwise closed immersion), `exists_pdivGroup_closure` gives `ι : G' → G × H`, `π₁ ∘ ι`
+  bijective on `ℚ̄_p`-points ⇒ levelwise bijective (Lemma 3.5.2,
+  `bijective_of_mapPoints_bijective_OL`), inverse `PDivGroup.Hom.inv`,
+  `f = π₂ ∘ ι ∘ (π₁ ∘ ι)⁻¹`, `f_L = f̃` by `Hom.ext_of_mapTate`; uniqueness
+  `Hom.ext_of_baseChange`. No use of [Hong, Prop. 2.1.14] (the generic-fibre form of
+  Prop. 3.5.3 takes the graph directly).
 * **planned** rest of the connected–étale sequence over `O_K`, formal Lie groups;
   Tate's Hodge–Tate decomposition of `T_p G ⊗ ℂ_p` and full faithfulness ([Tate] §4, Thm. 4;
   [Tate] not available locally, statements as quoted in [LocAn] and [BC]); see the hand-off.
