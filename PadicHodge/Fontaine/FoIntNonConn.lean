@@ -6,6 +6,7 @@ Authors: Claude (Anthropic)
 import PadicHodge.Fontaine.FoIntLattice
 import PadicHodge.Fontaine.HomRep
 import PadicHodge.FormalGroup.TateNonConnOL
+import PadicHodge.FormalGroup.HeightDualOL
 import PadicHodge.HodgeTate.Splitting
 
 /-!
@@ -34,10 +35,12 @@ trivialised by `ε`). We restate the (FoInt) package of `Fontaine/FoIntDecomp.le
   `ℂ_p(1)`-isotypic part of `W` (`isEquiv_mem_V1H`) and the étale classes
   `ker(W → W_F) = Hom(T / T_F, ℂ_p)` (`ker_restr_le_V1H`), which are themselves spanned by
   `G_L`-equivariant maps (`ker_restr_le_span_isEquiv`); so `V₁` is an extension of `ℂ_p(1)`-isotypic
-  pieces. That `V₁` *equals* the `ℂ_p(1)`-isotypic part of `W` is Tate's Hodge–Tate decomposition
-  for the non-connected `H`, which needs `h = d + d^∨` for `H` and its Cartier dual
-  ([Hong, Thm. 2.2.19, Thm. 3.4.12]); the Cartier dual of a non-connected `p`-divisible group over
-  `O_L` is not available here, and it is not needed for the weight argument of [LocAn] §9.
+  pieces. **`V₁` equals the `ℂ_p(1)`-isotypic part** `V1Iso` of `W` (`V1H_eq_V1Iso`,
+  `isCompl_V0H_V1Iso`): it contains it, and the isotypic part has dimension
+  `dim_L D_0(V_p(H_L)^∨) = h - d` (Tate's Hodge–Tate decomposition for the non-connected `H`,
+  `PDivGroup.finrank_DHT_dual_zero_eq_sub_OL`, from `h = d + d^∨` for `H` and its Cartier dual,
+  `FormalGroup/HeightDualOL.lean`; Serre–Tate linear independence,
+  `HomRep.finrank_E_zero_le_finrank_span_isEquiv`).
 * **(c) Cokernel / lattice bound** (`exists_lattice_H`): there are `N`, `c` with
   `p^c M ⊆ p^N ρ_H(O_{ℂ_p}^d) + (M ∩ V₁)`.
 -/
@@ -409,6 +412,41 @@ theorem ker_restr_le_span_isEquiv :
     galCp L σ (HomRep.toW _ h (G.connTateOL.mkQ x))
   rw [← galQ_mkOL]
   exact hh σ _
+
+/-! ### `V₁` is the `ℂ_p(1)`-isotypic part -/
+
+variable (G) in
+/-- **The `ℂ_p(1)`-isotypic part** of `W = Hom_{ℤ_p}(T_p H, ℂ_p)` (`ℂ_p(1)` trivialised by `ε`):
+the `ℂ_p`-span of the `G_L`-equivariant maps `T_p H → ℂ_p`. -/
+def V1Iso : Submodule ℂ_[p] (Additive ((G.baseChange L).TateModule K) →ₗ[ℤ_[p]] ℂ_[p]) :=
+  Submodule.span ℂ_[p] {f | HomRep.IsEquiv (G.baseChange L).galRepZ f}
+
+theorem V1Iso_le_V1H : V1Iso G ≤ V1H P ψ :=
+  Submodule.span_le.mpr fun f hf => isEquiv_mem_V1H P ψ f hf
+
+include φ hφψ hψφ in
+/-- `dim V1Iso ≥ h - d` (Tate's Hodge–Tate decomposition for the non-connected `H`). -/
+theorem le_finrank_V1Iso : G.height - d ≤ finrank ℂ_[p] (V1Iso G) := by
+  have h1 := HomRep.finrank_E_zero_le_finrank_span_isEquiv (G.baseChange L).galRepZ
+  have h2 := HomRep.finrank_E (G.baseChange L).galRepZ (ρ := (G.baseChange L).tateRepOver)
+    (fun _ => rfl) 0
+  have h3 := G.finrank_DHT_dual_zero_eq_sub_OL P φ ψ hφψ hψφ
+  change finrank L (HomRep.E (G.baseChange L).galRepZ 0) ≤ finrank ℂ_[p] (V1Iso G) at h1
+  omega
+
+include φ hε hεp hφψ hψφ in
+/-- **`V₁` is the `ℂ_p(1)`-isotypic part of `W`** (Tate's Hodge–Tate decomposition for the
+non-connected `H`). -/
+theorem V1H_eq_V1Iso : V1H P ψ = V1Iso G := by
+  refine (Submodule.eq_of_le_of_finrank_le (V1Iso_le_V1H P ψ) ?_).symm
+  rw [finrank_V1H P φ ψ hε hεp hφψ hψφ]
+  exact le_finrank_V1Iso P φ ψ hφψ hψφ
+
+include hεp in
+/-- **(FoInt)(b) for `H`, isotypic form**: `Hom_{ℤ_p}(T_p H, ℂ_p) = V₀ ⊕ V₁` with `V₁` the
+`ℂ_p(1)`-isotypic part. -/
+theorem isCompl_V0H_V1Iso : IsCompl (V0H P φ ψ hε hεp hφψ hψφ) (V1Iso G) :=
+  V1H_eq_V1Iso P φ ψ hε hεp hφψ hψφ ▸ isCompl_V0H_V1H P φ ψ hε hεp hφψ hψφ
 
 /-! ### (a), (c): integrality and the lattice lemma -/
 

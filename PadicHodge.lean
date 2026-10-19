@@ -75,6 +75,7 @@ import PadicHodge.FormalGroup.GmHeight
 import PadicHodge.FormalGroup.GmHom
 import PadicHodge.FormalGroup.GmLog
 import PadicHodge.FormalGroup.GmMu
+import PadicHodge.FormalGroup.HeightDualOL
 import PadicHodge.FormalGroup.HeightIneq
 import PadicHodge.FormalGroup.HodgeTateFGL
 import PadicHodge.FormalGroup.HodgeTateOL

@@ -520,6 +520,30 @@ theorem span_isEquiv_eq_top (h0 : finrank ℤ_[p] T ≤ finrank L (E act 0)) :
   rintro _ ⟨i, rfl⟩
   exact Submodule.subset_span ((mem_E_zero_iff act _).mp (b i).2)
 
+/-- **`dim_L E 0 ≤ dim_{ℂ_p}` of the `ℂ_p`-span of the `G_L`-equivariant maps** (an `L`-basis of
+`E 0` stays `ℂ_p`-linearly independent, Serre–Tate). -/
+theorem finrank_E_zero_le_finrank_span_isEquiv :
+    finrank L (E act 0) ≤
+      finrank ℂ_[p] (Submodule.span ℂ_[p] {f : T →ₗ[ℤ_[p]] ℂ_[p] | IsEquiv act f}) := by
+  classical
+  set n := finrank L (E act 0)
+  set b := Module.finBasis L (E act 0)
+  set e : Fin n → HomT act := fun i => (b i : HomT act)
+  have he : LinearIndependent ℂ_[p] e :=
+    SerreTate.linearIndependent_of_eigen_single (htSetup L) (smul_distrib_homT act) 0 e
+      (fun i => (b i).2) (b.linearIndependent.map' (E act 0).subtype (Submodule.ker_subtype _))
+  let toWL : HomT act →ₗ[ℂ_[p]] (T →ₗ[ℤ_[p]] ℂ_[p]) :=
+    { toFun := toW act, map_add' := fun _ _ => rfl, map_smul' := fun _ _ => rfl }
+  have he2 : LinearIndependent ℂ_[p] (toWL ∘ e) :=
+    he.map' toWL (LinearMap.ker_eq_bot.mpr fun _ _ h => h)
+  set S := Submodule.span ℂ_[p] {f : T →ₗ[ℤ_[p]] ℂ_[p] | IsEquiv act f}
+  have hmem : ∀ i, toWL (e i) ∈ S := fun i =>
+    Submodule.subset_span ((mem_E_zero_iff act _).mp (b i).2)
+  let e' : Fin n → S := fun i => ⟨toWL (e i), hmem i⟩
+  have he' : LinearIndependent ℂ_[p] e' := LinearIndependent.of_comp S.subtype he2
+  have := he'.fintype_card_le_finrank
+  rwa [Fintype.card_fin] at this
+
 /-! ### The lattice lemma -/
 
 omit [FiniteDimensional ℚ_[p] L] in

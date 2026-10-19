@@ -483,6 +483,16 @@ in place of Kähler differentials (all rings of integers here are monogenic), ev
   (`ℤ_p`-linear, `G_L`-equivariant); **[Hong, Prop. 3.4.6] over `O_{K'}`** (`dualTateHomOL`,
   bijective, `dualTateHomOL_gal`: `T_p(G^∨) ≅ Hom_{ℤ_p}(T_p G, ℤ_p(1))`), `tateRepDualEquivOL(_gal)`
   (`V_p(G^∨) ≅ V_p(G)^∨ ⊗ ℚ_p(1)` as `G_L`-representations).
+* **done** `FormalGroup/HeightDualOL.lean` (25th session): for a non-connected `G` over `O_{K'}`
+  with `G⁰ ≅ F[p^∞]`, `(G^∨)⁰ ≅ F'[p^∞]` (dimensions `d`, `d^∨`): `dim D_0(V_p(G_L)^∨) = d^∨`
+  (`finrank_DHT_dual_zero_OL`: Cor. 3.4.11 for `G^∨` + `tateRepDualEquivOL`); **[Hong,
+  Thm. 2.2.19] `h = d + d^∨`** (`height_eq_add_OL`, `exists_height_eq_add_OL`): `≥` by
+  orthogonality (3.11), `≤` from integrals `Λ ∈ O(G_1)`, `λ ∈ O(G_1^∨)` with `ε(Λ) = p^d`,
+  `λ(1) = p^{d^∨}` and the trace formula, `ε(Λ)λ(1) = λ(Λ)|G_1|`
+  (`FFGroupScheme.counit_mul_eq_of_dual_integral`), so `p^{d+d^∨} ∈ p^h O_L` (replaces Hong's
+  special-fibre Frobenius/Verschiebung argument); **Tate's Hodge–Tate decomposition for
+  non-connected `G`** (`hodgeTate_decomposition_nonconn_OL`: `V^∨`, `V` Hodge–Tate,
+  `dim D_0(V^∨) = h - d`, `dim D_1(V^∨) = d`).
 * **planned** rest of the connected–étale sequence over `O_K`, formal Lie groups;
   Tate's Hodge–Tate decomposition of `T_p G ⊗ ℂ_p` and full faithfulness ([Tate] §4, Thm. 4;
   [Tate] not available locally, statements as quoted in [LocAn] and [BC]); see the hand-off.
@@ -1116,10 +1126,10 @@ MR7 (MR7-plan "What MR7 needs from MR6" (b), (d)). `α_K` bijectivity is deferre
      **`isCompl_V0H_V1H`**, `finrank_V0H = d`, `finrank_V1H = h − d`, `isEquiv_mem_V1H`
      (`ℂ_p(1)`-isotypic part ⊆ `V₁`), `ker_restr_le_V1H`, `ker_restr_le_span_isEquiv` (étale classes
      are spanned by equivariant maps), **`exists_lattice_H`** (`p^c M ⊆ p^N ρ_H(O^d) + M ∩ V₁`).
-     Not proved: `V1H` = the full `ℂ_p(1)`-isotypic part (Tate's HT decomposition for non-connected
-     `H`; needs `h = d + d^∨` for `H` and the Cartier dual of a non-connected `p`-divisible group over
-     `O_L`, which is not constructed here (`DualPDivData` exists only for `F[p^∞]`)). `V1H` is an
-     extension of `ℂ_p(1)`-isotypic pieces, which suffices for the weight argument of [LocAn] §9.
+     **25th session**: `V1H` *is* the `ℂ_p(1)`-isotypic part `V1Iso` (`V1H_eq_V1Iso`,
+     `isCompl_V0H_V1Iso`; `le_finrank_V1Iso` from `finrank_DHT_dual_zero_eq_sub_OL`, i.e. Tate's HT
+     decomposition for non-connected `H` via the Cartier dual `dualPDivGen` and `h = d + d^∨`,
+     PH3 `HeightDualOL`; `HomRep.finrank_E_zero_le_finrank_span_isEquiv`).
      `FoIntDecomp`: the two `maxHeartbeats 400000` removed (`Phi_isEquiv` via `HomRep.mem_E_iff`).
 
 ## Hand-off (2026-10-19, twenty-fourth session)
